@@ -1,49 +1,45 @@
-## Equality
+## Igualdad
 
-One thing to be careful about in JavaScript is the difference between `==` and `===`. As JavaScript tries to
-be resilient against programming errors `==` tries to do type coercion between two variables e.g. converts a
-string to a number so that you can compare with a number as shown below:
+One cosa con la que hay que tener cuidado en Javascript es la diferencia entre `==` y `===`. Como JavaScript trata de ser resiliente contra errores de programación, `==` trata de coercer los tipos de dos variables. Por ejemplo, convierte una string a un número para que los puedas comparar: 
 
 ```js
-console.log(5 == "5"); // true   , TS Error
-console.log(5 === "5"); // false , TS Error
+console.log(5 == "5"); // verdadero   , TS Error
+console.log(5 === "5"); // falso , TS Error
 ```
 
-However, the choices JavaScript makes are not always ideal. For example, in the below example the first statement is false
-because `""` and `"0"` are both strings and are clearly not equal. However, in the second case both `0` and the
-empty string (`""`) are falsy (i.e. behave like `false`) and are therefore equal with respect to `==`. Both statements
-are false when you use `===`.
+Sin embargo, las elecciones de Javascript no siempre son ideales. Por ejemplo, en el ejemplo que sigue la primera declaración es falsa porque `""` y `"0"` son los dos strings y claramente no iguales. Sin embargo, en el segundo caso, ambos `0` y la string vacía (`""`) son falsy (en otras palabras, se comportan como `falso`) y son, por lo tanto, iguales en lo que respecta a `==`. Ambas declaraciones son falsas cuando se utiliza `===`.
 
 ```js
-console.log("" == "0"); // false
-console.log(0 == ""); // true
+console.log("" == "0"); // falso
+console.log(0 == ""); // verdadero
 
-console.log("" === "0"); // false
-console.log(0 === ""); // false
+console.log("" === "0"); // falso
+console.log(0 === ""); // falso
 ```
 
-> Note that `string == number` and `string === number` are both compile time errors in TypeScript, so you don't normally need to worry about this.
+> Notemos que tanto `string == numbero` como `string === numbero`  son errores de compilación en TypeScript, asi que normalmente no tienes que preocuparte por esto.
 
+De forma similar a `==` vs. `===`, hay un `!=` vs. `!==`
+
+Así que un consejo Pro: siempre usá `===` y `!==` excepto para checkear nulls (cubriremos por qué luego).
 Similar to `==` vs. `===`, there is `!=` vs. `!==`
 
-So ProTip: Always use `===` and `!==` except for null checks, which we cover later.
-
-## Structural Equality 
-If you want to compare two objects for structural equality `==`/`===` are ***not*** sufficient. e.g. 
+## Igualdad estructural
+Si quieres comparar dos objectos para igualdad estructural, `==`/`===` ***no*** son suficientes. Por ejemplo,  
 
 ```js
-console.log({a:123} == {a:123}); // False
-console.log({a:123} === {a:123}); // False
+console.log({a:123} == {a:123}); // Falso
+console.log({a:123} === {a:123}); // Falso
 ```
-To do such checks use the [deep-equal](https://www.npmjs.com/package/deep-equal) npm package e.g. 
+Para hacer este tipo de chequeos debes usar el paquete de npm [deep-equal](https://www.npmjs.com/package/deep-equal). Por ejemplo: 
 
 ```js
 import * as deepEqual from "deep-equal";
 
-console.log(deepEqual({a:123},{a:123})); // True
+console.log(deepEqual({a:123},{a:123})); // Verdadero
 ```
 
-However, quite commonly you don't need deep checks and all you really need is to check by some `id` e.g. 
+Sin embargo, generalmente no es necesario realizar chequeos profundos y todo lo que realmente es necesario es chequear por medio de un `id`. Por ejemplo: 
 
 ```ts
 type IdDisplay = {

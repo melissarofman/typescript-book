@@ -1,43 +1,42 @@
-# Your JavaScript is TypeScript
+# Tu JavaScript es TypeScript
 
-There were (and will continue to be) a lot of competitors in *Some syntax* to *JavaScript* compilers. TypeScript is different from them in that *Your JavaScript is TypeScript*. Here's a diagram:
+Hubieron (y van a seguir habiendo) muchos competidores en compiladores de *alguna sintaxis* a *JavaScript*. TypeScript es diferente en el sentido de que *Tu Javascript es Typescript*. Aquí hay un diagrama:
 
-![JavaScript is TypeScript](https://raw.githubusercontent.com/basarat/typescript-book/master/images/venn.png)
+![JavaScript es TypeScript](https://raw.githubusercontent.com/basarat/typescript-book/master/images/venn.png)
 
-However, it does mean that *you need to learn JavaScript* (the good news is *you **only** need to learn JavaScript*). TypeScript is just standardizing all the ways you provide *good documentation* on JavaScript.
+Sin embargo, eso significa que *tenés que aprender JavaScript* (las buenas noticias son que *vos **solo** tenes que aprender JavaScript*). TypeScript simplemente está estandarizando todas las maneras en las que poder proveer *buena documentación* en JavaScript.
 
-* Just giving you a new syntax doesn't help fix bugs (looking at you CoffeeScript).
-* Creating a new language abstracts you too far from your runtimes, communities (looking at you Dart).
+* Darte una nueva sintaxis no ayuda a resolver las bugs (mirandote a vos CoffeScript)
+* Crear un nuevo lenguaje te abstrae demasiado de tus tiempos de ejecucion, comunidades (mirandote a vos Dart)
 
-TypeScript is just JavaScript with docs.
+Typescript es Javascript con documentación.
 
-## Making JavaScript Better
+## Mejorando JavaScript
 
-TypeScript will try to protect you from portions of JavaScript that never worked (so you don't need to remember this stuff):
+TypeScript tratará de protegerte de partes de JavaScript que nunca funcionaron (así que no tenés que recordar estas cosas):
 
 ```ts
-[] + []; // JavaScript will give you "" (which makes little sense), TypeScript will error
+[] + []; // JavaScript te dará "" (lo que no tiene sentido), TypeScript tirará un error
 
 //
-// other things that are nonsensical in JavaScript
-// - don't give a runtime error (making debugging hard)
-// - but TypeScript will give a compile time error (making debugging unnecessary)
+// otras cosas que no tienen sentido en Javascript
+// - no hay errores en tiempo de ejecución (hace que depurar sea dificil)
+// - pero TypeScript te dará errores al compilar (haciendo la depuración innecesaria)
 //
 {} + []; // JS : 0, TS Error
 [] + {}; // JS : "[object Object]", TS Error
-{} + {}; // JS : NaN or [object Object][object Object] depending upon browser, TS Error
+{} + {}; // JS : NaN or [object Object][object Object] dependiendo del navegador, TS Error
 "hello" - 1; // JS : NaN, TS Error
 
 function add(a,b) {
   return
-    a + b; // JS : undefined, TS Error 'unreachable code detected'
+    a + b; // JS : undefined, TS Error 'unreachable code detected' (código inacalcanzable detectado)
 }
 ```
+Esencialmente TypeScript está *linteando* Javascript. Pero haciendo un mejor trabajo que otros linters que no tienen *información sobre tipos*
 
-Essentially TypeScript is linting JavaScript. Just doing a better job at it than other linters that don't have *type information*.
+## Igual tenés que aprender JavaScript
 
-## You still need to learn JavaScript
+Habiendo dicho eso, TypeScript es muy pragmatico sobre le hecho de que *estás escribiendo JavaScript*, por lo que hay ciertas cosas sobre JavaSCript que igual debes saber en order para no caer desprevenido. Discutamolas a continuación.
 
-That said TypeScript is very pragmatic about the fact that *you do write JavaScript* so there are some things about JavaScript that you still need to know in order to not be caught off-guard. Let's discuss them next.
-
-> Note: TypeScript is a superset of JavaScript. Just with documentation that can actually be used by compilers / IDEs ;)
+> Nota: TypeScript es un superconjunto de Javascript. Pero con documentación que puede ser utilizada por compiladores / IDEs ;)
