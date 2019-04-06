@@ -1,27 +1,27 @@
-* [Getting Started with TypeScript](#getting-started-with-typescript)
-* [TypeScript Version](#typescript-version)
+* [Empezando con TypeScript](#empezando-con-typescript)
+* [Version de TypeScript](#version-de-typescript)
 
-# Getting Started With TypeScript
+# Empezando con TypeScript
 
-TypeScript compiles into JavaScript. JavaScript is what you are actually going to execute (either in the browser or on the server). So you are going to need the following:
+TypeScript compila a Javascript. Javascript es lo que vas a ejecutar realmente (sea en el navegador o en el servidor). Por lo tanto vas a necesitar lo siguiente:
 
-* TypeScript compiler (OSS available [in source](https://github.com/Microsoft/TypeScript/) and on [NPM](https://www.npmjs.com/package/typescript))
-* A TypeScript editor (you can use notepad if you want but I use [vscode 🌹](https://code.visualstudio.com/) with an [extension I wrote](https://marketplace.visualstudio.com/items?itemName=basarat.god). Also [lots of other IDES support it as well]( https://github.com/Microsoft/TypeScript/wiki/TypeScript-Editor-Support))
+* Compliador para TypeScript (OSS disponible [como fuente](https://github.com/Microsoft/TypeScript/) y en [NPM](https://www.npmjs.com/package/typescript))
+* Un editor de TypeScript (puedes usar un bloc de notas si quieres, pero yo use [vscode 🌹](https://code.visualstudio.com/) con una [extensión que escribí](https://marketplace.visualstudio.com/items?itemName=basarat.god). Ademas [muchos otros IDES también lo soportan]( https://github.com/Microsoft/TypeScript/wiki/TypeScript-Editor-Support))
 
 
-## TypeScript Version
+## Version de TypeScript
 
-Instead of using the *stable* TypeScript compiler we will be presenting a lot of new stuff in this book that may not be associated with a version number yet. I generally recommend people to use the nightly version because **the compiler test suite only catches more bugs over time**.
+En lugar de usar la version *estable* del compilador de TypeScript, vamos a estar presentando mucha información nueva en este libro que puede no estar asociada con una version numerada todavía. Generalmente, recomiendo que se utilize la version nightly, porque **el suite de tests del compilador solo atrapa mas bugs a lo largo del tiempo**.
 
-You can install it on the command line as
+Lo puedes instalar en la línea de comando
 
 ```
 npm install -g typescript@next
 ```
 
-And now the command line `tsc` will be the latest and greatest. Various IDEs support it too, e.g.
+Y ahora el comando `tsc` será el ultimo y el mejor. Varios IDEs tambien lo soportan, etc.
 
-* You can ask vscode to use this version by creating `.vscode/settings.json` with the following contents:
+* Puedes pedirle a vscode que utilice esta versión creando `.vscode/settings.json` con el siguiente contenido:
 
 ```json
 {
@@ -29,12 +29,12 @@ And now the command line `tsc` will be the latest and greatest. Various IDEs sup
 }
 ```
 
-## Getting the Source Code
-The source for this book is available in the books github repository https://github.com/basarat/typescript-book/tree/master/code most of the code samples can be copied into vscode and you can play with them as is. For code samples that need additional setup (e.g. npm modules), we will link you to the code sample before presenting the code. e.g.
+## Obtener el Código Fuente
+El código para este libro se encuentra disponible en el repositorio de github https://github.com/basarat/typescript-book/tree/master/code. La mayoría de los ejemplos pueden ser copiados a vscode y puedes jugar con ellos como están. Para ejemplos que necesitan preparacion adicional (por ejemplo, módulos npm), presentaremos un link a la fuente antes de presentar el código. Por ejemplo, 
 
-`this/will/be/the/link/to/the/code.ts`
+`este/sera/el/link/a/la/fuente.ts`
 ```ts
-// This will be the code under discussion
+// Este será el código del que hablamos
 ```
 
-With a dev setup out of the way let's jump into TypeScript syntax.
+Con la preparación ya resulta, comenzemos con la sintaxis de TypeScript.
