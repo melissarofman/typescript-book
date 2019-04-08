@@ -1,4 +1,4 @@
-TypeScript Deep Dive
+TypeScript Deep Dive (Traducción en progreso)
 =======
 
 He estado mirando las dificultades que suelen emerger cuando la gente comienza a utilizar TypeScript. Me baso en las enseñanzas de [Stack Overflow](http://stackoverflow.com/tags/typescript/topusers) / [DefinitelyTyped](https://github.com/DefinitelyTyped/) y en estar involucrado con la [comunidad TypeScript](https://github.com/TypeStrong/). Puedes [seguir mis updates](https://twitter.com/basarat) y [no te olvides de ★ en GitHub](https://github.com/basarat/typescript-book) 🌹
