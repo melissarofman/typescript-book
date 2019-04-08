@@ -1,25 +1,25 @@
-## Closure
+## Cierre
 
-The best thing that JavaScript ever got was closures. A function in JavaScript has access to any variables defined in the outer scope. Closures are best explained with examples:
+Lo mejor que JavaScript son los cierres. Una función en JavaScript tiene acceso a cualquier variable que haya sido definida en su ámbito externo (outer scope). Los cierres se explican mejor con ejemplos:
 
 ```ts
 function outerFunction(arg) {
     var variableInOuterFunction = arg;
 
     function bar() {
-        console.log(variableInOuterFunction); // Access a variable from the outer scope
+        console.log(variableInOuterFunction); // Acceso a una variable del ámbito externo
     }
 
-    // Call the local function to demonstrate that it has access to arg
+    // Llama a la función local para demostrar que tiene acceso a arg
     bar();
 }
 
-outerFunction("hello closure"); // logs hello closure!
+outerFunction("hello closure"); // imprime "hello closure!"
 ```
 
-You can see that the inner function has access to a variable (variableInOuterFunction) from the outer scope. The variables in the outer function have been closed by (or bound in) the inner function. Hence the term **closure**. The concept in itself is simple enough and pretty intuitive.
+Puedes ver que la función interna tinene acceso a una variable (`variableInOuterFunction`) del ámbito externo. Las variables en el ámbito externo han sido cerradas (o rodeadas) por la función interior. De ahí el término **cierres** (o closures). El concepto en si mismo es simple y bastante intuitivo.
 
-Now the awesome part: The inner function can access the variables from the outer scope *even after the outer function has returned*. This is because the variables are still bound in the inner function and not dependent on the outer function. Again let's look at an example:
+Ahora la parte increíble: La función interna puede acceder las variables de su ámbito externo *incluso luego de que la función externa ya haya devuelto (o returned).* Esto se debe a que las variables siguen conectadas en la función interna y no dependen de la función externa. De nuevo, miremos un ejemplo: 
 
 ```ts
 function outerFunction(arg) {
@@ -31,12 +31,12 @@ function outerFunction(arg) {
 
 var innerFunction = outerFunction("hello closure!");
 
-// Note the outerFunction has returned
-innerFunction(); // logs hello closure!
+// Noten que la función externa ha devuelto
+innerFunction(); // imprime "hello closure!"
 ```
 
-### Reason why it's awesome
-It allows you to compose objects easily e.g. the revealing module pattern:
+### Razón por la cual es genial
+Te permite construir objetos fácilmente, por ejemplo, revelando el patrón modelo:
 
 ```ts
 function createCounter() {
@@ -53,14 +53,13 @@ console.log(counter.getVal()); // 1
 counter.increment();
 console.log(counter.getVal()); // 2
 ```
-
-At a high level it is also what makes something like Node.js possible (don't worry if it doesn't click in your brain right now. It will eventually 🌹):
+A un nivel más alto, también es lo que permite que algo como Node.js exista (no te preocupes si no hace click en tu cerebro en este momento, lo hará eventualmente 🌹):
 
 ```ts
-// Pseudo code to explain the concept
+// Pseudo código para explicar el concepto
 server.on(function handler(req, res) {
     loadData(req.id).then(function(data) {
-        // the `res` has been closed over and is available
+        // la `res` ha sido cerrado y está disponible
         res.send(data);
     })
 });
