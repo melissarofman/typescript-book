@@ -10,7 +10,7 @@
   * [Cierres](docs/javascript/closure.md)
   * [Número](docs/javascript/number.md)
   * [Truthy](docs/javascript/truthy.md)
-* [Future JavaScript Now](docs/future-javascript.md)
+* [Futuro JavaScript Ahora](docs/future-javascript.md)
   * [Classes](docs/classes.md)
     * [Classes Emit](docs/classes-emit.md)
   * [Arrow Functions](docs/arrow-functions.md)

@@ -1,44 +1,45 @@
 ## Truthy
 
-JavaScript has a concept of `truthy` i.e. things that evaluate like `true` would in certain positions (e.g. `if` conditions and the boolean `&&` `||` operators). The following things are truthy in JavaScript. An example is any number other than `0` e.g.
+JavaScript tiene un concepto `truthy`, es decir, cosas que son evaluadas como `verdaderas` en ciertas situaciones (por ejemplo, en condiciones `if` y los operadores booleanos `&&` y `||`). Las siguientes cosas son truthy en JavaScript. Por ejemplo, cualquier número excepto `0` es evaluado como truthy: 
 
 ```ts
-if (123) { // Will be treated like `true`
-  console.log('Any number other than 0 is truthy');
+if (123) { // será tratado como `true`
+  console.log('Cualquier número que no sea 0 es truthy');
 }
 ```
 
-Something that isn't truthy is called `falsy`.
+Algo que no es truthy es `falsy`.
 
-Here's a handy table for your reference.
-
-| Variable Type   | When it is *falsy*       | When it is *truthy*      |
-|-----------------|--------------------------|--------------------------|
-| `boolean`       | `false`                  | `true`                   |
-| `string`        | `''` (empty string)      | any other string         |
-| `number`        | `0`  `NaN`               | any other number         |
-| `null`          | always                   | never                    |
-| `undefined`     | always                   | never                    |
-| Any other Object including empty ones like `{}`,`[]` | never | always |
+Aquí hay una tabla de referencia.
 
 
-### Being explicit
+| Tipo de variable   | Cuándo es *falsy*        | Cuándo es *truthy*       |
+|--------------------|--------------------------|--------------------------|
+| `boolean`          | `false`                  | `true`                   |
+| `string`           | `''` (string vacía)      | cualquier otra string    |
+| `number`           | `0`  `NaN`               | cualquier otro número    |
+| `null`             | siempre                  | nunca                    |
+| `undefined`        | siempre                  | nunca                    |
+| Cualquier Objeto incluyendo los vacíos (`{}`, `[]`) | nunca | siempre |
 
-> The `!!` pattern
 
-Quite commonly it helps to be explicit that the intent is to treat the value as a `boolean` and convert it into a *true boolean* (one of `true`|`false`). You can easily convert values to a true boolean by prefixing it with `!!` e.g. `!!foo`. Its just `!` used *twice*. The first `!` converts the variable (in this case `foo`) to a boolean but inverts the logic (*truthy* -`!`> `false`, *falsy* -`!`> `true`). The second one toggles it again to match the nature of the original object (e.g. *truthy* -`!`> `false` -`!`> `true`).
+### Siendo explícito
 
-It is common to use this pattern in lots of places e.g.
+> El patrón `!!`
+
+Comúnmente ayuda ser explícito en la intención de tratar un valor como `boolean` y convertirlo en un *verdadero booleano* (`true`|`false`). Puedes convertir valores a verdaderos booleanos al prefixarlos con `!!`, por ejemplo, `!!foo`. Es sólo `!` utilizado dos veces. El primer `!` convierte la variable (en este caso `foo`) a un booleano, pero invierte la lógica <*truthy* - `!` > `false`, *falsy* - `!` > `true`. El segundo vuelve a invertirlo para igualar la naturaleza del objeto original: *truthy* -`!`> `false` -`!`> `true`.
+
+Es común utilizar este patrón en muchos lugares. Por ejemplo, 
 
 ```js
-// Direct variables
+// variables directas
 const hasName = !!name;
 
-// As members of objects
+// Como miembros de objetos
 const someObj = {
   hasName: !!name
 }
 
-// e.g. in ReactJS JSX
+// e.g. en ReactJS JSX
 {!!someName && <div>{someName}</div>}
 ```
