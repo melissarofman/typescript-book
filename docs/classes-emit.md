@@ -1,5 +1,5 @@
-#### What's up with the IIFE
-The js generated for the class could have been:
+#### Que pasa con la IIFE
+El JS generado para la clase podría haber sido:
 ```ts
 function Point(x, y) {
     this.x = x;
@@ -9,8 +9,7 @@ Point.prototype.add = function (point) {
     return new Point(this.x + point.x, this.y + point.y);
 };
 ```
-
-The reason it's wrapped in an Immediately-Invoked Function Expression (IIFE) i.e.
+La razón por la cual está envuelto en una Función Invocada Inmediatamente (IIFE), como la siguiente
 
 ```ts
 (function () {
@@ -21,7 +20,7 @@ The reason it's wrapped in an Immediately-Invoked Function Expression (IIFE) i.e
 })();
 ```
 
-has to do with inheritance. It allows TypeScript to capture the base class as a variable `_super` e.g.
+tiene que ver con el concepto de herencia. Le permite a JavaScript capturar la clase base como una variable `_super`. Por ejemplo
 
 ```ts
 var Point3D = (function (_super) {
@@ -37,11 +36,12 @@ var Point3D = (function (_super) {
     return Point3D;
 })(Point);
 ```
-
+Nota como la IIFE le permite a TypeScript capturar fácilmente la clase base `Point` en una variable `_super` y 
 Notice that the IIFE allows TypeScript to easily capture the base class `Point` in a `_super` variable and that is used consistently in the class body.
 
 ### `__extends`
-You will notice that as soon as you inherit a class TypeScript also generates the following function:
+Notarás que apenas heredás una clase TypeScript también genera la siguiente función:
+
 ```ts
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -50,68 +50,68 @@ var __extends = this.__extends || function (d, b) {
     d.prototype = new __();
 };
 ```
-Here `d` refers to the derived class and `b` refers to the base class. This function does two things:
-1. copies the static members of the base class onto the child class i.e. `for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];`
-1. sets up the child class function's prototype to optionally lookup members on the parent's `proto` i.e. effectively `d.prototype.__proto__ = b.prototype`
+Aquí `d` hace referencia a la clase derivada y `b` hace referencia a la clase base. Esta función hace dos cosas:
+1. Copia los miembros estáticos de la clase base a la clase hija, por ejemplo: `for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];`
+2. prepara al prototipo de la clase hija  para buscar, opcionalmente, a los miembros del `proto` del padre. Es decir, `d.prototype.__proto__ = b.prototype`
 
-People rarely have trouble understanding 1, but many people struggle with 2. So an explanation is in order.
+La gente raramente tiene problemas entendiendo 1, pero mucha gente tiene dificultades con 2. Así que corresponde brindar una explicación.
 
 #### `d.prototype.__proto__ = b.prototype`
 
-After having tutored many people about this I find the following explanation to be simplest. First we will explain how the code from `__extends` is equivalent to the simple `d.prototype.__proto__ = b.prototype`, and then why this line in itself is significant. To understand all this you need to know these things:
+Luego de haber enseñado este tema a mucha gente, encuentro que esta explicación es la más simple. Primero explicaremos como el código de `__extends` es equivalente a `d.prototype.__proto__ = b.prototype`, y luego por qué esta línea en si misma es importante. Para entender todo esto debes saber lo siguiente: 
 
 1. `__proto__`
 1. `prototype`
-1. effect of `new` on `this` inside the called function
-1. effect of `new` on `prototype` and `__proto__`
+1. el efecto de `new` sobre `this` en la función llamda
+1. el efecto de `new` en `prototype` y `__proto__`
 
-All objects in JavaScript contain a `__proto__` member. This member is often not accessible in older browsers (sometimes documentation refers to this magical property as `[[prototype]]`). It has one objective: If a property is not found on an object during lookup (e.g. `obj.property`) then it is looked up at `obj.__proto__.property`. If it is still not found then `obj.__proto__.__proto__.property` till either: *it is found* or *the latest `.__proto__` itself is null*. This explains why JavaScript is said to support *prototypal inheritance* out of the box. This is shown in the following example, which you can run in the chrome console or Node.js:
+Todos los objetos en JavaScript contienen un miembro `__proto__`. Este miembro suele no ser accesible en navegadores viejos (a veces la documentación se refiere a esta propiedad mágica como `[[prototype]]`). Tiene un objetivo: si la propiedad no se encuentra en un objeto durante la búsqueda (ejemplo, `obj.property`) entonce es buscada en `obj.__proto__.property`. Si tampoco es encontrada entonces es buscada en `obj.__proto__.__proto__.property` hasta que o *es encontrada* o *el últmo `__proto__` es nulo*. Esto explica por qué se dice que JavaScript soporta *herencia prototípica*. Esto se puede observar ne el siguiente ejemplo, que puedes correr en la consola de Chrome o en Node.js:
 
 ```ts
 var foo = {}
 
-// setup on foo as well as foo.__proto__
+// setup en foo y en foo.__proto__
 foo.bar = 123;
 foo.__proto__.bar = 456;
 
 console.log(foo.bar); // 123
-delete foo.bar; // remove from object
+delete foo.bar; // eliminar del objeto
 console.log(foo.bar); // 456
-delete foo.__proto__.bar; // remove from foo.__proto__
+delete foo.__proto__.bar; // eliminar de foo.__proto__
 console.log(foo.bar); // undefined
 ```
 
-Cool so you understand `__proto__`. Another useful fact is that all `function`s in JavaScript have a property called `prototype` and that it has a member `constructor` pointing back to the function. This is shown below:
+Así que ahora entendés `__proto__`. Otro dato útil es que todas las `funciones` en JavaScript tienen una propiedad llamada `prototype` y que esta tiene un miembro `constructor` que apunta de vuelta a la función. Eso se muestra a continuación:
 
 ```ts
 function Foo() { }
-console.log(Foo.prototype); // {} i.e. it exists and is not undefined
-console.log(Foo.prototype.constructor === Foo); // Has a member called `constructor` pointing back to the function
+console.log(Foo.prototype); // {}, es decir, existe y no es undefined
+console.log(Foo.prototype.constructor === Foo); // Tiene un miembro `constructor`que apunta de vuelta a la función
 ```
 
-Now let's look at *effect of `new` on `this` inside the called function*. Basically `this` inside the called function is going to point to the newly created object that will be returned from the function. It's simple to see if you mutate a property on `this` inside the function:
+Ahora consideremos el *efecto de `new` sobre `this` dentro de la función llamada*. Basicamente, `this` en la función llamda apuntará al nuevo objeto que será devuelto de la función. Es simple de observar si mutas una propiedad en `this` dentro de la función:
 
 ```ts
 function Foo() {
     this.bar = 123;
 }
 
-// call with the new operator
+// llamar con el nuevo operador
 var newFoo = new Foo();
 console.log(newFoo.bar); // 123
 ```
 
-Now the only other thing you need to know is that calling `new` on a function assigns the `prototype` of the function to the `__proto__` of the newly created object that is returned from the function call. Here is the code you can run to completely understand it:
+La únicao tra cosa que debes saber ahora es que llamar `new` en una función asigna al `prototype` de la función a el `__proto__` del nuevo objeto que es devuelto de la llamada de la función. Aquí está el código que tienes que correr para  entenderlo completamente:
 
 ```ts
 function Foo() { }
 
 var foo = new Foo();
 
-console.log(foo.__proto__ === Foo.prototype); // True!
+console.log(foo.__proto__ === Foo.prototype); // Verdadero!
 ```
 
-That's it. Now look at the following straight out of `__extends`. I've taken the liberty to number these lines:
+Eso es todo. Ahora mirá lo siguiente, sacado de `__extends~. Me tomé la libertad de numerar estas líneas:
 
 ```ts
 1  function __() { this.constructor = d; }
@@ -119,13 +119,13 @@ That's it. Now look at the following straight out of `__extends`. I've taken the
 3   d.prototype = new __();
 ```
 
-Reading this function in reverse the `d.prototype = new __()` on line 3 effectively means `d.prototype = {__proto__ : __.prototype}` (because of the effect of `new` on `prototype` and `__proto__`), combining it with the previous line (i.e. line 2 `__.prototype = b.prototype;`) you get `d.prototype = {__proto__ : b.prototype}`.
+Leyendo esta función en el orden inverso, el `d.prototype = new __()` en la tercera línea significa `d.prototype = {__proto__: __.prototype}` (debido al efecto de `new` en `prototype` y `__proto__`), y al combinarlo con la línea anterior (línea 2 `__.prototype = b.prototype`) queda `d.prototype = {__proto__ : b.prototype}`.
 
-But wait, we wanted `d.prototype.__proto__` i.e. just the proto changed and maintain the old `d.prototype.constructor`. This is where the significance of the first line (i.e. `function __() { this.constructor = d; }`) comes in. Here we will effectively have `d.prototype = {__proto__ : __.prototype, constructor : d}` (because of the effect of `new` on `this` inside the called function). So, since we restore `d.prototype.constructor`, the only thing we have truly mutated is the `__proto__` hence `d.prototype.__proto__ = b.prototype`.
+Pero esperen, queríamos `d.prototype.__proto__`, es decir que solo el proto cambió y mantener el `d.prototype.constructor` anterior. En este punto cobra importancia la primera línea (`funcion __() { this.constructor = d; }).` En este punto tendremos `d.prototype = {__proto__ : __.prototype, constructor : d}` (debido al efecto de `new` sobre `this` dentro de la función llamada). Entonces, dado que restablecemos `d.prototype.constructor`, lo único que hemos mutado realmente es el `__proto__`, y por lo tanto, `d.prototype.__proto__ = b.prototype`.
 
-#### `d.prototype.__proto__ = b.prototype` significance
+#### significado de `d.prototype.__proto__ = b.prototype`
 
-The significance is that it allows you to add member functions to a child class and inherit others from the base class. This is demonstrated by the following simple example:
+El significado es que te permite agregar funciones miembros a una clase hija y heredar otros de la clase base. Esto está demostrado en el siguiente ejemplo:
 
 ```ts
 function Animal() { }
@@ -139,4 +139,4 @@ var bird = new Bird();
 bird.walk();
 bird.fly();
 ```
-Basically `bird.fly` will be looked up from `bird.__proto__.fly` (remember that `new` makes the `bird.__proto__` point to `Bird.prototype`) and `bird.walk` (an inherited member) will be looked up from `bird.__proto__.__proto__.walk` (as `bird.__proto__ == Bird.prototype` and `bird.__proto__.__proto__` == `Animal.prototype`).
+Basicamente `bird.fly` será buscada de `bird.__proto__.fly` (acuerdate que `new` hace que `bird.__proto__` apunte a `Bird.prototype`) y `bird.wald` (un miembro heredado) será buscado de `bird.__proto__.__proto__.walk` (como `bird.__proto__ == Bird.prototype` y `bird.__proto__.__proto__` == `Animal.prototype`).
