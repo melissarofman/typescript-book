@@ -1,11 +1,11 @@
-### Destructuring
+### Desestructurando
 
-TypeScript supports the following forms of Destructuring (literally named after de-structuring i.e. breaking up the structure):
+TypeScript soporta las siguientes formas de Desestructuración (literalmente tomado de de-estructurando, es decir, rompiendo la estructura):
+ 
+ 1. Desestructuración de objetos
+ 2. Desestructuración de arrays
 
-1. Object Destructuring
-1. Array Destructuring
-
-It is easy to think of destructuring as an inverse of *structuring*. The method of *structuring* in JavaScript is the object literal:
+ Es fácil pensar en desestructurar como lo inverso de *estructurar*. El método de *estructurar* en JavaScript es el objeto literal:
 
 ```ts
 var foo = {
@@ -14,50 +14,50 @@ var foo = {
     }
 };
 ```
-Without the awesome *structuring* support built into JavaScript, creating new objects on the fly would indeed be very cumbersome. Destructuring brings the same level of convenience to getting data out of a structure.
+Sin el increible soporte para *estructurar* que se encuentra incluido en JavaScript, crear nuevos objetos sobre la marcha sería muy molesto. La desestructuración trae el mismo nivel de conveniencia a extraer información de una estructura.
 
-#### Object Destructuring
-Destructuring is useful because it allows you to do in a single line, what would otherwise require multiple lines. Consider the following case:
+#### Desestructuración de objetos
+La desestructuración es útil porque te permite hacer en una sola línea algo que sino llevaría muchas. Considerá el siguiente caso:
 
 ```ts
 var rect = { x: 0, y: 10, width: 15, height: 20 };
 
-// Destructuring assignment
+// Asignación desestructurante
 var {x, y, width, height} = rect;
 console.log(x, y, width, height); // 0,10,15,20
 
 rect.x = 10;
-({x, y, width, height} = rect); // assign to existing variables using outer parentheses
+({x, y, width, height} = rect); // Asigna a variables existentes utilizando paréntesis externos
 console.log(x, y, width, height); // 10,10,15,20
 ```
-Here in the absence of destructuring you would have to pick off `x,y,width,height` one by one from `rect`.
+Si la desestructuración no existiera, deberías seleccionar `x,y,width,height` uno a uno de `rect`.
 
-To assign an extracted variable to a new variable name you can do the following:
+Para asignar una variable extraida a una variable con un nuevo nombre, puedes hacer lo siguiente:
 
 ```ts
 // structure
-const obj = {"some property": "some value"};
+const obj = {"una propiedad": "un valor"};
 
 // destructure
-const {"some property": someProperty} = obj;
-console.log(someProperty === "some value"); // true
+const {"una propiedad": unaPropiedad} = obj;
+console.log(unaPropiedad === "un valor"); // verdadero
 ```
 
-Additionally you can get *deep* data out of a structure using destructuring. This is shown in the following example:
+Adicionalmente, puedes obtener datos *profundos* de una estructura a través de la desestructuración: 
 
 ```ts
 var foo = { bar: { bas: 123 } };
-var {bar: {bas}} = foo; // Effectively `var bas = foo.bar.bas;`
+var {bar: {bas}} = foo; // `var bas = foo.bar.bas;`
 ```
 
-#### Object Destructuring with rest
-You can pick up any number of elements from an object and get *an object* of the remaining elements using object destructuring with rest.
+#### Desestructurando objetso con rest
+Puedes levantar cualquier número de elementos de un objeto y obtener *un objeto* compuesto por los elementos restantes a través de desestructurar con rest.
 
 ```ts
-var {w, x, ...remaining} = {w: 1, x: 2, y: 3, z: 4};
-console.log(w, x, remaining); // 1, 2, {y:3,z:4}
+var {w, x, ...resto} = {w: 1, x: 2, y: 3, z: 4};
+console.log(w, x, resto); // 1, 2, {y:3,z:4}
 ```
-A common use case is also to ignore certain properties. For example:
+Un caso común de uso es ignorar ciertas propiedades:
 ```ts
 // Example function
 function goto(point2D: {x: number, y: number}) {
@@ -72,40 +72,40 @@ const { z, ...point2D } = point3D;
 goto(point2D);
 ```
 
-#### Array Destructuring
-A common programming question: "How to swap two variables without using a third one?". The TypeScript solution:
+#### Desestructuración de arrays
+Una pregunta de programación común es: "Cómo intercambio dos variables sin utilizar una tercera?" La solución de Typescript:
 
 ```ts
 var x = 1, y = 2;
 [x, y] = [y, x];
 console.log(x, y); // 2,1
 ```
-Note that array destructuring is effectively the compiler doing the `[0], [1], ...` and so on for you. There is no guarantee that these values will exist.
+Nota que la desestructuración de arrays es equivalente al decir que el compilador está haciendo `[0], [1], ...` por vos. No hay garantía de que estos valores existirán.
 
-#### Array Destructuring with rest
-You can pick up any number of elements from an array and get *an array* of the remaining elements using array destructuring with rest.
+#### Desestructuración de arrays con rest
+Puedes levanta cualquier número de elementos de un array y obtener *un array* compuesto por los elementos restantes a través de desestructurar con rest.
 
 ```ts
-var [x, y, ...remaining] = [1, 2, 3, 4];
-console.log(x, y, remaining); // 1, 2, [3,4]
+var [x, y, ...resto] = [1, 2, 3, 4];
+console.log(x, y, resto); // 1, 2, [3,4]
 ```
 
-#### Array Destructuring with ignores
-You can ignore any index by simply leaving its location empty i.e. `, ,` in the left hand side of the assignment. For example:
+#### Desestructuración de arrays ignorando
+Puedes ignorar cualquier índice dejando su ubicación vacía, es decir `, ,` en el lado izquierdo de la asignación. Por ejemplo:
 ```ts
-var [x, , ...remaining] = [1, 2, 3, 4];
-console.log(x, remaining); // 1, [3,4]
+var [x, , ...resto] = [1, 2, 3, 4];
+console.log(x, resto); // 1, [3,4]
 ```
 
-#### JS Generation
-The JavaScript generation for non ES6 targets simply involves creating temporary variables, just like you would have to do yourself without native language support for destructuring e.g.
+#### Generación JS
+La generación de Javascript para targets que no sean ES6 implica crear variables temporales, como tendrías que hacer vos mismo sin el soporte a desestructurar nativo del lenguage. Ejemplo:
 
 ```ts
 var x = 1, y = 2;
 [x, y] = [y, x];
 console.log(x, y); // 2,1
 
-// becomes //
+// se convierte en //
 
 var x = 1, y = 2;
 _a = [y,x], x = _a[0], y = _a[1];
@@ -113,5 +113,5 @@ console.log(x, y);
 var _a;
 ```
 
-#### Summary
-Destructuring can make your code more readable and maintainable by reducing the line count and making the intent clear. Array destructuring can allow you to use arrays as though they were tuples.
+#### Resumen
+Desestructurar puede mejorar la legibilidad de tu código y su mantenibilidad al reducr la cantidad de líneas y mostrar claramente la intención. La desestructuración de arrays te permite utilizarlos como si fueran tuples.

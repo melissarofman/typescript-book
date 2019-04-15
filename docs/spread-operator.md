@@ -1,9 +1,9 @@
-### Spread Operator
+### Operador de propagación
 
-The main objective of the spread operator is to *spread* the elements of an array or object. This is best explained with examples.
+El principal objetivo del operador de propagación es *propagar* los elementos de un array u objeto. Esto se explica mejor con ejemplos.
 
 #### Apply
-A common use case is to spread an array into the function arguments. Previously you would need to use `Function.prototype.apply`:
+Un caso de uso común es propagar un array en los argumentos de una función. Previamente, necesitabas usar `Function.prototype.apply`:
 
 ```ts
 function foo(x, y, z) { }
@@ -11,7 +11,7 @@ var args = [0, 1, 2];
 foo.apply(null, args);
 ```
 
-Now you can do this simply by prefixing the arguments with `...` as shown below:
+Ahora puedes hacerlo solamente prefijando los argumentso con `...` como mostramos a continuación: 
 
 ```ts
 function foo(x, y, z) { }
@@ -19,19 +19,19 @@ var args = [0, 1, 2];
 foo(...args);
 ```
 
-Here we are *spreading* the `args` array into positional `arguments`.
+Aquí estamos *propagando* el array `args` en un `arguments` posicional.
 
-#### Destructuring
-We've already seen one usage of this in *destructuring*:
+#### Desestructurando
+Ya hemos visto un uso de esto en *Desestructurando*:
 
 ```ts
 var [x, y, ...remaining] = [1, 2, 3, 4];
 console.log(x, y, remaining); // 1,2,[3,4]
 ```
-The motivation here is to simply make it easy for you to capture the remaining elements of an array when destructuring.
+La motivación aquí es simplicar el proceso de capturación de los elementos restantes de un array cuando desestructuramos.
 
-#### Array Assignment
-The spread operator allows you to easily place an *expanded version* of an array into another array. This is demonstrated in the example below:
+#### Asignación de array
+El operador de propagación te permite colocar una *versión extendida* de un array dentro de otro array. Lo demostramos en el ejemplo que sigue:
 
 ```ts
 var list = [1, 2];
@@ -39,7 +39,7 @@ list = [...list, 3, 4];
 console.log(list); // [1,2,3,4]
 ```
 
-You can put the expanded array in at any position, and get the effect you'd expect:
+Puedes poner el array expandido en cualquier posición y obtener el efecto que esperas:
 
 ```ts
 var list = [1, 2];
@@ -47,16 +47,16 @@ list = [0, ...list, 4];
 console.log(list); // [0,1,2,4]
 ```
 
-#### Object spread
-You can also spread an object into another object. A common use case is to simply add a property to an object without mutating the original:
+#### Propagación de objeto
+También puedes propagar un objeto dentro de otro objeto. Un caso de uso común es simplemente agregar una propiedad a un objeto sin mutar el objeto original:
 
 ```ts
 const point2D = {x: 1, y: 2};
-/** Create a new object by using all the point2D props along with z */
+/** Crea un nuevo objeto utilizando todas las props de point2D y z */
 const point3D = {...point2D, z: 3};
 ```
 
-For objects, the order of where you put the spread matters.  This works something like `Object.assign`, and does what you'd expect: what comes first is 'overridden' by what comes later:
+Para objetos, el orden en el que pones el propagador importa. Funciona de forma similar a `Object.assign` y hace lo que esperarías: lo que viene primero se encuentra anulado por lo que sigue:
 
 ```ts
 const point2D = {x: 1, y: 2};
@@ -66,18 +66,18 @@ const yetAnotherPoint3D = {...point2D, x: 5, z: 4}
 console.log(yetAnotherPoint3D); // {x: 5, y: 2, z: 4}
 ```
 
-Another common use case is a simple shallow extend:
+Otro caso de uso es una extención superficial:
 
 ```ts
 const foo = {a: 1, b: 2, c: 0};
 const bar = {c: 1, d: 2};
-/** Merge foo and bar */
+/** Combinar foo y bar */
 const fooBar = {...foo, ...bar};
-// fooBar is now {a: 1, b: 2, c: 1, d: 2}
+// fooBar ahora es {a: 1, b: 2, c: 1, d: 2}
 ```
 
-#### Summary
-`apply` is something that you often use in JavaScript, so it's good to have a better syntax where you don't have that ugly `null` for the `this` argument. Also having a dedicated syntax for moving arrays out of (destructuring) or into (assignment) other arrays provides a neat syntax for when you are doing array processing on partial arrays.
+#### Resumen
+`apply` es algo que utilizas habitualmente en JavaScript, por lo que es bueno tener una mejor sintaxis donde no tenes ese feo `null` para el argumento `this`. Además, tener una sintaxis dedicada a mover arrays fuera de (desestructurando) o hacia dentro de (asignar) otros arrays provee una forma limpia de procesar arrays parciales.
 
 
 [](https://github.com/Microsoft/TypeScript/pull/1931)
