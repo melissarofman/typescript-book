@@ -1,2 +1,3 @@
-## Compilation Context
-The compilation context is basically just a fancy term for grouping of the files that TypeScript will parse and analyze to determine what is valid and what isn't. Along with the information about which files, the compilation context contains information about *which compiler options* are in use. A great way to define this logical grouping (we also like to use the term *project*) is using a `tsconfig.json` file.
+## Contexto de compilación
+
+El contexto de compilación es, básicamente, un término elaborado para agrupar los archivos que TypeScript va a analizar para determinar qué es válido y qué no. Junto con la información sobre qué archivos leer, el contexto de compilación contiene información acerca de *qué opciones de compilación* se encuentran utilizadas. Una gran manera de definir esta agrupación lógica (también nos gusta usar el término *proyecto*) es mediante la creación del archivo `tsconfig.js`.

@@ -1,42 +1,43 @@
-## External modules
-There is a lot of power and usability packed into the TypeScript external module pattern. Here we discuss its power and some patterns needed to reflect real world usages.
+## Módulos externos
+Hay mucho poder y usabilidad en el patrón de módulos externos de TypeScript. Aquí discutiremos su poder y algunos patrones necesarios para reflejar su uso en el mundo real.
 
-### Clarification: commonjs, amd, es modules, others
+### Clarificación: commonjs, amd, es modules, y otros
 
-First up we need to clarify the (awful) inconsistency of the module systems out there. I'll just give you my *current* recommendation and remove the noise i.e. not show you all the *other* ways things can work.
+Primero tenemos que clarificar la (horrible) inconsitencia de los sitemas de módulos que existen. Les daremos nuestra recomendación *actual* para disminuir el ruido, es decir, no mostraremos las *otras* maneras en las que las cosas pueden funcionar. 
 
-From the *same TypeScript* you can generate different *JavaScript* depending upon the `module` option. Here are things you can ignore (I am not interested in explaining dead tech):
+Desde el *mismo TypeScript* puedes generar diferente *JavaScript*, dependiendo de la opción `module`. Aquí estan las cosas que puedes ignorar (No nos interesa adentrarnos en technologia muerta):
 
-* AMD: Do not use. Was browser only.
-* SystemJS: Was a good experiment. Superseded by ES modules.
-* ES Modules: Not ready yet.
+* AMD: No lo uses. Era solo para navegadores.
+* SystemJS: Fue un buen experimento. Fue superado por ES modules.
+* ES Modules: Aún no están listos.
 
-Now these are just the options for *generating the JavaScript*. Instead of these options use `module:commonjs`
+Estas son solamente las opciones para *generar JavaScript*. En su lugar, usen `module:commonj`
 
-How you *write* TypeScript modules is also a bit of a mess. Again here is how not to do it *today*:
+Como *escribimos* módulos en TypeScript también es compliado. De nuevo, aquí mostramos como *no* hacerlo *hoy*:
 
-* `import foo = require('foo')`. i.e. `import/require`. Use ES module syntax instead.
+* `import foo = require('foo')`. Es decir, `import/require`. En su lugar, usen ES modules.
 
-Cool, with that out of the way, lets look at the ES module syntax.
+Buenísimo, una vez que hemos corrido ese tema del medio, consideremos la sintaxis de ES module.
 
-> Summary: Use `module:commonjs` and use the ES module syntax to import / export / author modules.
 
-### ES Module syntax
+> Resumen: Usen `module:commonjs` y usen la sintaxis de ES modules para importar / exportar / crear módulos.
 
-* Exporting a variable (or type) is as easy as prefixing the keyword `export` e.g.
+### Sintaxis ES Module
+
+* Exportar una variable (o un tipo) es tan simple como prefijarla con la palabra clave `export` e.g.
 
 ```js
-// file `foo.ts`
+// archivo `foo.ts`
 export let someVar = 123;
 export type SomeType = {
   foo: string;
 };
 ```
 
-* Exporting a variable or type in a dedicated `export` statement e.g.
+* Exportar una variable o tipo en una declaración `export` especialmente dedicada e.g.
 
 ```js
-// file `foo.ts`
+// archivo `foo.ts`
 let someVar = 123;
 type SomeType = {
   foo: string;
@@ -46,249 +47,250 @@ export {
   SomeType
 };
 ```
-* Exporting a variable or type in a dedicated `export` statement *with renaming* e.g.
+* Exportar una vairable o tipo en una declaración `export` especialmente dedicada y *renombrarla* e.g.
 
 ```js
-// file `foo.ts`
+// archivo `foo.ts`
 let someVar = 123;
 export { someVar as aDifferentName };
 ```
 
-* Import a variable or a type using `import` e.g.
+* Importar una variable usando `import` e.g.
 
 ```js
-// file `bar.ts`
+// archivo `bar.ts`
 import { someVar, SomeType } from './foo';
 ```
 
-* Import a variable or a type using `import` *with renaming* e.g.
+* Importar una variable usando `import` *renombrándola* e.g.
 
 ```js
-// file `bar.ts`
+// archivo `bar.ts`
 import { someVar as aDifferentName } from './foo';
 ```
 
-* Import everything from a module into a name with `import * as` e.g.
+* Importar todo lo que se encuentre en un módulo a un nombre con `import * as` e.g.
 ```js
-// file `bar.ts`
+// archivo `bar.ts`
 import * as foo from './foo';
-// you can use `foo.someVar` and `foo.SomeType` and anything else that foo might export.
+// Puedes usar `foo.someVar` y `foo.someType` y cualquier otra cosa que foo exporte.
 ```
 
-* Import a file *only* for its side effect with a single import statement:
+* Importar un archivo *únicamente* por sus efectos secundarios con una única declaración de importación:
 
 ```js
-import 'core-js'; // a common polyfill library
+import 'core-js'; // una librería de polyfill popular
 ```
 
-* Re-Exporting all the items from another module
+* Re-exportar todos los ítems desde otro módulo
 
 ```js
 export * from './foo';
 ```
 
-* Re-Exporting only some items from another module
+* Re-exportar solo algunos ítemos desde otro módulo
 
 ```js
 export { someVar } from './foo';
 ```
 
-* Re-Exporting only some items from another module *with renaming*
+* Re-exportar solo algunos ítems desde otro módulo *renombrándolos*
 
 ```js
 export { someVar as aDifferentName } from './foo';
 ```
 
-### Default exports/imports
-As you will learn later, I am not a fan of default exports. Nevertheless here is syntax for export and using default exports
+### exportaciones/importaciones default
+Como aprenderán luego, no somos muy fanáticos de las exportaciones default. Sin embargo, la sintaxis para exportar y usar exportaciones default es la siguiente.
 
-* Export using `export default`
-  * before a variable (no `let / const / var` needed)
-  * before a function
-  * before a class
+* exportar usando `export default`
+  * antes de una variable (no se necesita `let / const / var` )
+  * antes de una función
+  * antes de una clase
 
 ```js
-// some var
+// una variable
 export default someVar = 123;
-// OR Some function
+// O una función
 export default function someFunction() { }
-// OR Some class
+// O una clase
 export default class SomeClass { }
 ```
 
-* Import using the `import someName from "someModule"` syntax (you can name the import whatever you want) e.g.
+* Importar usando la sintaxis `import someName from "someModule"` (puedes darle cualquier nombre a lo que importas) e.g.
 
 ```js
 import someLocalNameForThisFile from "../foo";
 ```
 
-### Module paths
+### Rutas de módulos
 
-> I am just going to assume `moduleResolution: commonjs`. This is the option you should have in your TypeScript config. This setting is implied automatically by `module:commonjs`.
+> Vamos a asumir que `moduleResolution: commonjs`. Esta es la opción que deberías tener en tu configuración de TypeScript.
+Esta configuración está implícita automáticamente con `module: commonjs`.
 
-There are two distinct kinds of modules. The distinction is driven by the path section of the import statement (e.g. `import foo from 'THIS IS THE PATH SECTION'`).
+Hay tipos distintos de módulos. La distinción se encuentra en la parte de la ruta de la declaración de importación (ejemplo, `import foo from 'ESTA ES LA PARTE DE LA RUTA'`).
 
-* Relative path modules (where path starts with `.` e.g. `./someFile` or `../../someFolder/someFile` etc.)
-* Other dynamic lookup modules (e.g. `'core-js'` or `'typestyle'` or `'react'` or even `'react/core'` etc.)
+* Módulos con rutas relativas (en los que la ruta empieza con `.`, por ejemplo, `./algunArchivo` o `../../algunaCarpeta/algunArchivo`, etc.)
+* Otras formas de búsqueda dinámicas (por ejemplo, `'core-js'`, `'typestyle'`, `'react'`, `'react/core'`, etc)
 
-The main difference is *how the module is resolved on the file system*.
+La principal diferencia se encuentra en *cómo el módulo se resuelve en el sistema de archivos*.
 
-> I will use a conceptual term *place* that I will explain after mentioning the lookup pattern.
+> Usaré el término conceptual *lugar* que explicaré luego de mentionar el patrón de búsqueda.
 
-#### Relative path modules
-Easy, just follow the relative path :) e.g.
+#### Módulos con rutas relativas
+Fácil, solo sigan la ruta relativa :), por ejemplo:
 
-* if file `bar.ts` does `import * as foo from './foo';` then place `foo` must exist in the same folder.
-* if file `bar.ts` does `import * as foo from '../foo';` then place `foo` must exist in a folder up.
-* if file `bar.ts` does `import * as foo from '../someFolder/foo';` then one folder up, there must be a folder `someFolder` with a place `foo`
+* si el archivo `bar.ts` tiene `import * as foo from './foo';` entonces el lugar `foo` debe existir en la misma carpeta.
+* si el archivo `bar.ts` tiene `import * as foo from '../foo';` entonces el lugar `foo` debe existir en una carpeta superior.
+* si el archivo `bar.ts` tiene `import * as foo from '../someFolder/foo';` entonces una carpeta más arriba, debe haber una carpeta `someFolder` con un lugar `foo`.
 
-Or any other relative path you can think of :)
+O cualquier otra ruta relativa que se les ocurra :)
 
-#### Dynamic lookup
+#### Búsqueda dinámica
 
-When the import path is *not* relative, lookup is driven by [*node style resolution*](https://nodejs.org/api/modules.html#modules_all_together). Here I only give a simple example:
+Cuando la ruta de importaciones *no* es relativa, la búsqueda es manejada por [*resolucion de estilo node*](https://nodejs.org/api/modules.html#modules_all_together). Aquí solo daremos un ejemplo sencillo:
 
-* You have `import * as foo from 'foo'`, the following are the places that are checked *in order*
+* Tienes `import * as foo from 'foo'`, los siguientes son los lugares que son chequeados *en orden*
   * `./node_modules/foo`
   * `../node_modules/foo`
   * `../../node_modules/foo`
-  * Till root of file system
+  * Hasta la raíz del sistema de archivos
 
-* You have `import * as foo from 'something/foo'`, the following are the places that are checked *in order*
+* Tienes `import * as foo from 'something/foo'`, los siguientes son los lugares que son chequeados *en orden*
   * `./node_modules/something/foo`
   * `../node_modules/something/foo`
   * `../../node_modules/something/foo`
-  * Till root of file system
+  * Hasta la raíz del sistema de archivos
 
 
-### What is *place*
-When I say *places that are checked* I mean that the following things are checked in that place. e.g. for a place `foo`:
+### Qué son *lugares*?
+Cuando decimos *lugares que son chequeados* nos referimos a las siguientes cosas que son chequeadas en ese lugar. Por ejemplo, para un lugar `foo`:
 
-* If the place is a file, e.g. `foo.ts`, hurray!
-* else if the place is a folder and there is a file `foo/index.ts`, hurray!
-* else if the place is a folder and there is a `foo/package.json` and a file specified in the `types` key in the package.json that exists, then hurray!
-* else if the place is a folder and there is a `package.json` and a file specified in the `main` key in the package.json that exists, then hurray!
+* si el lugar es un archivo, por ejemplo `foo.ts`, yay!
+* o si el lugar es una carpeat y hay un archivo `foo/index.ts`, yay!
+* o si el lugar es una carpeta y hay un `foo/package.json` y un archivo especificado en la clave `types` en el package.json que existe, entonces yay!
+* o si el lugar es una carpeta y hay un `package.json` y un archivo expecificado en el la clave `main` en el package.json que existe, yay!
 
-By file I actually mean `.ts` / `.d.ts` and `.js`.
+Y por archivo nos referimos a `.ts` / `.d.ts` y `.js`.
 
-And that's it. You are now module lookup experts (not a small feat!).
+Eso es todo. Ahora son expertos en búsqueda de módulos (lo que no es poca cosa!.)
 
-### Overturning dynamic lookup *just for types*
-You can declare a module *globally* for your project by using `declare module 'somePath'` and then imports will resolve *magically* to that path
+### Anulación de la búsqueda dinámica *solo para tipos*
+Puedes declarar un módulo para tu proyecto *globalmente* usando `declare module 'unaRuta'` Y todos las importaciones resolveran *mágicamente* a esa ruta
 
 e.g.
 ```ts
 // globals.d.ts
 declare module 'foo' {
-  // Some variable declarations
-  export var bar: number; /*sample*/
+  // una declaración de variable
+  export var bar: number; /*ejemplo*/
 }
 ```
 
 and then:
 ```ts
-// anyOtherTsFileInYourProject.ts
+// CualquierOtroArchivoTSEnTuProyecto.ts
 import * as foo from 'foo';
-// TypeScript assumes (without doing any lookup) that
-// foo is {bar:number}
+// TypeScript asume (sin realizar ninguna búsqueda) que
+// foo es {bar:number}
 
 ```
 
-### `import/require` for importing type only
-The following statement:
+### `import/require` para importar tipos únicamente
+La siguiente declaración:
 
 ```ts
 import foo = require('foo');
 ```
 
-actually does *two* things:
+en realidad hace *dos* cosas:
 
-* Imports the type information of the foo module.
-* Specifies a runtime dependency on the foo module.
+*Importa la información sobre tipos del módulo foo
+* Especifica una dependiencia de tiempo de ejecución del módulo foo
 
-You can pick and choose so that only *the type information* is loaded and no runtime dependency occurs. Before continuing you might want to recap the [*declaration spaces*](../project/declarationspaces.md) section of the book.
+Pueden elegir para que solo *la información de tipo* sea cargada y no ocurra ninguna especificación de dependencia de tiempo de ejecución. Antes de continuar, tal vez quieran revisar la sección sobre [*espacios de declaración*](../project/declarationspaces.md) de este libro.
 
-If you do not use the imported name in the variable declaration space then the import is completely removed from the generated JavaScript. This is best explained with examples. Once you understand this we will present you with use cases.
+Si no usan el nombre importado en la declaración de la variable, entonces la importación es completamente eliminada del JavaScript generado. Esto se explica mejor con ejemplos. Una vez que los entiendan, presentaremos ciertos casos de uso..
 
-#### Example 1
+#### Ejemplo 1
 ```ts
 import foo = require('foo');
 ```
-will generate the JavaScript:
+generará el JavaScript:
 
 ```js
 
 ```
-That's right. An *empty* file as foo is not used.
+Es correcto. Un archivo *vacío* ya que foo nunca es usada.
 
-#### Example 2
+#### Ejemplo 2
 ```ts
 import foo = require('foo');
 var bar: foo;
 ```
-will generate the JavaScript:
+generará el JavaScript:
 ```js
 var bar;
 ```
-This is because `foo` (or any of its properties e.g. `foo.bas`) is never used as a variable.
+Esto es porque `foo` (o cualquiera de sus propiedades, por ejemplo, `foo.bas`) nunca son usadas como una variable.
 
-#### Example 3
+#### Ejemplo 3
 ```ts
 import foo = require('foo');
 var bar = foo;
 ```
-will generate the JavaScript (assuming commonjs):
+generará el JavaScript (asumiendo commonjs):
 ```js
 var foo = require('foo');
 var bar = foo;
 ```
-This is because `foo` is used as a variable.
+Esto es porque `foo` es usada como una variable.
 
 
-### Use case: Lazy loading
-Type inference needs to be done *upfront*. This means that if you want to use some type from a file `foo` in a file `bar` you will have to do:
+### Caso de uso: lazy loading
+La inferencia de tipo debe ser hecha *al comienzo*. Esto significa que si quieren usar un tipo de un archivo `foo` en un arhivo `bar`, van a tener que:
 
 ```ts
 import foo = require('foo');
 var bar: foo.SomeType;
 ```
-However, you might want to only load the file `foo` at runtime under certain conditions. For such cases you should use the `import`ed name only in *type annotations* and **not** as a *variable*. This removes any *upfront* runtime dependency code being injected by TypeScript. Then *manually import* the actual module using code that is specific to your module loader.
+Sin embargo, tal vez sólamente quieran cargar el archivo `foo` durante tiempo de ejecución bajo ciertas condiciones. Para estos casos, deberán usar el nombre `import`ado solamente como *anotación de tipo* y **no** como una *variable*. Esto elimina cualquier dependencia de tu codigo en tiempo de ejecución que pueda ser insertada por TypeScript. Luego, deberan *importar manualmente* el módulo usando código que sea específico a tu módulo de cargas. 
 
-As an example, consider the following `commonjs` based code where we only load a module `'foo'` on a certain function call:
+Por ejemplo, considera el siguiente código basado en `commonjs` donde sólamente cargamos un módulo `'foo'` en una determinada llamada a una función: 
 
 ```ts
 import foo = require('foo');
 
 export function loadFoo() {
-    // This is lazy loading `foo` and using the original module *only* as a type annotation
+    // Esto carga `foo` de forma lazy y usa el módulo original *únicamente* como anotación de tipo
     var _foo: typeof foo = require('foo');
-    // Now use `_foo` as a variable instead of `foo`.
+    // Ahora usemos `_foo` como una variable en lugar de `foo`.
 }
 ```
 
-A similar sample in `amd` (using requirejs) would be:
+Un ejemplo similar en `amd` (usando requirejs) sería:
 ```ts
 import foo = require('foo');
 
 export function loadFoo() {
-    // This is lazy loading `foo` and using the original module *only* as a type annotation
+    // Esto carga `foo` de forma lazy y usa el módulo original *únicamente* como anotación de tipo
     require(['foo'], (_foo: typeof foo) => {
-        // Now use `_foo` as a variable instead of `foo`.
+        // Ahora usemos `_foo` como una variable en lugar de `foo`.
     });
 }
 ```
 
-This pattern is commonly used:
-* in web apps where you load certain JavaScript on particular routes,
-* in node applications where you only load certain modules if needed to speed up application bootup.
+Este patrón se usa comúnmente:
+* en páginas web donde debes cargar determinadas partes de tu JavaScript en determinadas rutas, 
+* en aplicacioens node donde solo cargas m[odulos si son necesarios, para acelerar la iniciación de la aplicación.
 
-### Use case: Breaking Circular dependencies
+### Caso de uso: Rompiendo dependencias circulares
 
-Similar to the lazy loading use case certain module loaders (commonjs/node and amd/requirejs) don't work well with circular dependencies. In such cases it is useful to have *lazy loading* code in one direction and loading the modules upfront in the other direction.
+De forma similar al caso de lazy loading, ciertos cargadores de moódulos (commonjs/node y amd/requirejs) no funcionan bien con dependencias ciruclares. En estos casos, es útil tener código con *lazy loading* en una dirección y cargar los módulos desde el comienzo en la otra. 
 
-### Use case: Ensure Import
+### Caso de uso: Asegurar la Importación
 
-Sometimes you want to load a file just for the side effect (e.g. the module might register itself with some library like [CodeMirror addons](https://codemirror.net/doc/manual.html#addons) etc.). However, if you just do a `import/require` the transpiled JavaScript will not contain a dependency on the module and your module loader (e.g. webpack) might completely ignore the import. In such cases you can use a `ensureImport` variable to ensure that the compiled JavaScript takes a dependency on the module e.g.:
+A veces quieres cargar un archivo únicamente por los efectos secundarios (por ejemplo, el módulo se registra a si mismo con una librería, como [CodeMirror addons](https://codemirror.net/doc/manual.html#addons) etc.). Sin embargo, si solamente haces `import/require`, el JavaScript traspilado no contendrá una dependencia en el módulo y tu cargador de módulos tal vez ignorará la importación. En estos casos, puedes usar una variable `ensureImport` para asegurarte que el javascript compilado toma una dependencia del módulo. Por ejemplo:
 
 ```ts
 import foo = require('./foo');

@@ -1,75 +1,76 @@
-### Basic
-It is extremely easy to get started with tsconfig.json as the basic file you need is:
+### Conceptos básicos
+Es extremadamente fácil crear `tsconfig.json`, ya que el archivo base que necesitas es:
 ```json
 {}
 ```
-i.e. an empty JSON file at the *root* of your project. This way TypeScript will include *all* the `.ts` files in this directory (and sub directories) as a part of the compilation context. It will also select a few sane default compiler options.
+Es decir, un archivo JSON vacío, ubicado en la *raíz* de tu proyecto. De esta forma TypeScript incluirá *todos* los archivos `.ts` en esa carpeta (y sus subcarpetas) como parte del contexto de compilación. También elegirá algunas opciones por defecto para el compilador.
 
 ### compilerOptions
-You can customize the compiler options using `compilerOptions`:
+
+Puedes customizar las opciones del compilador usando `compilerOptions`:
 
 ```json
 {
   "compilerOptions": {
 
-    /* Basic Options */                       
-    "target": "es5",                       /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', or 'ESNEXT'. */
-    "module": "commonjs",                  /* Specify module code generation: 'commonjs', 'amd', 'system', 'umd' or 'es2015'. */
-    "lib": [],                             /* Specify library files to be included in the compilation:  */
-    "allowJs": true,                       /* Allow JavaScript files to be compiled. */
-    "checkJs": true,                       /* Report errors in .js files. */
-    "jsx": "preserve",                     /* Specify JSX code generation: 'preserve', 'react-native', or 'react'. */
-    "declaration": true,                   /* Generates corresponding '.d.ts' file. */
-    "sourceMap": true,                     /* Generates corresponding '.map' file. */
-    "outFile": "./",                       /* Concatenate and emit output to single file. */
-    "outDir": "./",                        /* Redirect output structure to the directory. */
-    "rootDir": "./",                       /* Specify the root directory of input files. Use to control the output directory structure with --outDir. */
-    "removeComments": true,                /* Do not emit comments to output. */
-    "noEmit": true,                        /* Do not emit outputs. */
-    "importHelpers": true,                 /* Import emit helpers from 'tslib'. */
-    "downlevelIteration": true,            /* Provide full support for iterables in 'for-of', spread, and destructuring when targeting 'ES5' or 'ES3'. */
-    "isolatedModules": true,               /* Transpile each file as a separate module (similar to 'ts.transpileModule'). */
+    /* Opciones Básicas */                       
+    "target": "es5",                       /* Especificar la versión target de ECMAScript: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', o 'ESNEXT'. */
+    "module": "commonjs",                  /* Especificar la generación de módulos de código: 'commonjs', 'amd', 'system', 'umd' or 'es2015'. */
+    "lib": [],                             /* Especificar los archivos de librería que serán incluidos en la compilación. */
+    "allowJs": true,                       /* Permitir que los archivos JavaSCript sean compilados. */
+    "checkJs": true,                       /* Reportar errores en los archivos .js */
+    "jsx": "preserve",                     /* Especificar la generación de código JSX: 'preserve', 'react-native', o 'react'. */
+    "declaration": true,                   /* Genera el archivo '.d.ts' correspondiente. */
+    "sourceMap": true,                     /* Genera el archivo '.map' correspondiente. */
+    "outFile": "./",                       /* Concatenar y emitir el output en un único archivo. */
+    "outDir": "./",                        /* Redirigir la estructura del output a un directorio. */
+    "rootDir": "./",                       /* Especificar el directorio raíz de los archivos de input. Controlar el directorio de output con --outDir. */
+    "removeComments": true,                /* No emitir los comentarios al output. */
+    "noEmit": true,                        /* No emitir outputs. */
+    "importHelpers": true,                 /* Importar ayudantes (helpers) de emisión de 'tslib'. */
+    "downlevelIteration": true,            /* Proveer soporte completo para iterables en 'for-of', propagación y desestructuración al tener 'ES5' o 'ES6' como targets. */
+    "isolatedModules": true,               /* Transpilar cada archivo como un módulo separado (similar a 'ts.transpileModule'). */
                                               
-    /* Strict Type-Checking Options */        
-    "strict": true,                        /* Enable all strict type-checking options. */
-    "noImplicitAny": true,                 /* Raise error on expressions and declarations with an implied 'any' type. */
-    "strictNullChecks": true,              /* Enable strict null checks. */
-    "noImplicitThis": true,                /* Raise error on 'this' expressions with an implied 'any' type. */
-    "alwaysStrict": true,                  /* Parse in strict mode and emit "use strict" for each source file. */
+    /* Opciones de chequeo de tipado estrictas */        
+    "strict": true,                        /* Habilitar todas las opciones de chequeado de tipado estrictas. */
+    "noImplicitAny": true,                 /* Tirar errores en expresiones o declaraciones que tengan un tipo 'any'implícito. */
+    "strictNullChecks": true,              /* Habilitar chequeos de null estrictos. */
+    "noImplicitThis": true,                /* Tirar errores en expresiones 'this' que tengan un tipo 'any' implícito. */
+    "alwaysStrict": true,                  /* Analizar en modo estricto y emitir "use strict" para cada archivo fuente. */
                                               
-    /* Additional Checks */                   
-    "noUnusedLocals": true,                /* Report errors on unused locals. */
-    "noUnusedParameters": true,            /* Report errors on unused parameters. */
-    "noImplicitReturns": true,             /* Report error when not all code paths in function return a value. */
-    "noFallthroughCasesInSwitch": true,    /* Report errors for fallthrough cases in switch statement. */
+    /* Controles adicionales */                   
+    "noUnusedLocals": true,                /* Tirar errores en locales no usadas. */
+    "noUnusedParameters": true,            /* Tirar errores en parámetros no usados. */
+    "noImplicitReturns": true,             /* Tirar errores cuando no todos los "caminos" de una función devuelven un valor. */
+    "noFallthroughCasesInSwitch": true,    /* Tirar errores para casos de fallthrough en declaraciones switch. */
                                               
-    /* Module Resolution Options */           
-    "moduleResolution": "node",            /* Specify module resolution strategy: 'node' (Node.js) or 'classic' (TypeScript pre-1.6). */
-    "baseUrl": "./",                       /* Base directory to resolve non-absolute module names. */
-    "paths": {},                           /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */
-    "rootDirs": [],                        /* List of root folders whose combined content represents the structure of the project at runtime. */
-    "typeRoots": [],                       /* List of folders to include type definitions from. */
-    "types": [],                           /* Type declaration files to be included in compilation. */
-    "allowSyntheticDefaultImports": true,  /* Allow default imports from modules with no default export. This does not affect code emit, just typechecking. */
+    /* Opciones de resolución de modulos */           
+    "moduleResolution": "node",            /* Especificar la estrategia de resolución de módulos: 'node' (Node.js) o 'classic' (TypeScript pre-1.6). */
+    "baseUrl": "./",                       /* Directorio base para resolver nombres de módulos no absolutos. */
+    "paths": {},                           /* Una serie de entradas que re-map importa a ubicaciones de busqueda, relativas al 'baseUrl'. */
+    "rootDirs": [],                        /* Lista de carpetas raíz cuyo contenido combinado representa la estructura del proyecto en tiempo de ejecución. */
+    "typeRoots": [],                       /* Lista de carpetas desde las cuales incluir definiciones de tipo. */
+    "types": [],                           /* Archivos de declaraciones de tipos a ser incluídos en la compilación. */
+    "allowSyntheticDefaultImports": true,  /* Permitir importar defaults desde módulos sin export default. Esto no afecta la emisión de código, sino el control de tipos. */
                                               
-    /* Source Map Options */                  
-    "sourceRoot": "./",                    /* Specify the location where debugger should locate TypeScript files instead of source locations. */
-    "mapRoot": "./",                       /* Specify the location where debugger should locate map files instead of generated locations. */
-    "inlineSourceMap": true,               /* Emit a single file with source maps instead of having a separate file. */
-    "inlineSources": true,                 /* Emit the source alongside the sourcemaps within a single file; requires '--inlineSourceMap' or '--sourceMap' to be set. */
+    /* Opciones del mapa fuente */                  
+    "sourceRoot": "./",                    /* Especificar la ubicación donde el debugger debe ubicar los archivos TypeScript, en vez de las ubicaciones fuente. */
+    "mapRoot": "./",                       /* Especificar la ubicación donde el debugger debe ubicar los archivos mapa en vez de las ubicaciones generadas. */
+    "inlineSourceMap": true,               /* Emitir un único arcihvo con mapas fuente en vez de tener un archivo separado. */
+    "inlineSources": true,                 /* Emitir la fuente junto con los mapas fuente dentr ode un mismo archivo. Requiere '--inlineSourceMap' o '--sourceMap'. */
                                               
-    /* Experimental Options */                
-    "experimentalDecorators": true,        /* Enables experimental support for ES7 decorators. */
-    "emitDecoratorMetadata": true          /* Enables experimental support for emitting type metadata for decorators. */
+    /* Opciones experimentales */                
+    "experimentalDecorators": true,        /* Permite el soporte experimental de decoradores ES7. */
+    "emitDecoratorMetadata": true          /* Permite el soporte experimental para emitir metadata sobre tipos para decoradores. */
   }
 }
 ```
 
-These (and more) compiler options will be discussed later.
+Estas (y otras) opciones de compilación serán discutidas más adelante.
 
-### TypeScript compiler
-Good IDEs come with built in support for on the fly `ts` to `js` compilation. However, if you want to run the TypeScript compiler manually from the command line when using `tsconfig.json`, you can do it in a few ways:
-* Just run `tsc` and it will look for `tsconfig.json` in the current as well as all parent folders till it finds it.
-* Run `tsc -p ./path-to-project-directory`. Of course the path can be absolute or relative to the current directory.
+### Compilador TypeScript
+Las buenas IDEs incluyen soporte para compilación instantánea de `ts` a `js`. Sin embargo, si quieres correr el compilador de TypeScript manualmente desde la línea de comandos cuando usas `tsconfig.json`, lo puedes hacer de dos maneras:
+* Corriendo `tsc`, que buscará a `tsconfig.json` en el actual directorio (así como sus directorios padres) hasta encontrarlo.
+* Corriendo `tsc -p ./path-to-project-directory`. El path puede ser absoluto o relativo al directorio actual.
 
-You can even start the TypeScript compiler in *watch* mode using `tsc -w` and it will watch your TypeScript project files for changes.
+También puedes inciar el compilador TypeScript en modo *observacion* usando `tsc -w`, y controlará si hay cambios en los archivos TypeScript de tu proyecto.

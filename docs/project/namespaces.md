@@ -1,5 +1,5 @@
 ## Namespaces
-Namespaces provide you with a convenient syntax around a common pattern used in JavaScript:
+Namespaces (espacios de nombre) nos proveen con una sintaxis conveniente respecto de un patrón comúnmente usado en JavaScript:
 
 ```ts
 (function(something) {
@@ -9,7 +9,8 @@ Namespaces provide you with a convenient syntax around a common pattern used in 
 })(something || (something = {}))
 ```
 
-Basically `something || (something = {})` allows an anonymous function `function(something) {}` to *add stuff to an existing object* (the `something ||` portion) or *start a new object then add stuff to that object* (the `|| (something = {})` portion). This means that you can have two such blocks split by some execution boundary:
+Básicamente `something || (something = {})` permite a la función anónima `function(something) {}` *agregar cosas a un objeto existente* (la porción `something ||`) o *crear un nuevo objeto y luego agregar cosas a ese objeto* (la porción `|| (something = {})`). Esto significa que peudes tener dos bloques 
+Basically `something || (something = {})` allows an anonymous function `function(something) {}` to *add stuff to an existing object* (the `something ||` portion) or *start a new object then add stuff to that object* (the `|| (something = {})` portion). Esto significa que puede tener dos bloques de este tipo divididos por algún límite de ejecución:
 
 ```ts
 (function(something) {
@@ -30,7 +31,7 @@ console.log(something); // {foo:123, bar:456}
 
 ```
 
-This is commonly used in  the JavaScript land for making sure that stuff doesn't leak into the global namespace. With file based modules you don't need to worry about this, but the pattern is still useful for *logical grouping* of a bunch of functions. Therefore TypeScript provides the `namespace` keyword to group these e.g.:
+Esto se usa comúnmente en el mundo JavaScript para asegurarnos de que nada se derrame hacia el namespace global. Con módulos basados en archivos, no hace falta preocuparse por esto, pero el patrón sigue siendo útil para *agrupaciones locales* de una serie de funciones. Por esto, TypeScrip provee la palabra clave `namespace` para agruparlos. Por ejemplo:
 
 ```ts
 namespace Utility {
@@ -47,7 +48,7 @@ Utility.log('Call me');
 Utility.error('maybe!');
 ```
 
-The `namespace` keyword generates the same JavaScript that we saw earlier:
+La palabra clave `namespace` genera el mismo JavaScript que vimos previamente:
 
 ```ts
 (function (Utility) {
@@ -56,7 +57,6 @@ The `namespace` keyword generates the same JavaScript that we saw earlier:
 
 })(Utility || (Utility = {}));
 ```
+Algo importante de remarcar es que los namespaces pueden estar anidades por lo que peudes hacer cosas como `namespace Utility.Messaging` para anidar un namespace `Messaging` bajo `Utility`.
 
-One thing to note is that namespaces can be nested so you can do stuff like `namespace Utility.Messaging` to nest a `Messaging` namespace under `Utility`.
-
-For most projects we recommend using external modules and using `namespace` for quick demos and porting old JavaScript code.
+Para la mayoría de los proyectos recomendamos usar módulos externos y usar `namespace` para demos rápidas y para portar código Javascript viejo.

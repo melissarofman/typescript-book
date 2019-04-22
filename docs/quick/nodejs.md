@@ -1,22 +1,23 @@
-# TypeScript with Node.js
-TypeScript has had *first class* support for Node.js since inception. Here's how to setup a quick Node.js project:
+# TypeScript con Node.js
 
-> Note: many of these steps are actually just common practice Node.js setup steps
+TypeScript ha tenido soporte de *primera clase* para Node.js desde su concepción. Aquí explicamos como preparar un proyecto Node.js rápidamente:
 
-1. Setup a Node.js project `package.json`. Quick one : `npm init -y`
-1. Add TypeScript (`npm install typescript --save-dev`)
-1. Add `node.d.ts` (`npm install @types/node --save-dev`)
-1. Init a `tsconfig.json` for TypeScript options with a few key options in your tsconfig.json (`npx tsc --init --rootDir src --outDir lib --esModuleInterop --resolveJsonModule --lib es6,dom  --module commonjs`)
+> Nota: muchos de estos pasos en realidad son prácticas comunes al preparar cualquier proyecto con Node.js: 
 
-That's it! Fire up your IDE (e.g. `code .`) and play around. Now you can use all the built in node modules (e.g. `import * as fs from 'fs';`) with all the safety and developer ergonomics of TypeScript! 
+1. Preparar un `package.json` para tu proyecto Node.js. Rápidamente: `npm init -y`
+2. Agregar TypeScript (`npm install typescript --save-dev`)
+3. Agregar `node.d.ts` (`npm install @types/node --save-dev`)
+4. Inciar una `tsconfig.json` para las opciones TypeScript con agunas opciones claves ya elegidas (`npx tsc --init --rotDir src --outDir lib --esModuleInterop --resolveJsonModule --lib es6,dom --module commonjs`)
 
-All your TypeScript code goes in `src` and the generated JavaScript goes in `lib`. 
+Eso es todo! Ahora abran su IDE (eg. `code .`) y empiecen a jugar. Ahora puedes usar todas las características de node modules (por ejemplo, `import * as fs from 'fs'`) con toda la seguridad y ergonomía de desarrolladores TypeScript!
 
-## Bonus: Live compile + run
-* Add `ts-node` which we will use for live compile + run in node (`npm install ts-node --save-dev`)
-* Add `nodemon` which will invoke `ts-node` whenever a file is changed (`npm install nodemon --save-dev`)
+Todo el código TypeScript irá en la carpeta `src` y el JavaScript generado estará en `lib`.
 
-Now just add a `script` target to your `package.json` based on your application entry e.g. assuming its `index.ts`:
+## Bonus: compilar + correr en vivo
+* Agreguen `ts-node`, al que usaremos para compilar y correr node en vivo (`npm install ts-node --save-dev`)
+* Agreguen `nodemon`, al que usaremos para invocar `ts-node` cada vez que cambie algo en un archivo (`npm install nodemon --save-dev`)
+
+Ahora simplemente agreguen un `script` a su `package.json` basado en el punto de entrada de tu aplicación. Por ejemplo, si asumimos que es `index.ts`:
 
 ```json
   "scripts": {
@@ -26,21 +27,21 @@ Now just add a `script` target to your `package.json` based on your application 
   },
 ```
 
-So you can now run `npm start` and as you edit `index.ts`:
+Ahora pueden correr `npm start` y a medida que editen `index.ts`:
 
-* nodemon reruns its command (ts-node)
-* ts-node transpiles automatically picking up tsconfig.json and the installed TypeScript version,
-* ts-node runs the output JavaScript through Node.js.
+* nodemon repite su comando (ts-node)
+* ts-node transpila automáticamente, levantando tsconfig.json y la versión instalada de TypeScript
+* ts-node corre el JavaScript generado a través de Node.js.
 
-And when you are ready to deploy your JavaScript application run `npm run build`.
+Y cuando esten listos para publicar su aplicación JavaScript, corran `npm run build`.
 
-## Creating TypeScript node modules
+## Crear node modules en TypeScript
 
-* [A lesson on creating TypeScript node modules](https://egghead.io/lessons/typescript-create-high-quality-npm-packages-using-typescript)
+* [Una clase sobre crear node modules en TypeScript](https://egghead.io/lessons/typescript-create-high-quality-npm-packages-using-typescript)
 
-Using modules written in TypeScript is super fun as you get great compile time safety and autocomplete (essentially executable documentation).
+Usando modulos escritos en TypeScript es super divertido ya que obtienen seguridad a la hora de compilar y autocompletar (esencialmente, es documentación ejecutable).
 
-Creating a high quality TypeScript module is simple. Assume the following desired folder structure for your package:
+Crear un módulo de alta calidad en TypeScript es simple. Asumamos la proxima estructura de archivos para tu paquete:
 
 ```text
 package
@@ -61,24 +62,24 @@ package
 ```
 
 
-* In your `tsconfig.json`
-  * have `compilerOptions`: `"outDir": "lib"` and `"declaration": true` < This generates declaration and js files in the lib folder
-  * have `include: ["./src/**/*"]` < This includes all the files from the `src` dir.
+* En su `tsconfig.json`
+  * tengan `compilerOptions`: `"outDir": "lib"` y `"declaration": true` < Esto genera declaraciones y archivos js en la carpeta lib
+  * tengan `include: ["./src/**/*"]` < Esto incluye todos los archivos del directorio `src`.
 
-* In your `package.json` have
-  * `"main": "lib/index"` < This tells Node.js to load `lib/index.js`
-  * `"types": "lib/index"` < This tells TypeScript to load `lib/index.d.ts`
+* En su `package.json` tengan
+  * `"main": "lib/index"` < Esto le dice a node que debe cargar `lib/index.js`
+  * `"types": "lib/index"` < Esto le dice a TypeScript que debe cargar `lib/index.d.ts`
 
 
-Example package:
+Paquete ejemplo:
 * `npm install typestyle` [for TypeStyle](https://www.npmjs.com/package/typestyle)
-* Usage: `import { style } from 'typestyle';` will be completely type safe.
+* Usos: `import { style } from 'typestyle';` será completamente seguro respecto de tipos.
 
-MORE:
+MÁS:
 
-* If your package depends on other TypeScript authored packages, put them in `dependencies`/`devDependencies`/`peerDependencies` just like you would with raw JS packages.
-* If your package depends on other JavaScript authored packages and you want to use it with type safety in your project, put their types (e.g. `@types/foo`) in `devDependencies`. JavaScript types should be managed *out of bound* from the main NPM streams. The JavaScript ecosystem breaks types without semantic versioning too commonly, so if your users need types for these they should install the `@types/foo` version that works for them.
+* Si sus paquete depende de otros paquetes TypeScript creados por otros autores, incluyanlos en `dependencies`/`devDependencies`/`peerDependencies` al igual que harían con paquetes de JS en bruto.
+* Si sus paquete depende de otros paquetes TypeScript creados por otros autores y los quieren usar con seguridad de tipos en su proyecto, incluayn sus tipos (ejemplo, `@types/foo`) en `devDependencies`. Los tipos de JavaScript deberías ser manejados *fuera del alcance* de las corrientes principales de NPM. El ecosistema JavaScript suele romper tipos sin versiones semáticas, por lo que si sus usuarios necesitan tipos para estos paquetes, deberían instalar la versión de `@types/foo` que funciona para ellos.
 
-## Bonus points
+## Puntos extra
 
-Such NPM modules work just fine with browserify (using tsify) or webpack (using ts-loader).
+Módulos NPM como estos funcionan perfectamente con browserify (usando tsify) o webpack (usando ts-loader).

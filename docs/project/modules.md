@@ -1,39 +1,39 @@
-## Modules
+## Módulos
 
-### Global Module
+### Módulo Global
 
-By default when you start typing code in a new TypeScript file your code is in a *global* namespace. As a demo consider a file `foo.ts`:
+Por default, cuando comenzas a tipear código en un archivo de TypeScript, tu código se encuentra en un espacio de nombre (*namespace*) global. A modo de demostración, consideremos el archivo `foo.ts`:
 
 ```ts
 var foo = 123;
 ```
 
-If you now create a *new* file `bar.ts` in the same project, you will be *allowed* by the TypeScript type system to use the variable `foo` as if it was available globally:
+Si ahora creases un *nuevo* archivo `bar.ts` en el mismo proyecto, el sistema de tipos de TypeScript te *permitiría* usar la variable `foo` como si estuviese disponible globalmente:
 
 ```ts
-var bar = foo; // allowed
+var bar = foo; // permitido
 ```
-Needless to say having a global namespace is dangerous as it opens your code up for naming conflicts. We recommend using file modules which are presented next.
+No es necesario decir que tener un namespace global es peligroso, ya que abre la posibilidad de conflictos de nombramiento en tu código. Recomendamos utilizar módulos en su lugar, los cuales presentaremos a continuación.
 
-### File Module
-Also called *external modules*. If you have an `import` or an `export` at the root level of a TypeScript file then it creates a *local* scope within that file. So if we were to change the previous `foo.ts` to the following (note the `export` usage):
+### Módulo como archivo
+También llamados *módulos externos*. Si tienes un `import` o un `export` en el nivel raíz de un archivo TypeScript, entonces este crea un ámbito *local* dentro de ese archivo. Por lo tanto, si fueramos a cambiar el archivo `foo.ts` de la siguiente manera (prestá atención a la utilización de `export`):
 
 ```ts
 export var foo = 123;
 ```
 
-We will no longer have `foo` in the global namespace. This can be demonstrated by creating a new file `bar.ts` as follows:
+ya no tendriamos a `foo` en el namespace global. Esto puede ser demostrado creado un nuevo archivo `bar.ts` de la siguiente manera:
 
 ```ts
 var bar = foo; // ERROR: "cannot find name 'foo'"
 ```
 
-If you want to use stuff from `foo.ts` in `bar.ts` *you need to explicitly import it*. This is shown in an updated `bar.ts` below:
+Si quieres usar cosas de `foo.ts` en `bar.ts` *neceistas importarlas explícitamente*. A continuación mostramos un `bar.ts` actualizado:
 
 ```ts
 import { foo } from "./foo";
-var bar = foo; // allowed
+var bar = foo; // Permitido
 ```
-Using an `import` in `bar.ts` not only allows you to bring in stuff from other files, but also marks the file `bar.ts` as a *module* and therefore, declarations in `bar.ts` don't pollute the global namespace either.
+Usar `import` en `bar.ts` no solo te permite traer cosas de otros archivos, sino que también marca el archivo `bar.ts` como un *módulo* y, por lo tanto, cualquier declaración hecha en `bar.ts` tampoco contamina el namespace global.
 
-What JavaScript is generated from a given TypeScript file that uses external modules is driven by the compiler flag called `module`.
+El tipo de código JavaScript que es generado a partir de un archivo TypeScript que utiliza módulos externos es "decidido" por la flag de compilación `module`.

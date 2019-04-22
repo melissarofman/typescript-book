@@ -1,8 +1,6 @@
-### Iterators
+### Iteradores
 
-Iterator itself is not a TypeScript or ES6 feature, Iterator is a
-Behavioral Design Pattern common for Object oriented programming languages.
-It is, generally, an object which implements the following interface:
+Los iteradores no son una característica particual de TypeScript o ES6. Son un Patrón de Diseño de comportamiento para lenguages de programación orientada a Objetos. Es, en general, un objeto que implementa la siguiente interface:
 
 ```ts
 interface Iterator<T> {
@@ -11,11 +9,10 @@ interface Iterator<T> {
     throw?(e?: any): IteratorResult<T>;
 }
 ```
-([More on that `<T>` notation later](./types/generics.html))  
-This interface allows to retrieve a value from some collection or sequence
-which belongs to the object.
+([Más acerca de la notación `<T> luego](./types/generics.html))
+Esta interface permite recuperar un valor de una colección o secuencia perteneciente al objeto.
 
-The `IteratorResult` is simply a `value`+`done` pair: 
+El `IteratorResult` es simplemente un par `value`+`done`:
 ```ts
 interface IteratorResult<T> {
     done: boolean;
@@ -23,6 +20,7 @@ interface IteratorResult<T> {
 }
 ```
 
+Imagina que hay un objeto que pertenece a algun encuadre (`Frame`), el cual incluye la lista de componentes que componen (valga la redundancia) a este encuadre. Con la interface del Iterador es posible recuperar los componentes de este encuadre, como a continuación: 
 Imagine that there's an object of some frame, which includes the list of
 components of which this frame consists. With Iterator interface it is possible
 to retrieve components from this frame object like below:
@@ -61,16 +59,13 @@ let iteratorResult3 = frame.next(); //{ done: false, value: Component { name: 'l
 let iteratorResult4 = frame.next(); //{ done: false, value: Component { name: 'right' } }
 let iteratorResult5 = frame.next(); //{ done: true, value: null }
 
-//It is possible to access the value of iterator result via the value property:
+//Es posible acceder al valor del resultado del iterador a través de la propiedad value:
 let component = iteratorResult1.value; //Component { name: 'top' }
 ```
-Again. Iterator itself is not a TypeScript feature, this code could work without
-implementing Iterator and IteratorResult interfaces explicitly.
-However, it is very helpful to use these common
-ES6 [interfaces](./types/interfaces.md) for code consistency.
+De nuevo. El iterador no es una característica exclusiva de TypeScript. Este código funcionaría sin implementar interfaces explícitas para Iterator e IteratorResult. Sin embargo, es muy útil utilizar estas [interfaces](./types/interfaces.md) comunes a ES6 para mantener consistencia en tu código.
 
-Ok, Nice, but could be more helpful. ES6 defines the *iterable protocol*
-which includes the [Symbol.iterator] `symbol` if the Iterable interface is implemented:
+Ok, pero podría ser más util. ES6 define el *protocolo de iterabilidad* que incluye el símbolo(`symbol`) [Symbol.iterator] si la interface Iterable es implementada:
+
 ```ts
 //...
 class Frame implements Iterable<Component> {
@@ -105,8 +100,7 @@ for (let cmp of frame) {
 }
 ```
 
-Unfortunately `frame.next()` won't work with this pattern and it also looks
-a bit clunky. IterableIterator interface to the rescue!
+Desafortunadamente, `frame.next()` no funcionará con este patrón y también se lo ve un poco desorganizado. IterableIterator al rescate!
 ```ts
 //...
 class Frame implements IterableIterator<Component> {
@@ -136,10 +130,10 @@ class Frame implements IterableIterator<Component> {
 }
 //...
 ```
-Both `frame.next()` and `for` cycle now work fine with IterableIterator interface.
+Ahora tanto `frame.next()` y `for` cycle funcionan bien con la interface IterableIterator.
 
-Iterator does not have to iterate a finite value.
-The typical example is a Fibonacci sequence:
+El iterador no tiene que estar limitado a iterar a un valor finito. El típico ejemplo es la serie de Fibonacci:
+
 ```ts
 class Fib implements IterableIterator<number> {
 
@@ -184,13 +178,9 @@ console.log(Array.from(fibMax50)); // [ 0, 1, 1, 2, 3, 5, 8, 13, 21, 34 ]
 
 let fibMax21 = new Fib(21);
 for(let num of fibMax21) {
-  console.log(num); //Prints fibonacci sequence 0 to 21
+  console.log(num); //Imprime la secuencia de fibonacci de 0 a 21
 }
 ```
 
-#### Building code with iterators for ES5 target
-Code examples above require ES6 target. However, it could work
-with ES5 target as well if target JS engine supports `Symbol.iterator`.
-This can be achieved by using ES6 lib with ES5 target
-(add es6.d.ts to your project) to make it compile.
-Compiled code should work in node 4+, Google Chrome and in some other browsers.
+#### Crear código con iteradores para ES5
+Los ejemplos anterior requiren ES6. Sin embargo, pueden funcionar con ES5 si el motor JS soporta `Symbol.iterator`. Esto se puede lograr usando una una lib ES6 con un objetivo ES5 (agregá es6.d.ts a tu proyecto para que compile). Código compliado debería funcionar en node 4+, Google Chrome y otros navegadores.

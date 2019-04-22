@@ -1,12 +1,12 @@
-## Generators
+## Generadores
 
-`function *` is the syntax used to create a *generator function*. Calling a generator function returns a *generator object*. The generator object just follows the [iterator][iterator] interface (i.e. the `next`, `return` and `throw` functions). 
+`function*` es la sintaxis que utilizamos para crear una *función generadora*. Llamar a una función generadora devuelve un *objeto generador*. El objeto generador sigue la interface [iterator][iterator], es decir, las funciones, `next`, `return` y  `throw`. 
 
-There are two key motivations behind generator functions: 
+Hay dos incetivos detrás de las funciones generadoras:
 
-### Lazy Iterators
+### Iteradores perezosos
 
-Generator functions can be used to create lazy iterators e.g. the following function returns an **infinite** list of integers on demand:
+Las funciones generadores se pueden utilizar para crear iteradores perezosos. Por ejemplo, la siguiente función devuleve una lista **infinita** de numeros integrales:
 
 ```ts
 function* infiniteSequence() {
@@ -18,11 +18,11 @@ function* infiniteSequence() {
 
 var iterator = infiniteSequence();
 while (true) {
-    console.log(iterator.next()); // { value: xxxx, done: false } forever and ever
+    console.log(iterator.next()); // { value: xxxx, done: false } por siempre
 }
 ```
 
-Of course if the iterator does end, you get the result of `{ done: true }` as demonstrated below:
+Claro que si el iterador termina, recibirás el resultado de `{ done: true }` como mostramos a continuación:
 
 ```ts
 function* idMaker(){
@@ -39,72 +39,72 @@ console.log(gen.next()); // { value: 2, done: false }
 console.log(gen.next()); // { done: true }
 ```
 
-### Externally Controlled Execution
-This is the part of generators that is truly exciting. It essentially allows a function to pause its execution and pass control (fate) of the remainder of the function execution to the caller.
+### Ejecución controlada externamente
+Esta es la parte de los generadores que es realmente emocionante. Esencialmente, le permite a una función pausar en su ejecución y ceder el control (destino) de lo que resta de su ejecución a su "llamador".
 
-A generator function does not execute when you call it. It just creates a generator object. Consider the following example along with a sample execution:
+Una función generadora no ejecuta cuando la llamas. Simplemente crea un objeto generador. Considera el sigueinte ejemplo junto con una ejecución simple:
 
 ```ts
 function* generator(){
-    console.log('Execution started');
+    console.log('La Ejecución comenzó');
     yield 0;
-    console.log('Execution resumed');
+    console.log('La Ejecución continuó');
     yield 1;
-    console.log('Execution resumed');
+    console.log('La Ejecución continuó');
 }
 
 var iterator = generator();
-console.log('Starting iteration'); // This will execute before anything in the generator function body executes
+console.log('Comenzando la iteración'); // ESto ejecutará antes que cualquier cosa ejecute en el cuerpo de la función generadora
 console.log(iterator.next()); // { value: 0, done: false }
 console.log(iterator.next()); // { value: 1, done: false }
 console.log(iterator.next()); // { value: undefined, done: true }
 ```
 
-If you run this you get the following output:
+Si corres esto obtendrás el siguiente resultado:
 
 ```
 $ node outside.js
-Starting iteration
-Execution started
+Comenzando la iteration
+La Ejecución comenzó
 { value: 0, done: false }
-Execution resumed
+La Ejecución continuó
 { value: 1, done: false }
-Execution resumed
+La Ejecución continuó
 { value: undefined, done: true }
 ```
+* La función solo comienza a ejecutar una vez que `next` es llamado en el objeto generador.
+* La función *pausa* en cuanto encuentra una declaración `yield`.
+* La función *continúa* cuando `next` es llamado nuevamente.
 
-* The function only starts execution once `next` is called on the generator object.
-* The function *pauses* as soon as a `yield` statement is encountered.
-* The function *resumes* when `next` is called.
 
-> So essentially the execution of the generator function is controllable by the generator object.
+> Esencialmente, la ejecución de la función generadora es controlada por el objeto generador.
 
-Our communication using the generator has been mostly one way with the generator returning values for the iterator. One extremely powerful feature of generators in JavaScript is that they allow two way communications (with caveats).
+Nuestra comunicación usando el generador ha sido, principalmente, en una única dirección: el generador devuelve valores pal iterador. Una característica extremadamente poderosa de los generadores en JavaScript es que permiten la comunicación bidireccional (con algunas excepciones).
 
-* you can control the resulting value of the `yield` expression using `iterator.next(valueToInject)`
-* you can throw an exception at the point of the `yield` expression using `iterator.throw(error)`
+* Puedes controlar el valor que resulta de la expresión `yield` a través de `iterator.next(valorAInsertar)`
+* Puedes tirar una excepción al momento de `yield` usando `iterator.throw(error)`
 
-The following example demonstrates `iterator.next(valueToInject)`:
+El siguiente ejemplo demuestra `iterator.next(valorAInsertar)`:
 
 ```ts
 function* generator() {
-    const bar = yield 'foo'; // bar may be *any* type
+    const bar = yield 'foo'; // bar puede tener *any* tipo
     console.log(bar); // bar!
 }
 
 const iterator = generator();
-// Start execution till we get first yield value
+// Comienza la ejecución hasta que obtenemos el primer valor yield
 const foo = iterator.next();
 console.log(foo.value); // foo
-// Resume execution injecting bar
+// Resume la ejecución insertando bar
 const nextThing = iterator.next('bar');
 ```
 
-Since `yield` returns the parameter passed to the iterator's `next` function, and all iterators' `next` functions accept a parameter of any type, TypeScript will always assign the `any` type to the result of the `yield` operator (`bar` above).
+Dado que `yield` devuelve el parámetro pasado al `next` de la función iteradora, y todas las funciones iteradoras `next` acpetan un parámetro de cualquier typo, TypeScript siempre asignará el tipo `any` al resultado del operador `yield` (`bar` en el caso anterior).
 
-> You are on your own to coerce the result to the type you expect, and ensure that only values of that type are passed to next (such as by scaffolding an additional type-enforcement layer that calls `next` for you.) If strong typing is important to you, you may want to avoid two-way communication altogether, as well as packages that rely heavily on it (e.g., redux-saga).
+> Puedes forzar el resultado al tipo que esperas, y asi asegurarte que solo valores de ese tipo sean pasados a next (por ejemplo, utilizando una capa adicional que fuerce los tipos y llame a next por ti). Si el tipeado fuerte es importante para vos, tal vez quieras evitar la comunicación bidireccional por completo, así como aquellos paquetes que dependan en gran medida de esta funcion (por ejemplo, redux-saga).
 
-The following example demonstrates `iterator.throw(error)`:
+El siguiente ejemplo pone en práctica `iterator.throw(error)`:
 
 ```ts
 function* generator() {
@@ -117,19 +117,19 @@ function* generator() {
 }
 
 var iterator = generator();
-// Start execution till we get first yield value
+// Comienza la ejecución hasta que obtenemos el primer valor de yield
 var foo = iterator.next();
 console.log(foo.value); // foo
-// Resume execution throwing an exception 'bar'
+// Continua la ejecución tirando una excepción 'bar'
 var nextThing = iterator.throw(new Error('bar'));
 ```
 
-So here is the summary:
-* `yield` allows a generator function to pause its communication and pass control to an external system
-* the external system can push a value into the generator function body
-* the external system can throw an exception into the generator function body
+Aquí está el resumen:
+* `yield` permite a una función generadora pausar su comunicación y ceder el control a un sistema externo.
+* el sistema externo puede insertar un valor en el cuerpo de la función generadora.
+* el sistema externo puede tirar una excepción en el cuerpo de la función generadora.
 
-How is this useful? Jump to the next section [**async/await**][async-await] and find out.
+Por qué es útil todo esto? Saltá a la próxima sección [**async/await**][async-await] y descubrilo.
 
 [iterator]:./iterators.md
 [async-await]:./async-await.md

@@ -1,10 +1,10 @@
 # globals.d.ts
 
-We discussed *global* vs. *file* modules when covering [projects](./modules.md) and recommended using file based modules and not polluting the global namespace.
+Discutimos módulos *globales* y en *archivos* cuadno cubrimos [proyectos](./modules.md) y recomendamos usando los módulos basados en archivo para evitar contaminar el namespace global.
 
-Nevertheless, if you have beginning TypeScript developers you can give them a `globals.d.ts` file to put interfaces / types in the global namespace to make it easy to have some *types* just *magically* available for consumption in *all* your TypeScript code.
+Sin embargo, si tienen desarrolladores TypeScript que recién estan comenzando, pueden darles un archivo `globals.d.ts` donde poner interfaces y tipos en el namespeace global, y así facilitarles el acceso a algunos *tipos* al tenerlos *mágicamente* disponibles en *toda* la base de código de TypeScript.
 
-> For any code that is going to generate *JavaScript* we highly recommend using *file modules*.
+> Para cualquier código que vaya a generar *JavaScript*, es altamente recomendable usar los *módulos en archivos*.
 
-* `globals.d.ts` is great for adding extensions to `lib.d.ts` if you need to.
-* It's good for quick `declare module "some-library-you-dont-care-to-get-defs-for";` when doing JS to TS migrations.
+* `globals.d.ts` es útil para agregar extensiones a `lib.d.ts` en caso de que lo necesiten
+* También sirve para `declare module "some-library-you-dont-care-to-get-defs-for";` rápidamente cuando estén migrando JS a TS.

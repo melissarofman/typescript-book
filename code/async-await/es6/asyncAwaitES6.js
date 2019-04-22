@@ -13,7 +13,7 @@ function delay(milliseconds, count) {
         }, milliseconds);
     });
 }
-// async function always return a Promise
+// Una función async siempre devuelve una Promesa
 function dramaticWelcome() {
     return __awaiter(this, void 0, void 0, function* () {
         console.log("Hello");

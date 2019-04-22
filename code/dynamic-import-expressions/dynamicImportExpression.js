@@ -2,8 +2,8 @@
 function myApp() {
     import(/* webpackChunkName: "momentjs" */ "moment")
         .then(function (moment) {
-        // lazyModule has all of the proper types, autocomplete works,
-        // type checking works, code references work \o/
+        // lazyModule tiene todos los tipos correctos, la autocompletar funciona,
+        // el chequeo de tipos funciona y las referencias de código también \o/
         var time = moment().format();
         console.log("TypeScript >= 2.4.0 Dynamic Import Expression:");
         console.log(time);

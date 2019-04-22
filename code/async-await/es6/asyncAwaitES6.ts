@@ -6,7 +6,7 @@ function delay(milliseconds: number, count: number): Promise<number> {
         });
 }
 
-// async function always return a Promise
+// Una función async siempre devuelve una Promesa
 async function dramaticWelcome(): Promise<void> {
     console.log("Hello");
 
