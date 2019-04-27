@@ -1,112 +1,112 @@
-## Migrating From JavaScript
+## Migrar desde JavaScript
 
-Assuming:
-* you know JavaScript.
-* you know patterns and build tools (e.g. webpack) used in the project. 
+Asumimos que:
+* saben JavaScript, y
+* que conocen los patrones y las herramientas de construcción (e.g. webpack) you know patterns and build tools (e.g. webpack) usados en el project. 
 
-With that assumption out of the way, in general the process consists of the following steps:
+Con esos supuestos fuera del camino, en general el proceso consiste de los siguientes pasos:
 
-* Add a `tsconfig.json`.
-* Change your source code file extensions from `.js` to `.ts`. Start *suppressing* errors using `any`.
-* Write new code in TypeScript and make as little use of `any` as possible.
-* Go back to the old code and start adding type annotations and fix identified bugs.
-* Use ambient definitions for third party JavaScript code.
+* Agregar un `tsconfig.json`.
+* Cambiar las extensiones de tus archivos de código fuente de `.js` a `.ts`. Comenzar a *contener* errores usando `any`.
+* Escribir código nuevo en TypeScript, usando `any` tan poco como sea posible.
+* Volver al código viejo y comenzar a agregar anotaciones de tipo y solucionar bugs identificadas.
+* Usar definiciones de ambiente para el código JavaScript de terceros.
 
-Let us discuss a few of these points further.
+Discutamos algunos de estos puntos con mayor detalle.
 
-Note that all JavaScript is *valid* TypeScript. That is to say that if you give the TypeScript compiler some JavaScript -> the JavaScript emitted by the TypeScript compiler will behave exactly the same as the original JavaScript. This means that changing the extension from `.js` to `.ts` will not adversely affect your codebase.
+Notemos que todo JavaScript es *válido* en TypeScript. Eso significa que si le sirven JavaScript al compilador TypeScript -> El JavaScript emitido por el compilador de TypeScript se comportará de la misma forma que el JavaScript original. Esto significa que cambiar las extensiones `.js` a `.ts` no afectarán a nuestro código adversamente.
 
-### Suppressing Errors
-TypeScript will immediately start TypeChecking your code and your original JavaScript code *might not be as neat as you thought it was* and hence you get diagnostic errors. Many of these errors you can suppress with using `any` e.g.:
-
-```ts
-var foo = 123;
-var bar = 'hey';
-
-bar = foo; // ERROR: cannot assign a number to a string
-```
-
-Even though the **error is valid** (and in most cases the inferred information will be better than what the original authors of different portions of the code bases imagined), your focus will probably be writing new code in TypeScript while progressively updating the old code base. Here you can suppress this error with a type assertion as shown below:
+### Conteniendo errores
+TypeScript comenzará a chequear los tipos del código inmediatamente y su JavaScript original *puede no ser tan limpio como pensaron que era*, causando errores de diagnóstico. Muchos de estos errores podrán ser contenidos usando `any`. Por ejemplo:
 
 ```ts
 var foo = 123;
 var bar = 'hey';
 
-bar = foo as any; // Okay!
+bar = foo; // ERROR: No es posible asignar un número a una string
 ```
 
-In other places you might want to annotate something as `any` e.g.:
+A pesar de que el **el error es válido** (y en muchos casos la información inferida será mejor que lo que los autores originales de diferentes porciones del código imaginaron), su enfoque problemente se encontrará en escribir código nuevo en TypeScript mientras que actualizando progresivamente el viejo. Aquí podran contener el error con una afirmación de tipo, como mostramos a continuación: 
+
+```ts
+var foo = 123;
+var bar = 'hey';
+
+bar = foo as any; // Ok!
+```
+
+En otros lugares, tal vez quieran anotar algo como `any`. Por ejemplo: 
 
 ```ts
 function foo() {
     return 1;
 }
 var bar = 'hey';
-bar = foo(); // ERROR: cannot assign a number to a string
+bar = foo(); // ERROR: No es posible asignar un número a una string
 ```
 
-Suppressed:
+Contenido:
 
 ```ts
-function foo(): any { // Added `any`
+function foo(): any { // Agregamos `any`
     return 1;
 }
 var bar = 'hey';
-bar = foo(); // Okay!
+bar = foo(); // Ok!
 ```
 
-> Note: Suppressing errors is dangerous, but it allows you to take notice of errors in your *new* TypeScript code. You might want to leave `// TODO:` comments as you go along.**
+> Nota: Contener errores es peligroso, pero les permitirá identificar errores en su código TypeScript *nuevo*. Tal vez quieran dejar comentarios `// TODO:` a medida que avanzan.
 
-### Third Party JavaScript
-You can change your JavaScript to TypeScript, but you can't change the whole world to use TypeScript. This is where TypeScript's ambient definition support comes in. In the beginning we recommend you create a `vendor.d.ts` (the `.d.ts` extension specifies the fact that this is a *declaration file*) and start adding dirty stuff to it. Alternatively create a file specific for the library e.g. `jquery.d.ts` for jquery.
+### JavaScript de terceros
+Pueden cambiar su JavaScript a TypeScript, pero no pueden cambiar al mundo entero para que usen TypeScript. Aquí es dónde el soporte de TypeScript a las definciones de ambiente juega su rol. Al comienzo, recomendamos que creen un `vendor.d.ts` (la extensión `.d.ts` especifíca el hecho de que este es un *archivo de declaraciones*) y que comiencen a agregar las cosas sucias. Alternativamente pueden crear un archivo específico para la libreria, por ejemplo `jquery.d.ts` para jquery.
 
-> Note: Well maintained and strongly typed definitions for nearly the top 90% JavaScript libraries out there exists in an OSS Repository called [DefinitelyTyped](https://github.com/borisyankov/DefinitelyTyped). We recommend looking there before creating your own definitions as we present here. Nevertheless this quick and dirty way is vital knowledge to decrease your initial friction with TypeScript**.
+> NotaL Definiciones de tipo bien definidas y mantenidas para casi el 90% de las librerias mas utilizadas de JavaScript existe en un Repositorio OSS llamado [DefintelyTyped](https://github.com/borisyankov/DefinitelyTyped). Recomendamos mirar ahí antes de crear tus propias definiciones siguiendo las indicaciones que presentamos aquí. Sin embargo, esta forma rápida y sucia que mostraremos es conocimiento esencial para disminuir sus fricciones iniciales con TypesCript.
 
-Consider the case of `jquery`, you can create a *trivial* definition for it quite easily:
+Consideremos el caso de `jquery`, para el que podemos crear una definición trivial fácilmente:
 
 ```ts
 declare var $: any;
 ```
 
-Sometimes you might want to add an explicit annotation on something (e.g. `JQuery`) and you need something in *type declaration space*. You can do that quite easily using the `type` keyword:
+A veces querrán agregar una anotación explícita para algo (por ejemplo `JQuery`) y necesitarán algo en el *espacio de declaración de tipos*. Pueden hacer esto fácilmente usando la palabra clave `type`.
 
 ```ts
 declare type JQuery = any;
 declare var $: JQuery;
 ```
 
-This provides you an easier future update path.
+Esto provee un camino de actualizaciones más sencillo.
 
-Again, a high quality `jquery.d.ts` exists at [DefinitelyTyped](https://github.com/borisyankov/DefinitelyTyped). But you now know how to overcome any JavaScript -> TypeScript friction *quickly* when using third party JavaScript. We will look at ambient declarations in detail next.
+De nuevo, un `jquery.d.ts` de alta calidad existe en [DefinitelyTyped](https://github.com/borisyankov/DefinitelyTyped).  Pero ahora saben como sobreponerse a cualquier fricción JavaScript -> TypeScript *rápidamente* cuando estén usando JavaScript creado por terceros. Miraremos a las declaraciones ambientes con más detalle a continuación.
 
 
-# Third Party NPM modules
+# Módulos NPM de terceros
 
-Similar to global variable declaration you can declare a global module quite easily. E.g. for `jquery` if you want to use it as a module (https://www.npmjs.com/package/jquery) you can write the following yourself: 
+De manera similar a las declaraciones de variables globales, pueden declarar un módulo global con facilidad. Por ejemplo, si quieren usar `jquery` como un módulo (https://www.npmjs.com/package/jquery) pueden escribir lo siguiente ustedes mismos:
 
 ```ts
 declare module "jquery";
 ```
 
-And then you can import it in your file as needed: 
+Y luego podrán importarlo en sus archivos cuando sea necesario:
 
 ```ts
 import * as $ from "jquery";
 ```
 
-> Again, a high quality `jquery.d.ts` exists at [DefinitelyTyped](https://github.com/borisyankov/DefinitelyTyped) that provides a much higher quality jquery module declaration. But it might not exist for your library, so now you have a quick low friction way of continuing the migration 🌹
+> De nuevo, un `jquery.d.ts` de alta calidad existe en [DefinitelyTyped](https://github.com/borisyankov/DefinitelyTyped), el cual provee declaraciones de módulo de jquery de calidad muchísimo más alta. Pero tal vez no exista para la librería que ustedes estén considerando, por lo que ahora tienen una manera de baja fricción y veloz para continuar migrando su JavaScript 🌹
 
-# External non js resources
+# Recursos externos no js
 
-You can even allow import of any file e.g. `.css` files (if you are using something like webpack style loaders or css modules) with a simple `*` style declaration (ideally in a [`globals.d.ts` file](../project/globals.md)): 
+También pueden permitir la importación de cualquier tipo de archivo, por ejemplo, archivos `.css` (si están usando algo como los cargadores de estilo de webpack o módulos css) con una declaración de estilo `*` simple (idealmente en un [archivo `globals.d.ts`](../project/globals.md)):
 
 ```ts
 declare module "*.css";
 ```
 
-Now people can `import * as foo from "./some/file.css";`
+Ahora es posible `import * as foo from "./some/file.css";`
 
-Similarly if you are using html templates (e.g. angular) you can: 
+Similarmente, si están usando plantillas html (por ejemplo, con angular) pueden:
 
 ```ts
 declare module "*.html";

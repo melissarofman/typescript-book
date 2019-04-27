@@ -1,18 +1,18 @@
-### Declaration file
-You can tell TypeScript that you are trying to describe code that exists elsewhere (e.g. written in JavaScript/CoffeeScript/The runtime environment like the browser or Node.js) using the `declare` keyword. As a quick example:
+### Archivo de declaración
+Pueden decirle a TypeScript que estan tratando de describir código que existe en otro lado (por ejemplo, escrito JavaScript/CoffeeScript/en un ambiente de ejecución como el navegador o Node.js) usando la palabra clave `declare`. A modo de ejemplo rápido:
 
 ```ts
-foo = 123; // Error: `foo` is not defined
+foo = 123; // Error: `foo` no está definido
 ```
 vs.
 ```ts
 declare var foo: any;
-foo = 123; // allowed
+foo = 123; // permitido
 ```
 
-You have the option of putting these declarations in a `.ts` file or in a `.d.ts` file. We highly recommend that in your real world projects you use a separate `.d.ts` (start with one called something like `globals.d.ts` or `vendor.d.ts`).
+Tienen la opción de poner estas declaraciones en un archivo `.ts` o en un archivo `.d.ts`. Nosotros recomendamos que en sus proyectos reales usen un `d.ts` separado. Comiencen con un archivo llamado `globals.d.ts` o `vendor.d.ts`, o algo similar.
 
-If a file has the extension `.d.ts` then each root level definition must have the `declare` keyword prefixed to it. This helps make it clear to the author that there will be *no code emitted by TypeScript*. The author needs to ensure that the declared item will exist at runtime.
+Si un archivo tiene la extensión `.d.ts`, etnonces cada definición a nivel raíz debe tener la palabra clave `declare` precediéndola. Esto ayuda a clarificarle al autor que *no habrá código emitido por TypeScript*. El autor debe asegurarse que el ítem declarado existirá al momento de ejecución.
 
-> * Ambient declarations is a promise that you are making with the compiler. If these do not exist at runtime and you try to use them, things will break without warning.
-* Ambient declarations are like docs. If the source changes the docs need to be kept updated. So you might have new behaviours that work at runtime but no one's updated the ambient declaration and hence you get compiler errors.
+> * Las declaraciones ambiente son una promesa que estan haciendo con el compilador. Si estas no existen en el momento de ejecución y ustedes intentan utilizarlas, las cosas se romperan sin advertencia previa.
+* Las declaraciones ambiente son como documentación. Si la fuente cambia, la documentación debe ser actualizada. Por lo que tal vez tengan nuevos comportamientos que funcionan en tiempo de ejecución pero nadie actualizó las declaraciones de ambiente y, por ende, recibirián errores de compilación.

@@ -1,19 +1,19 @@
 ### Variables
-For example to tell TypeScript about the [`process` variable](https://nodejs.org/api/process.html) you *can* do:
+Para contarle a TypeScript sobre la [variable `process`](https://nodejs.org/api/process.html), por ejemplo, *pueden*:
 
 ```ts
 declare var process: any;
 ```
 
-> You don't *need* to do this for `process` as there is already a [community maintained `node.d.ts`](https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/node/index.d.ts).
+> No *necesitan* hacer esto para `process` ya que ya existe un [`node.d.ts` mantenido por la comunidad(https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/node/index.d.ts).
 
-This allows you to use the `process` variable without TypeScript complaining:
+Esto les permitirá usar la variable `process` sin que TypeScript se queje:
 
 ```ts
 process.exit();
 ```
 
-We recommend using an interface wherever possible e.g.:
+Recomendamos usar una interface en donde sea posible. Por ejemplo:
 
 ```ts
 interface Process {
@@ -22,7 +22,7 @@ interface Process {
 declare var process: Process;
 ```
 
-This allows other people to *extend* the nature of these global variables while still telling TypeScript about such modifications. E.g. consider the following case where we add an `exitWithLogging` function to process for our amusement:
+Esto le permite a otras personas *extender* la naturaleza de estas variables globales y mantener a TypeScript informado sobre los cambios. Por ejemplo, consideremos el siguiente caso donde agregamos una función `exitWithLogging` a `process` para nuestro entretenimiento:
 
 ```ts
 interface Process {
@@ -34,4 +34,4 @@ process.exitWithLogging = function() {
 };
 ```
 
-Let's look at interfaces in a bit more detail next.
+Procedamos a mirar las interfaces con mayor nivel de detalle.
