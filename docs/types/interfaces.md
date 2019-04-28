@@ -78,7 +78,7 @@ Y cosas como `foo: Point = MyPoint` no son lo mismo.
 
 Las interfaces son diseñadas para declarar cualquier estructura *arbitrariamente loca* que pueda encontrarse presente en JavaScript. 
 
-Consideremos la siguiente interfaz donde algo es llamable con `new`:
+Consideremos la siguiente interface donde algo es llamable con `new`:
 
 ```ts
 interface Crazy {

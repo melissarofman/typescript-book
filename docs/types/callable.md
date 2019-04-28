@@ -1,20 +1,20 @@
-## Callable
-You can annotate callables as a part of a type or an interface as follows
+## Llamables
+Pueden anotar llamables como parte de un tipo o de una interface de la siguiente manera:
 
 ```ts
 interface ReturnString {
   (): string
 }
 ```
-An instance of such an interface would be a function that returns a string e.g.
+Una instnacia de esta interface sería una función que devuelve una string, por ejemplo:
 
 ```ts
 declare const foo: ReturnString;
-const bar = foo(); // bar is inferred as a string
+const bar = foo(); // bar se infirere como string
 ```
 
-### Obvious examples
-Of course such a *callable* annotation can also specify any arguments / optional arguments / rest arguments as needed. e.g. here is a complex example:
+### Ejemplos obvios
+Por supuesto que una anotación a una *llamable* también puede especificar cualquier argumento / argumento opcional / resto de argumentos como sea necesario. Por ejemplo, aquí hay un caso más complejo:
 
 ```ts
 interface Complex {
@@ -22,7 +22,7 @@ interface Complex {
 }
 ```
 
-An interface can provide multiple callable annotations to specify function overloading. For example:
+Una interface puede proveer muchas anotaciones a llamables para especificar la sobrecarga de funciones. Por ejemplo: 
 
 ```ts
 interface Overloaded {
@@ -30,7 +30,7 @@ interface Overloaded {
     (foo: number): number
 }
 
-// example implementation
+// implementación del ejemplo
 function stringOrNumber(foo: number): number;
 function stringOrNumber(foo: string): string;
 function stringOrNumber(foo: any): any {
@@ -43,12 +43,12 @@ function stringOrNumber(foo: any): any {
 
 const overloaded: Overloaded = stringOrNumber;
 
-// example usage
-const str = overloaded(''); // type of `str` is inferred as `string`
-const num = overloaded(123); // type of `num` is inferred as `number`
+// uso del ejemplo
+const str = overloaded(''); // el tipo de `str` se infiere como `string`.
+const num = overloaded(123); // el tipo de `num` se infiere como `num`
 ```
 
-Of course, like the body of *any* interface, you can use the body of a callable interface as a type annotation for a variable. For example:
+Claro, como el cuerpo de *cualquier* interface, pueden usar el cuerpo de una interface llamable como un tipo de anotación para una variable. Por ejemplo:
 
 ```ts
 const overloaded: {
@@ -57,25 +57,25 @@ const overloaded: {
 } = (foo: any) => foo;
 ```
 
-### Arrow Syntax
-To make it easy to specify callable signatures, TypeScript also allows simple arrow type annotations. For example, a function that takes a `number` and returns a `string` can be annotated as:
+### Sintaxis de flecha
+Para simplificar la declaración de firmas de llamables, TypeScript también permite la anotación de flecha. Por ejemplo, una función que acepta un `number` y devuelve una `string` puede ser anotada como:
 
 ```ts
 const simple: (foo: number) => string
     = (foo) => foo.toString();
 ```
 
-> Only limitation of the arrow syntax: You can't specify overloads. For overloads you must use the full bodied `{ (someArgs): someReturn }` syntax.
+> La única limitación de la sintaxis de flecha: no pueden especificar sobrecargas. Para sobrecargas deben utiliar la sintaxis de cuerpo completo `{ (someArgs): someReturn }`.
 
 ### Newable
 
-Newable is just a special type of *callable* type annotation with the prefix `new`. It simply means that you need to *invoke* with `new` e.g.
+*Newable* es un tipo especial de anotación de tipo de *llamables* con el prefijo `new`. Simplemente significa que deberan *invocarla* con `new`:
 
 ```ts
 interface CallMeWithNewToGetString {
   new(): string
 }
-// Usage
+// Uso
 declare const Foo: CallMeWithNewToGetString;
-const bar = new Foo(); // bar is inferred to be of type string
+const bar = new Foo(); // bar es inferida del tipo string
 ```

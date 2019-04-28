@@ -1,15 +1,15 @@
 * [Enums](#enums)
-* [Number Enums and numbers](#number-enums-and-numbers)
-* [Number Enums and strings](#number-enums-and-strings)
-* [Changing the number associated with a number enum](#changing-the-number-associated-with-a-number-enum)
-* [Enums are open ended](#enums-are-open-ended)
-* [Number Enums as flags](#number-enums-as-flags)
+* [Number Enums y números](#number-enums-and-numbers)
+* [Number Enums y strings](#number-enums-and-strings)
+* [Cambiar el número asociado con un number enum](#changing-the-number-associated-with-a-number-enum)
+* [Enums están abiertos](#enums-are-open-ended)
+* [Number Enums como banderas](#number-enums-as-flags)
 * [String Enums](#string-enums)
 * [Const enums](#const-enums)
-* [Enum with static functions](#enum-with-static-functions)
+* [Enum con funciones estáticas](#enum-with-static-functions)
 
 ### Enums
-An enum is a way to organize a collection of related values. Many other programming languages (C/C#/Java) have an `enum` data type but JavaScript does not. However, TypeScript does. Here is an example definition of a TypeScript enum:
+Un enum es una forma de organizar una collección de valores relacionados. Muchos otros lenguajes de programación (C/C#/Java) tienen un tipo de datos `enum` pero JavaScript no. Sin embargo, TypeScript sí. Aquí mostramos un ejemplo de una definición de un enum de TypeScript:
 
 ```ts
 enum CardSuit {
@@ -19,17 +19,17 @@ enum CardSuit {
 	Spades
 }
 
-// Sample usage
+// Ejemplo de uso
 var card = CardSuit.Clubs;
 
-// Safety
-card = "not a member of card suit"; // Error : string is not assignable to type `CardSuit`
+// Seguridad
+card = "no soy un mimebro de CardSuit"; // Error : string no es asignable al tipo `CardSuit`
 ```
 
-These enums values are `number`s so I'll call them Number Enums from hence forth.
+Estos valores enums son de tipo número (`number`) por los que los llamaremos Number Enum de ahora en adelante.
 
-#### Number Enums and Numbers
-TypeScript enums are number based. This means that numbers can be assigned to an instance of the enum, and so can anything else that is compatible with `number`.
+#### Number Enums y números
+Los enums de TypeScript están basados en números. Esto significa que números pueden ser asignados a una instancia del enum, así como cualquier otra cosa que sea compatible con `number`.
 
 ```ts
 enum Color {
@@ -38,11 +38,11 @@ enum Color {
     Blue
 }
 var col = Color.Red;
-col = 0; // Effectively same as Color.Red
+col = 0; // En práctica es lo mismo que Color.Red
 ```
 
-#### Number Enums and Strings
-Before we look further into enums let's look at the JavaScript that it generates, here is a sample TypeScript:
+#### Number Enums y Strings
+Antes de que profundicemos más sobre los enums, miremos al JavaScript que generan. Aquí hay un ejemplo en TypeScript:
 
 ```ts
 enum Tristate {
@@ -51,7 +51,7 @@ enum Tristate {
     Unknown
 }
 ```
-generates the following JavaScript:
+genera el siguiente JavaScript:
 
 ```js
 var Tristate;
@@ -62,7 +62,7 @@ var Tristate;
 })(Tristate || (Tristate = {}));
 ```
 
-let's focus on the line `Tristate[Tristate["False"] = 0] = "False";`. Within it `Tristate["False"] = 0` should be self explanatory, i.e. sets `"False"` member of `Tristate` variable to be `0`. Note that in JavaScript the assignment operator returns the assigned value (in this case `0`). Therefore the next thing executed by the JavaScript runtime is `Tristate[0] = "False"`. This means that you can use the `Tristate` variable to convert a string version of the enum to a number or a number version of the enum to a string. This is demonstrated below:
+Focalicemos nuestra atención en la línea `Tristate[Tristate["False"] = 0] = "False"`. En ella, `Tristate["False"] = 0` no debería requerir mayores explicaciones: declara que el miembro `"False"` de la variable `Tristate` tiene valor `0`. Notemos que en JavaScript el operador de asignación devuelve el valor asignado, (en este caso, `0`). Por lo tanto, el siguiente paso ejecutado por JavaScript es `Tristate[0] = "False"`. Esto significa que pueden usar la variable `Tristate` para convertir una versión string del enum a un número, o una version númerica del enum a una string. Lo demostramos a continuación:
 
 ```ts
 enum Tristate {
@@ -75,8 +75,8 @@ console.log(Tristate["False"]); // 0
 console.log(Tristate[Tristate.False]); // "False" because `Tristate.False == 0`
 ```
 
-#### Changing the number associated with a Number Enum
-By default enums are `0` based and then each subsequent value increments by 1 automatically. As an example consider the following:
+#### Cambiar el número asociado con un Number Enum
+Por default, los enums se basan en `0` y aumentan cada valor subsecuente por 1, automáticamente. A modo de ejemplo, consideremos lo siguiente:
 
 ```ts
 enum Color {
@@ -86,7 +86,7 @@ enum Color {
 }
 ```
 
-However, you can change the number associated with any enum member by assigning to it specifically. This is demonstrated below where we start at 3 and start incrementing from there:
+Sin embargo, pueden cambiar el número asociado con cualquier miembro de un enum realizando una asignación específica. Esto es demostrado a continuación, donde comenzamos con el 3 y incrementamos desde ese punto:
 
 ```ts
 enum Color {
@@ -96,10 +96,10 @@ enum Color {
 }
 ```
 
-> TIP: I quite commonly initialize the first enum with ` = 1` as it allows me to do a safe truthy check on an enum value.
+> TIP: Comúnmente iniciamos el primer enum con `= 1` ya que nos permite hacer un chequeo truthy seguro con un valor enum.
 
-#### Number Enums as flags
-One excellent use of enums is the ability to use enums as `Flags`. Flags allow you to check if a certain condition from a set of conditions is true. Consider the following example where we have a set of properties about animals:
+#### Number Enums como banderas
+Un excelente uso de los enums es utilizarlos como `Banderas`. Las banderas te permiten chequear si una cierta condición de un grupo de condiciones es verdadera. Consideremos el siguiente ejemplo, donde tenemos una lista de propiedades sobre animales:
 
 ```ts
 enum AnimalFlags {
@@ -111,7 +111,7 @@ enum AnimalFlags {
 }
 ```
 
-Here we are using the left shift operator to move `1` around a certain level of bits to come up with bitwise disjoint numbers `0001`, `0010`, `0100` and `1000` (these are decimals `1`,`2`,`4`,`8` if you are curious). The bitwise operators `|` (or) / `&` (and) / `~` (not) are your best friends when working with flags and are demonstrated below:
+Aquí estamos utilizando el operador de desplazamiento a la izquierda para mover `1` alrededor de un cierto nivel de bits para obtener números desunidos a nivel de bits `0001`, `0010`, `0100` y `1000` (estos son los decimales `1`, `2`, `4`, y `8`, en caso de que quisieran saberlo). Los operadores de bits `|` (o) / `&` (y) / `~` (no) son nuestros mejores amigos a la hora de trabajar con banderas, como demostramos a continuación: 
 
 ```ts
 enum AnimalFlags {
@@ -137,21 +137,21 @@ function printAnimalAbilities(animal: Animal) {
 }
 
 let animal: Animal = { flags: AnimalFlags.None };
-printAnimalAbilities(animal); // nothing
+printAnimalAbilities(animal); // nada
 animal.flags |= AnimalFlags.HasClaws;
-printAnimalAbilities(animal); // animal has claws
+printAnimalAbilities(animal); // el animal tiene garras
 animal.flags &= ~AnimalFlags.HasClaws;
-printAnimalAbilities(animal); // nothing
+printAnimalAbilities(animal); // nada
 animal.flags |= AnimalFlags.HasClaws | AnimalFlags.CanFly;
-printAnimalAbilities(animal); // animal has claws, animal can fly
+printAnimalAbilities(animal); // animal tiene garras y puede volar
 ```
 
-Here:
-* we used `|=` to add flags
-* a combination of `&=` and `~` to clear a flag
-* `|` to combine flags
+Aquí:
+* usamos `|=` para agregar banderas
+* una combinación de `&=` y `~` para eliminar una bandera
+* `|` para combinar banderas
 
-> Note: you can combine flags to create convenient shortcuts within the enum definition e.g. `EndangeredFlyingClawedFishEating` below:
+> Nota: pueden combinar banderas para crear atajos convenientes dentro de la definción del enum. Por ejemplo `EndangeredFlyingClawedFishEating`:
 
 ```ts
 enum AnimalFlags {
@@ -166,7 +166,7 @@ enum AnimalFlags {
 ```
 
 #### String Enums
-We've only looked at enums where the member values are `number`s. You are actually allowed to have enum members with string values as well. e.g. 
+Por ahora solo hemos considerado enums donde los valores de los miembros son de tipo `number`. Actualmente, está permitido tener miembros de enums con valores string. Por ejemplo:
 
 ```ts
 export enum EvidenceTypeEnum {
@@ -179,15 +179,15 @@ export enum EvidenceTypeEnum {
 }
 ```
 
-These can be easier to deal with and debug as they provide meaningful / debuggable string values. 
+Estos pueden ser más fáciles de tratar y de depurar ya que proveen valores string con significado / depurables. 
 
-You can use these values to do simple string comparisons. e.g. 
+Puedes usar estos valores para hacer comparaciones de strings simples. Por ejemplo:
 
 ```ts
-// Where `someStringFromBackend` will be '' | 'passport_visa' | 'passport' ... etc.
+// Donde `someStringFromBackend` será '' | 'passport_visa' | 'passport' ... etc.
 const value = someStringFromBackend as EvidenceTypeEnum; 
 
-// Sample use in code
+// Ejemplo de uso en código
 if (value === EvidenceTypeEnum.PASSPORT){
     console.log('You provided a passport');
     console.log(value); // `passport`
@@ -196,7 +196,7 @@ if (value === EvidenceTypeEnum.PASSPORT){
 
 #### Const Enums
 
-If you have an enum definition like the following:
+Si tienen una definición de enum como la siguiente:
 
 ```ts
 enum Tristate {
@@ -208,7 +208,7 @@ enum Tristate {
 var lie = Tristate.False;
 ```
 
-The line `var lie = Tristate.False` is compiled to the JavaScript `var lie = Tristate.False` (yes, output is same as input). This means that at execution the runtime will need to lookup `Tristate` and then `Tristate.False`. To get a performance boost here you can mark the `enum` as a `const enum`. This is demonstrated below:
+La lína `var lie = Tristate.False` es compilada a JavaScript como `var lie = Tristate.False` (sí, el output es idéntico al input). Esto singifica que en tiempo de ejecución será necesario buscar `Tristate` y luego `Tristate.False`. Para obtener una mejoría en términos de rendimiento pueden marcar el `enum` como `const enum`. Lo demostraremos a continuación:
 
 ```ts
 const enum Tristate {
@@ -220,21 +220,21 @@ const enum Tristate {
 var lie = Tristate.False;
 ```
 
-generates the JavaScript:
+genera el siguiente JavaScript: 
 
 ```js
 var lie = 0;
 ```
 
-i.e. the compiler:
-1. *Inlines* any usages of the enum (`0` instead of `Tristate.False`).
-1. Does not generate any JavaScript for the enum definition (there is no `Tristate` variable at runtime) as its usages are inlined.
+Es decir, el compilador: 
+1. coloca cualquier uso del enum *en línea* (`0` en lugar de `Tristate.False`).
+2. No genera JavaScript para la definición del enum (no hay una variable `Tristate` en tiempo de ejecución) ya que sus usos están en línea.
 
 ##### Const enum preserveConstEnums
-Inlining has obvious performance benefits. The fact that there is no `Tristate` variable at runtime is simply the compiler helping you out by not generating JavaScript that is not actually used at runtime. However, you might want the compiler to still generate the JavaScript version of the enum definition for stuff like *number to string* or *string to number* lookups as we saw. In this case you can use the compiler flag `--preserveConstEnums` and it will still generate the `var Tristate` definition so that you can use `Tristate["False"]` or `Tristate[0]` manually at runtime if you want. This does not impact *inlining* in any way.
+Colocar los usos en línea tiene sus beneficios de rendimiento obvios. El hecho de que no exista una variable `Tristate` en tiempo de ejecución es simplemente el compilador ayudándolos al no generar JavaScript que no será utilizado en tiempo de ejecución. Sin embargo, tal vez quieran que el compilador genere la versión JavaScript del enum de todas formas, para cosas como las búsquedas *número a string* o *string a número* que vimos anteriormente. En estos casos, pueden usar `Tristate["False"]` o `Tristate[0]` manualmente en tiempo de ejecución si así lo desean. Esto no impacta la capacidad de colocar *en línea* de ninguna manera.
 
-### Enum with static functions
-You can use the declaration `enum` + `namespace` merging to add static methods to an enum. The following demonstrates an example where we add a static member `isBusinessDay` to an enum `Weekday`:
+### Enum con funciones estáticas
+Pueden usar la unificación de declaraciones `enum` +  `namespace` para agregar métodos estáticos a un enum. El siguiente ejemplo demuestra un caso en el que agregamos un miembro estático `isBusinessDay` a un enum `Weekday`:
 
 ```ts
 enum Weekday {
@@ -264,11 +264,11 @@ console.log(Weekday.isBusinessDay(mon)); // true
 console.log(Weekday.isBusinessDay(sun)); // false
 ```
 
-#### Enums are open ended
+#### Enums son abiertos
 
-> NOTE: open ended enums are only relevant if you are not using modules. You should be using modules. Hence this section is last.
+> Nota: los enums abiertos son relevantes únicamente si no están usando módulos. Deberían usar módulos. De ahí que esta sección sea la última.
 
-Here is the generated JavaScript for an enum shown again:
+Nuevamente, aquí está el JavaSript generado para un enum:
 
 ```js
 var Tristate;
@@ -279,9 +279,9 @@ var Tristate;
 })(Tristate || (Tristate = {}));
 ```
 
-We already explained the `Tristate[Tristate["False"] = 0] = "False";` portion. Now notice the surrounding code `(function (Tristate) { /*code here */ })(Tristate || (Tristate = {}));` specifically the `(Tristate || (Tristate = {}));` portion. This basically captures a local variable `TriState` that will either point to an already defined `Tristate` value or initialize it with a new empty `{}` object.
+Ya explicamos la porción `Tristate[Tristate["False"] = 0] = "False";`. Ahora noten el código que lo rodea `(function (Tristate) { /*code here */ })(Tristate || (Tristate = {}));` específicamente la parte `(Tristate || (Tristate = {}));`. Básicamente, esto captura una variable local `Tristate` que apuntará a un valor `Tristate` ya definido o lo inicializará con un objeto vacío nuevo `{}`.
 
-This means that you can split (and extend) an enum definition across multiple files. For example below we have split the definition for `Color` into two blocks
+Esto significa que pueden dividir y extender una definición enum a lo largo de múltiples archivos. Por ejemplo, debajo tenemos la definición de `Color` dividida en dos bloques:
 
 ```ts
 enum Color {
@@ -297,4 +297,4 @@ enum Color {
 }
 ```
 
-Note that you *should* reinitialize the first member (here `DarkRed = 3`) in a continuation of an enum to get the generated code not clobber values from a previous definition (i.e. the `0`, `1`, ... so on values). TypeScript will warn you if you don't anyways (error message `In an enum with multiple declarations, only one declaration can omit an initializer for its first enum element.`).
+Notemos que *deberían* reiniciar el primer miembro (en este caso `DarkRed = 3`) en la continuación de un enum para evitar que el código generado no se superponga con una definición previa (por ejemplo, los valores `0`, `1`, etc). TypeScript tirará una advertencia si no lo hacen (mensaje error: `En una enum con muchas declaraciones, solo una declaración puede omitir un inicializador para el primer elemento del enum`).
