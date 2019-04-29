@@ -1,27 +1,26 @@
-* [Type Guard](#type-guard)
-* [User Defined Type Guards](#user-defined-type-guards)
+* [Guardia de tipos](#type-guard)
+* [Guardias de tipo definidas por el usuario](#user-defined-type-guards)
 
-## Type Guard
-Type Guards allow you to narrow down the type of an object within a conditional block. 
-
+## Guardia de tipos
+Las guardias de tipos les permitirán reducir los posibles tipos de un objeto dentro de un bloque condicional.
 
 ### typeof
 
-TypeScript is aware of the usage of the JavaScript `instanceof` and `typeof` operators. If you use these in a conditional block, TypeScript will understand the type of the variable to be different within that conditional block. Here is a quick example where TypeScript realizes that a particular function does not exist on `string` and points out what was probably a user typo:
+TypeScript está al tanto del uso de los operadores `instanceof` y `typeof` de JavaScript. Si los usan en un bloque condicional, TypeScript entenderá que el tipo de la variable es diferente al interior de ese bloque condicional. Aquí mostramos un ejemplo corto en el que TypeScript se da cuenta que una función en particular no existe en `string` y señala que esto probablemente haya sido causado por un error de tipeo del usuario:
 
 ```ts
 function doSomething(x: number | string) {
-    if (typeof x === 'string') { // Within the block TypeScript knows that `x` must be a string
-        console.log(x.subtr(1)); // Error, 'subtr' does not exist on `string`
+    if (typeof x === 'string') { // Dentro del bloque TypeScript sabe que `x` debe ser una string
+        console.log(x.subtr(1)); // Error, 'subtr' no existe en `string`
         console.log(x.substr(1)); // OK
     }
-    x.substr(1); // Error: There is no guarantee that `x` is a `string`
+    x.substr(1); // Error: No hay garantía de que `x` sea una `string`
 }
 ```
 
 ### instanceof
 
-Here is an example with a class and `instanceof`:
+Aquí hay un ejemplo con una clase e `instanceof`:
 
 ```ts
 class Foo {
@@ -53,7 +52,7 @@ doStuff(new Foo());
 doStuff(new Bar());
 ```
 
-TypeScript even understands `else` so when an `if` narrows out one type it knows that within the else *it's definitely not that type*. Here is an example:
+TypeScript incluso entiende `else`, así que cuando un `if` descarta un tipo, sabe que dentro del bloque `else` *defintiivamente no será ese tipo*. Aquí hay un ejemplo:
 
 ```ts
 class Foo {
@@ -69,7 +68,7 @@ function doStuff(arg: Foo | Bar) {
         console.log(arg.foo); // OK
         console.log(arg.bar); // Error!
     }
-    else {  // MUST BE Bar!
+    else {  // DEBE SER Bar!
         console.log(arg.foo); // Error!
         console.log(arg.bar); // OK
     }
@@ -81,7 +80,7 @@ doStuff(new Bar());
 
 ### in 
 
-The `in` operator does a safe check for the existance of a property on an object and can be used as a type guard. E.g. 
+El operador `in` hace un chequeo de seguridad respecto de la existencia de una propiedad en un objeto y puede ser usado como una guardia de tipo:
 
 ```ts
 interface A {
@@ -101,17 +100,17 @@ function doStuff(q: A | B) {
 }
 ```
 
-### Literal Type Guard
+### Guardias de tipos literales
 
-When you have literal types in a union you can check them to discriminate e.g. 
+Cuando tengan tipos literales en una unión pueden controlarlos para diferenciar, por ejemplo:
 
 ```ts
 type Foo = {
-  kind: 'foo', // Literal type 
+  kind: 'foo', // Tipo literal 
   foo: number
 }
 type Bar = {
-  kind: 'bar', // Literal type 
+  kind: 'bar', // Tipo literal 
   bar: number
 }
 
@@ -120,19 +119,19 @@ function doStuff(arg: Foo | Bar) {
         console.log(arg.foo); // OK
         console.log(arg.bar); // Error!
     }
-    else {  // MUST BE Bar!
+    else {  // DEBE SER Bar!
         console.log(arg.foo); // Error!
         console.log(arg.bar); // OK
     }
 }
 ```
 
-### User Defined Type Guards
-JavaScript doesn't have very rich runtime introspection support built in. When you are using just plain JavaScript Objects (using structural typing to your advantage), you do not even have access to `instanceof` or `typeof`. For these cases you can create *User Defined Type Guard functions*. These are just functions that return `someArgumentName is SomeType`. Here is an example:
+### Guardias de tipo definidas por el usuario
+JavaScript no tiene soporte para un sistema de introspección durante tiempo de ejecución incluído. Cuando estén usando objetos de JavaScript simples (usando el tipeo estructural para su conveniencia), ni siquiera tendrán que tener acceso a `instanceof` o `typeof`. Para estos casos podrán crear *Guardias de tipo definidas por el usuario*. Estas son funciones que deuelven `unArgumento is UnTipo`. Aquí hay un ejemplo:
 
 ```ts
 /**
- * Just some interfaces
+ * Algunas interfaces
  */
 interface Foo {
     foo: number;
@@ -145,14 +144,14 @@ interface Bar {
 }
 
 /**
- * User Defined Type Guard!
+ * Guardia de tipo definida por el usuario!
  */
 function isFoo(arg: any): arg is Foo {
     return arg.foo !== undefined;
 }
 
 /**
- * Sample usage of the User Defined Type Guard
+ * Ejemplo de uso de las Guardias de tipo definidas por el usuario
  */
 function doStuff(arg: Foo | Bar) {
     if (isFoo(arg)) {
@@ -169,19 +168,19 @@ doStuff({ foo: 123, common: '123' });
 doStuff({ bar: 123, common: '123' });
 ```
 
-### Type Guards and callbacks
+### Guardias de tipo y devoluciones de llamada
 
-TypeScript doesn't assume type guards remain active in callbacks as making this assumption is dangerous. e.g. 
+TypeScript no asume que las guardias de tipo continuan activas en las devoluciones de llamada, ya que esta suposición es peligrosa. Por ejemplo:
 
 ```js
-// Example Setup
+// Ejemplo
 declare var foo:{bar?: {baz: string}};
-function immediate(callback: ()=>void) {
+function immediate(callback: () => void) {
   callback();
 }
 
 
-// Type Guard
+// Guardia de tipo
 if (foo.bar) {
   console.log(foo.bar.baz); // Okay
   functionDoingSomeStuff(() => {
@@ -190,10 +189,10 @@ if (foo.bar) {
 }
 ```
 
-The fix is as easy as storing the inferred safe value in a local variable, automatically ensuring it doesn't get changed externally, and TypeScript can easily understand that: 
+La solución es tan sencilla como guardar el valor seguro inferido en una variable local, asegurandonos automáticamente que no es cambiado externamente, y TypeScript puede entender eso fácilmente:
 
 ```js
-// Type Guard
+// Gardia de tipo
 if (foo.bar) {
   console.log(foo.bar.baz); // Okay
   const bar = foo.bar;
