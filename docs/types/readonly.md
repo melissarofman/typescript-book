@@ -1,5 +1,5 @@
 ## readonly
-TypeScript's type system allows you to mark individual properties on an interface as `readonly`. This allows you to work in a functional way (unexpected mutation is bad):
+El sistema de tipos de TypeScript les permite marcar propiedades individuales de una interface como `readonly`. Esto les permitirá trabajar funcionalmente (mutaciones inesperadas son malas):
 
 ```ts
 function foo(config: {
@@ -11,10 +11,10 @@ function foo(config: {
 
 let config = { bar: 123, bas: 123 };
 foo(config);
-// You can be sure that `config` isn't changed 🌹
+// Pueden estar seguros que `config` no es cambiada 🌹
 ```
 
-Of course you can use `readonly` in `interface` and `type` definitions as well e.g.:
+Por supuesto que pueden usar `readonly` tanto en interfaces como en definiciones de tipo. Por ejemplo:
 
 ```ts
 type Foo = {
@@ -22,14 +22,14 @@ type Foo = {
     readonly bas: number;
 }
 
-// Initialization is okay
+// La inicialización está bien
 let foo: Foo = { bar: 123, bas: 456 };
 
-// Mutation is not
+// La mutación no
 foo.bar = 456; // Error: Left-hand side of assignment expression cannot be a constant or a read-only property
 ```
 
-You can even declare a class property as `readonly`. You can initialize them at the point of declaration or in the constructor as shown below:
+También pueden declarar propiedades de clases como `readonly`. Pueden inicializarlas en la declaración on en el constructor, como mostramos a continuación:
 
 ```ts
 class Foo {
@@ -42,7 +42,7 @@ class Foo {
 ```
 
 ## Readonly
-There is a type `Readonly` that takes a type `T` and marks all of its properties as `readonly` using mapped types. Here is a demo that uses it in practice: 
+Existe un tipo `Readonly` que acepta un tipo `T` y marca todas sus propiedades como `readonly` usando tipos mapeados. A continuación lo ponemos en práctica:
 
 ```ts
 type Foo = {
@@ -59,10 +59,10 @@ foo.bar = 456; // Okay
 fooReadonly.bar = 456; // ERROR: bar is readonly
 ```
 
-### Various Use Cases
+### Varios casos de uso
 
 #### ReactJS
-One library that loves immutability is ReactJS, you *could* mark your `Props` and `State` to be immutable e.g.:
+Una librería que ama la inmutabilidad es ReactJs. Una posibilidad es marcar sus `Props` y `State` para que sean inmutables. Por ejemplo:
 
 ```ts
 interface Props {
@@ -73,56 +73,56 @@ interface State {
 }
 export class Something extends React.Component<Props,State> {
   someMethod() {
-    // You can rest assured no one is going to do
-    this.props.foo = 123; // ERROR: (props are immutable)
-    this.state.baz = 456; // ERROR: (one should use this.setState)  
+    // Pueden quedarse tranquilos que nadie hará
+    this.props.foo = 123; // ERROR: (las props son inmutables)
+    this.state.baz = 456; // ERROR: (debemos usar this.setState)  
   }
 }
 ```
 
-You do not need to, however, as the type definitions for React mark these as `readonly` already (by internally wrapping the passed in generic types with the `Readonly` type mentioned above).
+No ncesitan hacerlo, sin embargo, ya que las definiciones de tipo de React ya las marcan como `readonly` (envolviendo internamente el tipo genérico con el tipo `Readonly` que mencionamos previamente).
 
 ```ts
 export class Something extends React.Component<{ foo: number }, { baz: number }> {
-  // You can rest assured no one is going to do
+  // Pueden quedarse tranquilos que nadie hará
   someMethod() {
-    this.props.foo = 123; // ERROR: (props are immutable)
-    this.state.baz = 456; // ERROR: (one should use this.setState)  
+    this.props.foo = 123; // ERROR: (las props son inmutables)
+    this.state.baz = 456; // ERROR: (debemos usar this.setState)  
   }
 }
 ```
 
-#### Seamless Immutable
+#### Inmutabilidad sin fisuras
 
-You can even mark index signatures as readonly:
+También pueden marcar las firmas de índices como readonly:
 
 ```ts
 /**
- * Declaration
+ * Declaración
  */
 interface Foo {
     readonly[x: number]: number;
 }
 
 /**
- * Usage
+ * Uso
  */
 let foo: Foo = { 0: 123, 2: 345 };
-console.log(foo[0]);   // Okay (reading)
-foo[0] = 456;          // Error (mutating): Readonly
+console.log(foo[0]);   // Ok (leyendo)
+foo[0] = 456;          // Error (mutando): Readonly
 ```
 
-This is great if you want to use native JavaScript arrays in an *immutable* fashion. In fact TypeScript ships with a `ReadonlyArray<T>` interface to allow you to do just that:
+Esto es genial si quieren hacer uso de los arrays nativos de JavaScript de forma *inmutable*. De hecho, TypeScript incluye una interface `ReadonlyArray<T>` que les permitirá hacer exactamente eso:
 
 ```ts
 let foo: ReadonlyArray<number> = [1, 2, 3];
-console.log(foo[0]);   // Okay
+console.log(foo[0]);   // Ok
 foo.push(4);           // Error: `push` does not exist on ReadonlyArray as it mutates the array
-foo = foo.concat([4]); // Okay: create a copy
+foo = foo.concat([4]); // Ok: crea una copia
 ```
 
-#### Automatic Inference
-In some cases the compiler can automatically infer a particular item to be readonly e.g. within a class if you have a property that only has a getter but no setter, it is assumed readonly e.g.:
+#### Inferencia automática
+En algunos casos, el compiador puede inferir que un ítem en particular es readonly. Por ejemplo, si dentro de una clase declaran una propiedad que tiene un getter pero no un setter, TypeScript asume que es readonly:
 
 ```ts
 class Person {
@@ -138,25 +138,25 @@ console.log(person.fullName); // John Doe
 person.fullName = "Dear Reader"; // Error! fullName is readonly
 ```
 
-### Difference from `const`
+### Diferencia con `const`
 `const`
-1. is for a variable reference
-1. the variable cannot be reassigned to anything else.
+1. es para referenciar variables
+2. la variable no puede ser reasignada a nada más
 
-`readonly` is
-1. for a property
-1. the property can be modified because of aliasing
+`readonly` es
+1. para una propiedad
+2. la propiedad puede ser modificada debido a los alias
 
-Sample explaining 1:
+Ejemplo que explica 1:
 
 ```ts
-const foo = 123; // variable reference
+const foo = 123; // referencia a variable
 var bar: {
-    readonly bar: number; // for property
+    readonly bar: number; // propiedad
 }
 ```
 
-Sample explaining 2:
+Ejemplo que explica 2:
 
 ```ts
 let foo: {
@@ -169,11 +169,11 @@ function iMutateFoo(foo: { bar: number }) {
     foo.bar = 456;
 }
 
-iMutateFoo(foo); // The foo argument is aliased by the foo parameter
+iMutateFoo(foo); // El argumento foo tiene un alias en el parámetro foo
 console.log(foo.bar); // 456!
 ```
 
-Basically `readonly` ensures that a property *cannot be modified by me*, but if you give it to someone that doesn't have that guarantee (allowed for type compatibility reasons) they can modify it. Of course if `iMutateFoo` said that they do not mutate `foo.bar` the compiler would correctly flag it as an error as shown:
+Básicamente, `readonly` se asegura de que una propiedad *no pueda ser modificada por nosotros*, pero si se la pasan a algo que no tiene esa garantía (permitido por razones de compatibilidad de tipos), eso podrá modificarla. Por supuesto que si `iMutateFoo` hubiese declarado que no muta a `foo.bar`, el compilador lo hubiese señalado como un error:
 
 ```ts
 interface Foo {
@@ -187,7 +187,5 @@ function iTakeFoo(foo: Foo) {
     foo.bar = 456; // Error! bar is readonly
 }
 
-iTakeFoo(foo); // The foo argument is aliased by the foo parameter
+iTakeFoo(foo); // El argumento foo tiene un alias en el parámetro foo
 ```
-
-[](https://github.com/Microsoft/TypeScript/pull/6532)
