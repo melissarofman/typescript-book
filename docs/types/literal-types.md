@@ -1,22 +1,22 @@
-## Literals
-Literals are *exact* values that are JavaScript primitives. 
+## Literales
+Los literales son valores *exactos* que son primitivos de JavaScript.
 
-### String Literals
+### Literales String
 
-You can use a string literal as a type. For example:
-
-```ts
-let foo: 'Hello';
-```
-
-Here we have created a variable called `foo` that *will only allow the literal value `'Hello'` to be assigned to it*. This is demonstrated below:
+Pueden usar un literal string como un tipo. Por ejemplo:
 
 ```ts
-let foo: 'Hello';
-foo = 'Bar'; // Error: "Bar" is not assignable to type "Hello"
+let foo: 'Hola';
 ```
 
-They are not very useful on their own but can be combined in a type union to create a powerful (and useful) abstraction e.g.:
+Aquí hemos creado una variable llamada `foo` que *aceptará que se le asigne únicamente el valor literal `'Hola'`*. Lo demostramos a continuación:
+
+```ts
+let foo: 'Hola';
+foo = 'Bar'; // Error: "Bar" is not assignable to type "Hola"
+```
+
+No son muy útiles por su cuenta, pero pueden ser usados en uniones de tipo para crear abstracciones poderosas (y útiles). Por ejemplo:
 
 ```ts
 type CardinalDirection =
@@ -29,20 +29,20 @@ function move(distance: number, direction: CardinalDirection) {
     // ...
 }
 
-move(1,"North"); // Okay
+move(1,"North"); // Ok
 move(1,"Nurth"); // Error!
 ```
 
-### Other literal types
-TypeScript also supports `boolean` and `number` literal types, e.g.: 
+### Otros tipos literales
+TypeScript también soporta los tipos literales `boolean` y `number`, por ejemplo:
 
 ```ts
 type OneToFive = 1 | 2 | 3 | 4 | 5;
 type Bools = true | false;
 ```
 
-### Inference 
-Quite commonly you get an error like `Type string is not assignable to type "foo"`. The following example demonstrates this.
+### Inferencia
+Es común obtener un error del tipo `Type string is not assignable to type "foo"`. El siguiente ejemplo demuestra esto:
 
 ```js
 function iTakeFoo(foo: 'foo') { }
@@ -52,38 +52,38 @@ const test = {
 iTakeFoo(test.someProp); // Error: Argument of type string is not assignable to parameter of type 'foo'
 ```
 
-This is because `test` is inferred to be of type `{someProp: string}`. The fix here is to use a simple type assertion to tell TypeScript the literal you want it to infer as shown below: 
+Esto se debe a que TypeScript infiere que `test` es de tipo `{ someProp: string }`. La solución en este caso sería usar una simple aserción de tipo para señalarle a TypeScript el literal que quieren que infiera, como mostramos a continuación:
 
 ```js
 function iTakeFoo(foo: 'foo') { }
 const test = {
   someProp: 'foo' as 'foo'
 };
-iTakeFoo(test.someProp); // Okay!
+iTakeFoo(test.someProp); // Ok!
 ```
 
-or use a type annotation that helps TypeScript infer the correct thing at the point of declaration: 
+o usar una anotación en el punto de declaracion de tipo que ayude a TypeScript a inferir qué es lo correcto:
 
 ```
 function iTakeFoo(foo: 'foo') { }
 type Test = {
   someProp: 'foo',
 }
-const test: Test = { // Annotate - inferred someProp is always === 'foo'
+const test: Test = { // Anotación - someProp inferida es siempre === 'foo'
   someProp: 'foo' 
 }; 
 iTakeFoo(test.someProp); // Okay!
 ```
 
-### Use cases
-Valid use cases for string literal types are:
+### Casos de uso
+Los casos de uso válido para los tipos de string literales son:
 
-#### String based enums
+#### Enums basadas en strings
 
-[TypeScript enums are number based](../enums.md). You can use string literals with union types to mock a string based enum as we did in the `CardinalDirection` example above. You can even generate a `Key:Value` structure using the following function: 
+[Los enums de TypeScript tienen base numérica](../enums.md). Pueden usar string literales con unión de tipos para fingir un enum basado en strings, como hicimos en el ejemplo anterior para `CardinalDirection`. También pueden generar una estructura `Clave:Valor` usando la siguiente función:
 
 ```ts
-/** Utility function to create a K:V from a list of strings */
+/** Función de utilidad para crear una K:V a partir de una lista de strings */
 function strEnum<T extends string>(o: Array<T>): {[K in T]: K} {
   return o.reduce((res, key) => {
     res[key] = key;
@@ -92,10 +92,10 @@ function strEnum<T extends string>(o: Array<T>): {[K in T]: K} {
 }
 ```
 
-And then generate the literal type union using `keyof typeof`. Here is a complete example:
+Y luego generen la union de tipo literal usando `keyof typeof`. Aquí está el ejemplo completo:
 
 ```ts
-/** Utility function to create a K:V from a list of strings */
+/** Función de utilidad para crear una K:V a partir de una lista de strings */
 function strEnum<T extends string>(o: Array<T>): {[K in T]: K} {
   return o.reduce((res, key) => {
     res[key] = key;
@@ -104,21 +104,21 @@ function strEnum<T extends string>(o: Array<T>): {[K in T]: K} {
 }
 
 /**
-  * Sample create a string enum
+  * Muestra crear una enum de strings
   */
 
-/** Create a K:V */
+/** Crear una K:V */
 const Direction = strEnum([
   'North',
   'South',
   'East',
   'West'
 ])
-/** Create a Type */
+/** Crear un tipo */
 type Direction = keyof typeof Direction;
 
 /** 
-  * Sample using a string enum
+  *  Muestra crear una enum de strings
   */
 let sample: Direction;
 
@@ -127,17 +127,14 @@ sample = 'North'; // Okay
 sample = 'AnythingElse'; // ERROR!
 ```
 
-#### Modelling existing JavaScript APIs
+#### Modelando APIs de JavaScript ya existentes
 
-E.g. [CodeMirror editor has an option `readOnly`](https://codemirror.net/doc/manual.html#option_readOnly) that can either be a `boolean` or the literal string `"nocursor"` (effective valid values `true,false,"nocursor"`).  It can be declared as:
+Por ejemplo, [el editor CodeMirror tiene una opción `readOnly`](https://codemirror.net/doc/manual.html#option_readOnly) que puede ser o un `boolean` o la string literal `"nocursor"` (valores válidos: `true,false,"nocursor"`). Puede ser declarado como:
 
 ```ts
 readOnly: boolean | 'nocursor';
 ```
 
-#### Discriminated Unions
+#### Uniones discriminadas
 
-We will cover [this later in the book](./discriminated-unions.md).
-
-
-[](https://github.com/Microsoft/TypeScript/pull/5185)
+Cubriremos este tema [más adelante en el libro](./discriminated-unions.md).
