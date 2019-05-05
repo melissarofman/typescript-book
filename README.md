@@ -33,7 +33,7 @@ He estado mirando las dificultades que suelen emerger cuando la gente comienza a
 * Esta buenisimo! Tantos extras en #typescript! [link](https://twitter.com/pauliescanlon/status/989898852474998784)
 
 ## Empezá
-Si estás aqui para leer el libro online, [empezá]().
+Si estás aqui para leer el libro online, [empezá](./SUMMARY.md).
 
 ## Traducciones
 El libro es completamente gratis asi que puedes copiar y pegar lo que quieras sin pedir permiso. Si tienes una traduccion y quieres que agregue el link aqui, [mandame una PR](https://github.com/basarat/typescript-book/edit/master/README.md).
