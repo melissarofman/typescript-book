@@ -1,25 +1,28 @@
-# Type Inference in TypeScript
+# Inferencia de tipos en TypeScript
 
+TypeScript puede inferir (y luego controlar) el tipo de una variable basándose en un conjunto de reglas simples. Gracias a que estas reglas son simples, podrán entrenar a su cerebro para reconocer código seguro / inseguro ( para nosotros ocurrió relativamente rápido).
+
+> 
 TypeScript can infer (and then check) the type of a variable based on a few simple rules. Because these rules
 are simple you can train your brain to recognize safe / unsafe code (it happened for me and my teammates quite quickly).
 
-> The types flowing is just how I imagine in my brain the flow of type information.
+> Los tipos que fluyen es exactamente como me imagino en mi cerebro el flujo de información de tipo.
 
-## Variable Definition
+## Definición de variables
 
-Types of a variable are inferred by definition.
+Los tipos de las variables son inferidos por definición.
 
 ```ts
-let foo = 123; // foo is a `number`
-let bar = "Hello"; // bar is a `string`
+let foo = 123; // foo es `number`
+let bar = "Hello"; // bar es `string`
 foo = bar; // Error: cannot assign `string` to a `number`
 ```
 
-This is an example of types flowing from right to left.
+Este es un ejempo de tipos fluyenod de derecha a izquierda.
 
-## Function Return Types
+## Tipos de devoluciones de funciones
 
-The return type is inferred by the return statements e.g. the following function is inferred to return a `number`.
+El tipo de devolución es inferido por la declaración de devolución. Por ejemplo, la siguiente función infiere que debe devolver un `number`.
 
 ```ts
 function add(a: number, b: number) {
@@ -27,18 +30,18 @@ function add(a: number, b: number) {
 }
 ```
 
-This is an example of types flowing bottom out.
+Este es un ejemplo de tipos fluyendo de abajo hacia afuera.
 
-## Assignment
+## Asignación
 
-The type of function parameters / return values can also be inferred by assignment e.g. here we say that `foo` is an `Adder`, that makes `number` the type of `a` and `b`.
+El tipo de los parámetros / valores de devolución de una función también pueden ser inferidos por asignación. Por ejemplo, digamos que `foo` es un `Adder`, que convierte a los tipos de `a` y `b` en `number`.
 
 ```ts
 type Adder = (a: number, b: number) => number;
 let foo: Adder = (a, b) => a + b;
 ```
 
-This fact can be demonstrated by the below code which raises an error as you would hope:
+Esto puede ser demostrado por el código que sigue, que tira un error tal como esperamos:
 
 ```ts
 type Adder = (a: number, b: number) => number;
@@ -48,9 +51,9 @@ let foo: Adder = (a, b) => {
 }
 ```
 
-This is an example of types flowing from left to right.
+Este es un ejemplo de tipos fluyendo de izquierda a derecha.
 
-The same *assignment* style type inference works if you create a function for a callback argument. After all an `argument -> parameter`is just another form of variable assignment.
+La misma inferencia de tipos de estilo de *asignación* funciona si crean una función para un argumento de devolución de llamada. Después de todo, un `argumento -> parametro` es nada menos que otra forma de asignación de variables.
 
 ```ts
 type Adder = (a: number, b: number) => number;
@@ -63,9 +66,9 @@ iTakeAnAdder((a, b) => {
 })
 ```
 
-## Structuring
+## Estructuración
 
-These simple rules also work in the presence of **structuring** (object literal creation). For example in the following case the type of `foo` is inferred to be `{a:number, b:number}`
+Estas reglas simples también funcionan en la presencia de **estructuración** (creación de objetos literales). Por ejemplo, en el siguiente caso se infiere que el tipo de `foo` es `{a: number, b: number}`
 
 ```ts
 let foo = {
@@ -75,14 +78,14 @@ let foo = {
 // foo.a = "hello"; // Would Error: cannot assign `string` to a `number`
 ```
 
-Similarly for arrays:
+Los arrays funcionan de forma similar:
 
 ```ts
 const bar = [1,2,3];
 // bar[0] = "hello"; // Would error: cannot assign `string` to a `number`
 ```
 
-And of course any nesting:
+Y por supuesto cualquier anidación: 
 
 ```ts
 let foo = {
@@ -91,9 +94,9 @@ let foo = {
 // foo.bar[0] = 'hello'; // Would error: cannot assign `string` to a `number`
 ```
 
-## Destructuring
+## Desestructuración
 
-And of course, they also work with destructuring, both objects:
+Y por supuesto, también funcionan con desestructuración de objetos:
 
 ```ts
 let foo = {
@@ -104,7 +107,7 @@ let {a} = foo;
 // a = "hello"; // Would Error: cannot assign `string` to a `number`
 ```
 
-and arrays:
+y arrays:
 
 ```ts
 const bar = [1, 2];
@@ -112,63 +115,63 @@ let [a, b] = bar;
 // a = "hello"; // Would Error: cannot assign `string` to a `number`
 ```
 
-And if the function parameter can be inferred, so can its destructured properties. For example here we destructure the argument into its `a`/`b` members.
+Y si el parámetro de la función puede ser inferido, también lo pueden ser sus propiedades desestructuradas. Por ejemplo, en el siguiente caso desestructuramos el argumento a sus miembros `a`/`b`.
 
 ```ts
 type Adder = (numbers: { a: number, b: number }) => number;
 function iTakeAnAdder(adder: Adder) {
     return adder({ a: 1, b: 2 });
 }
-iTakeAnAdder(({a, b}) => { // Types of `a` and `b` are inferred
+iTakeAnAdder(({a, b}) => { // Los tipos de `a` y `b` son inferidos
     // a = "hello"; // Would Error: cannot assign `string` to a `number`
     return a + b;
 })
 ```
 
-## Type Guards
+## Guardias de tipos
 
-We have already seen how [Type Guards](./typeGuard.md) help change and narrow down types (particularly in the case of unions). Type guards are just another form of type inference for a variable in a block.
+Ya hemos visto como las [Guardias de tipos](./typeGuard.md) ayudan a cambiar y restringir los tipos (especialmente en casos de uniones). Las guardias de tipo son simplemente otra forma de inferencia de tipo para una variable dentro de un bloque.
 
-## Warnings
+## Advertencias
 
-### Be careful around parameters
+### Tengan cuidado con los parámetros
 
-Types do not flow into the function parameters if it cannot be inferred from an assignment. For example in the following case the compiler does not know the type of `foo` so it cannot infer the type of `a` or `b`.
+Los tipos no fluyen hacia los parámetros de funciones si no pueden ser inferidos a partir de una asignación. Por ejemplo, en el sigueinte caso el compilador no sabe el tipo de `foo`, por lo que no puede inferir los tipos de `a` o `b`.
 
 ```ts
-const foo = (a,b) => { /* do something */ };
+const foo = (a,b) => { /* hace algo */ };
 ```
 
-However, if `foo` was typed the function parameters type can be inferred (`a`,`b` are both inferred to be of type `number` in the example below).
+Sin embargo, si `foo` tuviese tipo, los parámetros de la función podrían ser inferidos (Se infiere que tanto `a` como `b` son números en el ejemplo que sigue).
 
 ```ts
 type TwoNumberFunction = (a: number, b: number) => void;
-const foo: TwoNumberFunction = (a, b) => { /* do something */ };
+const foo: TwoNumberFunction = (a, b) => { /* hace algo */ };
 ```
 
-### Be careful around return
+### Tengan cuidado con las devoluciones
 
-Although TypeScript can generally infer the return type of a function, it might not be what you expect. For example here function `foo` has a return type of `any`.
+A pesar de que TypeScript en general puede inferir el tipo de la devolución de una función, este puede no ser el que esperan. Por ejemplo, aquí `foo` tiene una devolución de tipo `any`.
 
 ```ts
 function foo(a: number, b: number) {
     return a + addOne(b);
 }
-// Some external function in a library someone wrote in JavaScript
+// Una función de una librería externa que alguien escribió en JavaScript
 function addOne(a) {
     return a + 1;
 }
 ```
 
-This is because the return type is impacted by the poor type definition for `addOne` (`a` is `any` so the return of `addOne` is `any` so the return of `foo` is `any`).
+Esto se debe a que el tipo de la devolución es impactado por la baja calidad de definiciones de tipo de `addOne` (`a` es de tipo `any`, por lo que la devolución de `addOne` es `any`, por lo que la devolución de `foo` es `any`).
 
-> I find it simplest to always be explicit about function returns. After all, these annotations are a theorem and the function body is the proof.
+> Nos parece más simple ser siempre explícito sobre los retornos de función. Después de todo, estas anotaciones son un teorema y el cuerpo de la función es la prueba.
 
-There are other cases that one can imagine, but the good news is that there is a compiler flag that can help catch such bugs.
+Hay otros casos que uno puede imaginar, pero las buenas noticias es que existe una bandera del compilador que permite atrapar estas bugs.
 
 ## `noImplicitAny`
 
-The flag `noImplicitAny` instructs the compiler to raise an error if it cannot infer the type of a variable (and therefore can only have it as an *implicit* `any` type). You can then
+La bandera `noImplicitAny` le indica al compilador que levante un error si no puede inferir el tipo de una variable (y por lo tanto sólo puede definirla implícitamente como de tipo `any`). De esta manera pueden
 
-* either say that *yes I want it to be of type `any`* by *explicitly* adding an `: any` type annotation
-* help the compiler out by adding a few more *correct* annotations.
+* decir que *sí quieren que sea de tipo `any`* agregando la anotación `: any` *explícitamente*;
+* ayudar al compilador agregando algunas anotaciones más *correctas*.

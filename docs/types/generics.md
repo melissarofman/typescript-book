@@ -1,15 +1,15 @@
-## Generics
+## Genéricos
 
-The key motivation for generics is to provide meaningful type constraints between members. The members can be:
+La motivación principal para los genéricos es proveer restricciones de tipo singificativas entre miembros. Los miembros pueden ser:
 
-* Class instance members
-* Class methods
-* function arguments
-* function return value
+* miembros de instancias de clases
+* métodos de clase
+* argumentos de funciones
+* valores de devolución de funciones
 
-## Motivation and samples
+## Motivación y ejemplos
 
-Consider the simple `Queue` (first in, first out) data structure implementation. A simple one in TypeScript / JavaScript looks like:
+Consideren la implementación de estructura de datos simple `Queue` (fila, el primero que entra es el primero que sale). Una implementación simple en TypeScript / JavaScript se ve así:
 
 ```ts
 class Queue {
@@ -19,7 +19,7 @@ class Queue {
 }
 ```
 
-One issue with this implementation is that it allows people to add *anything* to the queue and when they pop it - it can be *anything*. This is shown below, where someone can push a `string` onto the queue while the usage actually assumes that only `numbers` were pushed in:
+Un problema con esta implementación es que permite agregar *cualquier cosa* a la fila y cuando quitamos el último elemento (pop) este también puede ser *cualquier cosa*. A continación mostramos como es posible agregar una `string` a la fila, aunque la utilización asume que solo `números` fueron agregados:
 
 ```ts
 class Queue {
@@ -30,14 +30,14 @@ class Queue {
 
 const queue = new Queue();
 queue.push(0);
-queue.push("1"); // Oops a mistake
+queue.push("1"); // Ups! un error
 
-// a developer walks into a bar
+// Un desarrollador entra a un bar...
 console.log(queue.pop().toPrecision(1));
-console.log(queue.pop().toPrecision(1)); // RUNTIME ERROR
+console.log(queue.pop().toPrecision(1)); // ERROR de tiempo de ejecución
 ```
 
-One solution (and in fact the only one in languages that don't support generics) is to go ahead and create *special* classes just for these constraints. E.g. a quick and dirty number queue:
+Una solución (y la única en lenguages que no soportan genéricos) es proceder creando clases *especiales* para estas restricciones. Por ejemplo, para una fila de números:
 
 ```ts
 class QueueNumber extends Queue {
@@ -49,28 +49,28 @@ const queue = new QueueNumber();
 queue.push(0);
 queue.push("1"); // ERROR : cannot push a string. Only numbers allowed
 
-// ^ if that error is fixed the rest would be fine too
+// ^ Si ese error se soluciona el resto funcionará correctamente
 ```
 
-Of course this can quickly become painful e.g. if you want a string queue you have to go through all that effort again. What you really want is a way to say that whatever the type is of the stuff getting *pushed* it should be the same for whatever gets *popped*. This is done easily with a *generic* parameter (in this case, at the class level):
+Por supuesto, esto puede resultar doloroso rápidamente. Por ejemplo, si quieren crear una fila de strings, tendrán que realizar el mismo esfuerzo otra vez. Lo que realmente quieren es una manera de decir que sea cual sea el tipo que *agregamos*, este debería ser el mismo tipo que *sale*. Esto es fácil con un parámetro *genérico* (en este caso, a nivel de la clase):
 
 ```ts
-/** A class definition with a generic parameter */
+/** Definición de clase con un parámetro genérico */
 class Queue<T> {
   private data = [];
   push(item: T) { this.data.push(item); }
   pop(): T | undefined { return this.data.shift(); }
 }
 
-/** Again sample usage */
+/** Utilización simple */
 const queue = new Queue<number>();
 queue.push(0);
 queue.push("1"); // ERROR : cannot push a string. Only numbers allowed
 
-// ^ if that error is fixed the rest would be fine too
+// ^ Si ese error se soluciona el resto funcionará correctamente
 ```
 
-Another example that we have already seen is that of a *reverse* function, here the constraint is between what gets passed into the function and what the function returns:
+Otro ejemplo que ya hemos visto es la implementación de la función *reverse*. Aquí la restricción se encuentra entre lo que es pasado a la función y lo que la función devuelve:
 
 ```ts
 function reverse<T>(items: T[]): T[] {
@@ -89,11 +89,11 @@ console.log(reversed); // 3,2,1
 reversed[0] = '1';     // Error!
 reversed = ['1', '2']; // Error!
 
-reversed[0] = 1;       // Okay
-reversed = [1, 2];     // Okay
+reversed[0] = 1;       // Ok
+reversed = [1, 2];     // Ok
 ```
 
-In this section you have seen examples of generics being defined *at class level* and at *function level*. One minor addition worth mentioning is that you can have generics created just for a member function. As a toy example consider the following where we move the `reverse` function into a `Utility` class:
+En esta sección han visto ejemplos de genéricos siendo definidos a *nivel de clases* y a *nivel de funciones*. Un detalle que vale la pena mencionar es que pueden crear genéricos para funciones miembros también. A modo de un pequeño ejemplo, considreen el siguiente caso, en el que movemos la funcion `reverse` a una clase `Utility`:
 
 ```ts
 class Utility {
@@ -107,18 +107,18 @@ class Utility {
 }
 ```
 
-> TIP: You can call the generic parameter whatever you want. It is conventional to use `T`, `U`, `V` when you have simple generics. If you have more than one generic argument try to use meaningful names e.g. `TKey` and `TValue` (conventional to prefix with `T` as generics are also called *templates* in other languages e.g. C++).
+> TIP: Pueden darle el nombre que quieran al parametro genérico. Convencionalmente, se usa `T`, `U`, `V` cuando tienen genéricos simples. Si tienen más de un argumento genérico intenten usar nombres con mayor significación, como `TKey` y `TValue` (es convención prefijar los parámetros con `T` ya que los genéricos también son llamados *templates* - plantillas - en otros lenguajes, como C++).
 
 
-### Design Pattern: Convenience generic
+### Patrones de diseño: comodidad genérica
 
-Consider the function: 
+Consideren la función: 
 
 ```ts
 declare function parse<T>(name: string): T;
 ```
 
-In this case you can see that the type `T` is only used in one place. So there is no constraint *between* members. This is equivalent to a type assertion in terms of type safety:
+En este caso pueden ver que el tipo `T` solo es usado en un lugar. Por lo tanto, no hay restricción *entre* miembros. Esto es equivalente a una aserción de tipo en términos de seguridad de tipos:
 
 ```ts
 declare function parse(name: string): any;
@@ -126,9 +126,9 @@ declare function parse(name: string): any;
 const something = parse('something') as TypeOfSomething;
 ```
 
-Generics used *only once* are no better than an assertion in terms of type safety. That said they do provide *convenience* to your API.
+Genéricos que son usados *únicamente una vez* no son mejores que una aserción en términos de seguridad de tipos. Habiendo dicho eso, si le proveen cierta *comodidad* a sus APIs.
 
-A more obvious example is a function that loads a json response. It returns a promise of *whatever type you pass in*:
+Un ejemplo más obvio es una función que carga una respuesta JSON. Esta devuelve una promesa del *tipo que sea lo que le pasen*:
 ```ts
 const getJSON = <T>(config: {
     url: string,
@@ -145,34 +145,34 @@ const getJSON = <T>(config: {
   }
 ```
 
-Note that you still have to explicitly annotate what you want, but the `getJSON<T>` signature `(config) => Promise<T>` saves you a few key strokes (you don't need to annotate the return type of `loadUsers` as it can be inferred):
+Noten que de todos modos tendrán que anotar lo que quieren, pero la firma `getJson<T>` `config() => Promise<T>` les ahorrará algunas pulsaciones de teclas (no necesitarán anotar el tipo de devolución de `loadUsers` ya que puede ser inferido):
 
 ```ts
 type LoadUsersResponse = {
   users: {
     name: string;
     email: string;
-  }[];  // array of user objects
+  }[];  // array de objetos sobre usuarios
 }
 function loadUsers() {
   return getJSON<LoadUsersResponse>({ url: 'https://example.com/users' });
 }
 ```
 
-Also `Promise<T>` as a return value is definitely better than alternatives like `Promise<any>`.
+Asimismo, `Promise<T>` como valor de devolución es definitivamente mejor que alternativas como `Promise<any>`.
 
-Another example is where a generic is only used as an argument: 
+Otro ejemplo es cuando un genéro se usa únicamente como argumento:
 
 ```ts
 declare function send<T>(arg: T): void;
 ```
 
-Here the generic `T` can be used to annote the type that you want the argument to match e.g. 
+Aquí el genérico `T` puede ser usado para anotar el tipo al que quieren que el argumento corresponda. Por ejemplo:
 
 ```ts
 send<Something>({
   x:123,
-  // Also you get autocomplete  
-}); // Will TSError if `x:123` does not match the structure expected for Something
+  // También obtendrán autocompleción  
+}); // Tirará TSError si `x:123` no coincide con la estructura esperada por `Something`
 
 ```

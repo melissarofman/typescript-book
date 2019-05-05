@@ -1,4 +1,4 @@
-# Resumen
+# Índice
 
 * [Empezando](docs/getting-started.md)
   * [Por qué TypeScript](docs/why-typescript.md)
@@ -49,14 +49,14 @@
   * [Funciones](docs/types/functions.md)
   * [Llamables](docs/types/callable.md)
   * [Aserción de tipo](docs/types/type-assertion.md)
-  * [Freshness](docs/types/freshness.md)
-  * [Type Guard](docs/types/typeGuard.md)
-  * [Literal Types](docs/types/literal-types.md)
+  * [Frescura](docs/types/freshness.md)
+  * [Guardia de tipos](docs/types/typeGuard.md)
+  * [Tipos literales](docs/types/literal-types.md)
   * [Readonly](docs/types/readonly.md)
-  * [Generics](docs/types/generics.md)
-  * [Type Inference](docs/types/type-inference.md)
-  * [Type Compatibility](docs/types/type-compatibility.md)
-  * [Never Type](docs/types/never.md)
+  * [Genéricos](docs/types/generics.md)
+  * [Inferencia de tipos](docs/types/type-inference.md)
+  * [Compatibilidad de tipos](docs/types/type-compatibility.md) 
+  * [Tipo Never](docs/types/never.md) --> **Traducido hasta aquí**
   * [Discriminated Unions](docs/types/discriminated-unions.md)
   * [Index Signatures](docs/types/index-signatures.md)
   * [Moving Types](docs/types/moving-types.md)

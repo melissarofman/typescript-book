@@ -1,34 +1,34 @@
 # Never
 
-> [A video lesson on the never type](https://egghead.io/lessons/typescript-use-the-never-type-to-avoid-code-with-dead-ends-using-typescript)
+> [Un video con una clase sobre el tipo *never*](https://egghead.io/lessons/typescript-use-the-never-type-to-avoid-code-with-dead-ends-using-typescript)
 
-Programming language design does have a concept of *bottom* type that is a **natural** outcome as soon as you do *code flow analysis*. TypeScript does *code flow analysis* (😎) and so it needs to reliably represent stuff that might never happen.
+El diseño de lenguages de programación tiene un concepto de un tipo *de fondo* que es un resultado **natural** cuando realizan *análisis de flujo de código*. TypeScript hace *análisis de flujo de código* (😎) por lo que tiene que representar de forma fidedigna cosas que tal vez nunca sucedan.
 
-The `never` type is used in TypeScript to denote this *bottom* type. Cases when it occurs naturally:
+El tipo `never` es usando en TypeScirpt para denotar este tipo *de fondo*. Los casos en los que ocurre naturalmente son:
 
-* A function never returns (e.g. if the function body has `while(true){}`)
-* A function always throws (e.g. in `function foo(){throw new Error('Not Implemented')}` the return type of `foo` is `never`)
+* una función que nunca devuelve (ejemplo, si el cuerpo de la función tiene un `while(true){}`)
+* una función que siempre tira un error (ejempplo, en `function foo(){throw new Error('Not Implemented')}` el tipo de devolución de `foo` es `never`)
 
-Of course you can use this annotation yourself as well
+Por supeusto pueden usar esta anotación ustedes también de la siguiente manera: 
 
 ```ts
 let foo: never; // Okay
 ```
 
-However, *only `never` can be assigned to another never*. e.g.
+Sin embargo *`never` solo puede ser asignado a otro never*, por ejemplo:
 
 ```ts
 let foo: never = 123; // Error: Type number is not assignable to never
 
-// Okay as the function's return type is `never`
+// Ok ya que el tipo de devolución de la función es `never`
 let bar: never = (() => { throw new Error('Throw my hands in the air like I just dont care') })();
 ```
 
-Great. Now let's just jump into its key use case :)
+Genial. Ahora entremos en su caso de uso principal :)
 
-# Use case: Exhaustive Checks
+# Caso de uso: chequeos exhaustivos
 
-You can call never functions in a never context.
+Pueden llamar funciones never en un contexto never.
 
 ```ts
 function foo(x: string | number): boolean {
@@ -38,27 +38,24 @@ function foo(x: string | number): boolean {
     return false;
   }
 
+  // Sin un tipo never tendríamos un error:
+  // - No todos los caminos del código devuelven un valor (chequeos null estrictos)
+  // - O se detecta código inalcanzable
+  // Pero como TypeScript entiende que la función `fail` devuelve `never`
+  // les permite llamarla como si fueran a usarla para seguridad de tiempo de ejecución o 
+  // chequeos de tipo exhaustivos
   // Without a never type we would error :
-  // - Not all code paths return a value (strict null checks)
-  // - Or Unreachable code detected
-  // But because TypeScript understands that `fail` function returns `never`
-  // It can allow you to call it as you might be using it for runtime safety / exhaustive checks.
+ 
   return fail("Unexhaustive!");
 }
 
 function fail(message: string): never { throw new Error(message); }
 ```
 
-And because `never` is only assignable to another `never` you can use it for *compile time* exhaustive checks as well. This is covered in the [*discriminated union* section](./discriminated-unions.md).
+Y porque `never` únicamente puede ser asignado a otro `never`, también pueden usarlo para controles exhaustivos en tiempo de compilación. Esto es cubierto en la [sección *uniones discriminadas*](./discriminated-unions.md).
 
-# Confusion with `void`
+# Confusión con `void`
 
-As soon as someone tells you that `never` is returned when a function never exits gracefully you intuitively want to think of it as the same as `void`. However, `void` is a Unit. `never` is a falsum.
+En cuanto alguien les diga que `never` es devuelto cuando una función nunca sale con gracia, intuitivamente ustedes querrán pensar que es lo mismo que `void`. Sin embargo, `void` es una Unidad. `never` es un falsum. 
 
-A function that *returns* nothing returns a Unit `void`. However, a function *that never returns* (or always throws) returns `never`. `void` is something that can be assigned (without `strictNullChecking`) but `never` can `never` be assigned to anything other than `never`.
-
-<!--
-PR: https://github.com/Microsoft/TypeScript/pull/8652
-Issue : https://github.com/Microsoft/TypeScript/issues/3076
-Concept : https://en.wikipedia.org/wiki/Bottom_type
--->
+Un faunción que *devuelve* nada, devuelve una unidad `void`. Sin embargo, una función *que nunca devuelve* (o siempre tira un error) devuelve `never`. `void` es algo que peude ser asignado (sin `strictNullChecking`), pero `never` no puede ser *nunca* asignado a nada que no sea `never`.

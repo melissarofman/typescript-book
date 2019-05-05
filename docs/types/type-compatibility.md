@@ -1,21 +1,21 @@
-* [Type Compatibility](#type-compatibility)
-* [Soundness](#soundness)
-* [Structural](#structural)
-* [Generics](#generics)
-* [Variance](#variance)
-* [Functions](#functions)
-  * [Return Type](#return-type)
-  * [Number of arguments](#number-of-arguments)
-  * [Optional and rest parameters](#optional-and-rest-parameters)
-  * [Types of arguments](#types-of-arguments)
+* [Compatibilidad de Tipos](#type-compatibility)
+* [Firmeza](#soundness)
+* [Estructural](#structural)
+* [Genéricos](#generics)
+* [Varianza](#variance)
+* [Funciones](#functions)
+  * [Tipo de devolución](#return-type)
+  * [Número de argumentos](#number-of-arguments)
+  * [Parámetros rest y opcionales](#optional-and-rest-parameters)
+  * [Tipos de argumentos](#types-of-arguments)
 * [Enums](#enums)
-* [Classes](#classes)
-* [Generics](#generics)
-* [FootNote: Invariance](#footnote-invariance)
+* [Clases](#classes)
+* [Genéricos](#generics)
+* [Nota al pie: invariancia](#footnote-invariance)
 
-## Type Compatibility
+## Compatibilidad de Tipos
 
-Type Compatibility (as we discuss here) determines if one thing can be assigned to another. E.g. `string` and `number` are not compatible:
+La Compatibilidad de Tipos (como la discutiremos aquí) determina si una cosa puede ser asignada a otra. Por ejemplo, `string` y `number` no son compatibles:
 
 ```ts
 let str: string = "Hello";
@@ -25,21 +25,21 @@ str = num; // ERROR: `number` is not assignable to `string`
 num = str; // ERROR: `string` is not assignable to `number`
 ```
 
-## Soundness
+## Firmeza
 
-TypeScript's type system is designed to be convenient and allows for *unsound* behaviours e.g. anything can be assigned to `any` which means telling the compiler to allow you to do whatever you want:
+El sistema de tipos de TypeScript fue diseñado para ser conveniente y permite comportamientos *poco seguros*. Por ejemplo, cualquier cosa puede ser asignada a `any`, lo que implica decirle al compilador que les deje hacer lo que quieran:
 
 ```ts
 let foo: any = 123;
 foo = "Hello";
 
 // Later
-foo.toPrecision(3); // Allowed as you typed it as `any`
+foo.toPrecision(3); // Permitido, ya que el tipo es `any`
 ```
 
-## Structural
+## Estructural
 
-TypeScript objects are structurally typed. This means the *names* don't matter as long as the structures match
+Los objetos de TypeScript tienen tipos estructurales. Esto significa que los *nombres* no importan siempre y cuanto las estructuras coincidan:
 
 ```ts
 interface Point {
@@ -52,13 +52,13 @@ class Point2D {
 }
 
 let p: Point;
-// OK, because of structural typing
+// OK, gracias a los tipos estructurales
 p = new Point2D(1,2);
 ```
 
-This allows you to create objects on the fly (like you do in vanilla JS) and still have safety whenever it can be inferred.
+Esto les permitirá crear objetos sobre la marcha (como lo hacen en JS vainilla) y conservar la seguridad de tipos donde los mismos pueden ser inferidos.
 
-Also *more* data is considered fine:
+Además, *más* datos se consideran aceptables:
 
 ```ts
 interface Point2D {
@@ -72,59 +72,59 @@ interface Point3D {
 }
 var point2D: Point2D = { x: 0, y: 10 }
 var point3D: Point3D = { x: 0, y: 10, z: 20 }
-function iTakePoint2D(point: Point2D) { /* do something */ }
+function iTakePoint2D(point: Point2D) { /* hace algo */ }
 
-iTakePoint2D(point2D); // exact match okay
-iTakePoint2D(point3D); // extra information okay
-iTakePoint2D({ x: 0 }); // Error: missing information `y`
+iTakePoint2D(point2D); // coincidencia exacta ok
+iTakePoint2D(point3D); // información extra ok
+iTakePoint2D({ x: 0 }); // Error: falta información `y`
 ```
 
-## Variance
+## Varianza
 
-Variance is an easy to understand and important concept for type compatibility analysis.
+La varianza es un concepto importante y fácil de entender para el análisis de compatiblidad.
 
-For simple types `Base` and `Child`, if `Child` is a child of `Base`, then instances of `Child` can be assigned to a variable of type `Base`.
+Para los tipos simples `Base` y `Child`, si `Child` es un hijo de `Base`, entonces instancias de `Child` pueden ser asignadas a variables de tipo `Base`.
 
-> This is polymorphism 101
+> Esto es polimorfismo 101
 
-In type compatibility of complex types composed of such `Base` and `Child` types depends on where the `Base` and `Child` in similar scenarios is driven by *variance*.
+En cuanto a casos de tipos complejos, la compatibilidad depende de la *varianza*:
 
-* Covariant : (co aka joint) only in *same direction*
-* Contravariant : (contra aka negative) only in *opposite direction*
-* Bivariant : (bi aka both) both co and contra.
-* Invariant : if the types aren't exactly the same then they are incompatible.
+* Covariante: (co === conjunta) solo en la *misma dirección*.
+* Contravariante: (contra === negativa) solo en la *dirección opuesta*.
+* Bivariante: (bi === ambas) ambas son co y contra.
+* Invariante: si los tipos no son exactamente iguales entonces son incompatibles.
 
-> Note: For a completely sound type system in the presence of mutable data like JavaScript, `invariant` is the only valid option. But as mentioned *convenience* forces us to make unsound choices.
+> Nota: Para un sistema de tipos completamente seguro en la presencia de datos mutables como en JavaScript, la única opción válida es `invariante`. Pero como mencionamos, la *comodidad* nos fuerza a realizar elecciones menos seguras.
 
-## Functions
+## Funciones
 
-There are a few subtle things to consider when comparing two functions.
+Hay algunas sutilezas a considerar al comparar dos funciones.
 
-### Return Type
+### Tipo de devolución
 
-`covariant`: The return type must contain at least enough data.
+`covariant`: El tipo de devolución debe contener por lo menos sufientes datos
 
 ```ts
-/** Type Hierarchy */
+/** Jerarquía de Tipos */
 interface Point2D { x: number; y: number; }
 interface Point3D { x: number; y: number; z: number; }
 
-/** Two sample functions */
+/** Dos funciones muestra */
 let iMakePoint2D = (): Point2D => ({ x: 0, y: 0 });
 let iMakePoint3D = (): Point3D => ({ x: 0, y: 0, z: 0 });
 
-/** Assignment */
+/** Asignación */
 iMakePoint2D = iMakePoint3D; // Okay
 iMakePoint3D = iMakePoint2D; // ERROR: Point2D is not assignable to Point3D
 ```
 
-### Number of arguments
+### Número de argumentos
 
-Fewer arguments are okay (i.e. functions can choose to ignore additional parameters). After all you are guaranteed to be called with at least enough arguments.
+Menos argumentos está bien (es decir, las funciones pueden elegir ignorar parámetros adicionales). Despues de todo, tienen la garantía de que serán llamados con, por lo menos, los parámetros necesarios.
 
 ```ts
 let iTakeSomethingAndPassItAnErr
-    = (x: (err: Error, data: any) => void) => { /* do something */ };
+    = (x: (err: Error, data: any) => void) => { /* hace algo */ };
 
 iTakeSomethingAndPassItAnErr(() => null) // Okay
 iTakeSomethingAndPassItAnErr((err) => null) // Okay
@@ -134,68 +134,68 @@ iTakeSomethingAndPassItAnErr((err, data) => null) // Okay
 iTakeSomethingAndPassItAnErr((err, data, more) => null);
 ```
 
-### Optional and Rest Parameters
+### Parámetros rest y opcionales
 
-Optional (pre determined count) and Rest parameters (any count of arguments) are compatible, again for convenience.
+Parámetros opcionales (cantidad predeterminada) y Rest (cualquier cantidad de argumentos) son compatibles, de nuevo, por comodidad.
 
 ```ts
-let foo = (x:number, y: number) => { /* do something */ }
-let bar = (x?:number, y?: number) => { /* do something */ }
-let bas = (...args: number[]) => { /* do something */ }
+let foo = (x:number, y: number) => { /* hace algo */ }
+let bar = (x?:number, y?: number) => { /* hace algo */ }
+let bas = (...args: number[]) => { /* hace algo */ }
 
 foo = bar = bas;
 bas = bar = foo;
 ```
 
-> Note: optional (in our example `bar`) and non optional (in our example `foo`) are only compatible if strictNullChecks is false.
+> Nota los parámetros opcionales (en nuestro ejemplo, `bar`) y no opcionales (en nuestro ejemplo `foo`) únicamente son compatibles si `strictNullChecks` es falso.
 
-### Types of arguments
+### Tipos de argumentos
 
-`bivariant` : This is designed to support common event handling scenarios
+`bivariant` : Esto está diseñado para soportar escenarios comunes de manejo de eventos
 
 ```ts
-/** Event Hierarchy */
+/** Jerarquía de eventos */
 interface Event { timestamp: number; }
 interface MouseEvent extends Event { x: number; y: number }
 interface KeyEvent extends Event { keyCode: number }
 
-/** Sample event listener */
+/** Ejemplo de detector de eventos */
 enum EventType { Mouse, Keyboard }
 function addEventListener(eventType: EventType, handler: (n: Event) => void) {
     /* ... */
 }
 
-// Unsound, but useful and common. Works as function argument comparison is bivariant
+// Poro seguro pero útil y común. Funciona como un argumento de función. La comparación es bivariante.
 addEventListener(EventType.Mouse, (e: MouseEvent) => console.log(e.x + "," + e.y));
 
-// Undesirable alternatives in presence of soundness
+// Alternativa no deseada en presencia de firmeza
 addEventListener(EventType.Mouse, (e: Event) => console.log((<MouseEvent>e).x + "," + (<MouseEvent>e).y));
 addEventListener(EventType.Mouse, <(e: Event) => void>((e: MouseEvent) => console.log(e.x + "," + e.y)));
 
-// Still disallowed (clear error). Type safety enforced for wholly incompatible types
+// No está permitido (error claro). La seguridad de tipos está impuesta por la total incompatibilidad de tipos
 addEventListener(EventType.Mouse, (e: number) => console.log(e));
 ```
 
-Also makes `Array<Child>` assignable to `Array<Base>` (covariance) as the functions are compatible. Array covariance requires all `Array<Child>` functions to be assignable to `Array<Base>` e.g. `push(t:Child)` is assignable to `push(t:Base)` which is made possible by function argument bivariance.
+Esto también hace que `Array<Child>` sea asignable a `Array<Base>` (covarianza) ya que las funciones son compatibles. La covarianza de arrays requiere que todas las funciones `Array<Child>` sean asignables a `Array<Base>`. Por ejemplo, `push(t: Child)` es asignable a `push(t: Base)`. Esto es permitido por la bivarianza de los argumentos de la función.
 
-**This can be confusing for people coming from other languages** who would expect the following to error but will not in TypeScript:
+**Esto puede ser confuso para desarrolladores que vienen de otros lenguages** quienes esperarían que lo siguente tire un error, aunque no lo hará en TypeScript:
 
 ```ts
-/** Type Hierarchy */
+/** Jerarquía de tipos */
 interface Point2D { x: number; y: number; }
 interface Point3D { x: number; y: number; z: number; }
 
-/** Two sample functions */
-let iTakePoint2D = (point: Point2D) => { /* do something */ }
-let iTakePoint3D = (point: Point3D) => { /* do something */ }
+/** Dos funciones de muestra */
+let iTakePoint2D = (point: Point2D) => { /* hace algo */ }
+let iTakePoint3D = (point: Point3D) => { /* hace algo */ }
 
-iTakePoint3D = iTakePoint2D; // Okay : Reasonable
-iTakePoint2D = iTakePoint3D; // Okay : WHAT
+iTakePoint3D = iTakePoint2D; // OK : Razonable
+iTakePoint2D = iTakePoint3D; // OK : QUÉ
 ```
 
 ## Enums
 
-* Enums are compatible with numbers, and numbers are compatible with enums.
+* Los Enums son compatibles con números y los números son compatibles con enums.
 
 ```ts
 enum Status { Ready, Waiting };
@@ -203,11 +203,11 @@ enum Status { Ready, Waiting };
 let status = Status.Ready;
 let num = 0;
 
-status = num; // OKAY
-num = status; // OKAY
+status = num; // OK
+num = status; // OK
 ```
 
-* Enum values from different enum types are considered incompatible. This makes enums useable *nominally* (as opposed to structurally)
+* Los valores Enum de diferentes tipos Enum son considerados incompatibles. Esto hace que los enums sean usables *nominalmente* (en vez de estructuralmente).
 
 ```ts
 enum Status { Ready, Waiting };
@@ -219,19 +219,19 @@ let color = Color.Red;
 status = color; // ERROR
 ```
 
-## Classes
+## Clases
 
-* Only instance members and methods are compared. *constructors* and *statics* play no part.
+* Solo miembros y métodos de instancias son comparados. Los *constructures* y *estáticos* no influyen.
 
 ```ts
 class Animal {
     feet: number;
-    constructor(name: string, numFeet: number) { /** do something */ }
+    constructor(name: string, numFeet: number) { /** hace algo */ }
 }
 
 class Size {
     feet: number;
-    constructor(meters: number) { /** do something */ }
+    constructor(meters: number) { /** hace algo */ }
 }
 
 let a: Animal;
@@ -241,10 +241,10 @@ a = s;  // OK
 s = a;  // OK
 ```
 
-* `private` and `protected` members *must originate from the same class*. Such members essentially make the class *nominal*.
+* Los miembros `private` y `protected` *deben surgir de la misma clase*. Estos miembros esencialmente convierten a la clase en *nominal*.
 
 ```ts
-/** A class hierarchy */
+/** Jerarquía de clase */
 class Animal { protected feet: number; }
 class Cat extends Animal { }
 
@@ -254,7 +254,7 @@ let cat: Cat;
 animal = cat; // OKAY
 cat = animal; // OKAY
 
-/** Looks just like Animal */
+/** Se ve igual que Animal */
 class Size { protected feet: number; }
 
 let size: Size;
@@ -263,9 +263,9 @@ animal = size; // ERROR
 size = animal; // ERROR
 ```
 
-## Generics
+## Genéricos
 
-Since TypeScript has a structural type system, type parameters only affect compatibility when used by a member. For example, in the  following `T` has no impact on compatibility:
+Dado que TypeScript tiene un sistema de tipos estructural, los tipos de parámetros solo afectan la compatibilidad cuando son usados por un miembro. Por ejemplo, en el siguente caso `T` no tiene impacto sobre la compatibilidad:
 
 ```ts
 interface Empty<T> {
@@ -273,10 +273,10 @@ interface Empty<T> {
 let x: Empty<number>;
 let y: Empty<string>;
 
-x = y;  // okay, y matches structure of x
+x = y;  // ok, y tiene la misma estructura que x
 ```
 
-However, if `T` is used, it will play a role in compatibility based on its *instantiation* as shown below:
+Sin embargo, si `T` es usada, jugará un rol en la compatibilidad en base a su *instanciación*, como mostramos a continuación:
 
 ```ts
 interface NotEmpty<T> {
@@ -285,10 +285,10 @@ interface NotEmpty<T> {
 let x: NotEmpty<number>;
 let y: NotEmpty<string>;
 
-x = y;  // error, x and y are not compatible
+x = y;  // error, x e y no son compatibles
 ```
 
-In cases where generic arguments haven't been *instantiated* they are substituted by `any` before checking compatibility:
+En casos donde los argumentos genéricos aún no han sido *instanciados*, son substituidos por `any` antes de controlar la compatibilidad:
 
 ```ts
 let identity = function<T>(x: T): T {
@@ -299,10 +299,10 @@ let reverse = function<U>(y: U): U {
     // ...
 }
 
-identity = reverse;  // Okay because (x: any)=>any matches (y: any)=>any
+identity = reverse;  // Okay porque (x: any)=>any coincide con (y: any)=>any
 ```
 
-Generics involving classes are matched by relevant class compatibility as mentioned before. e.g. 
+Los genéricos que involucran a clases son equiparados por compatibilidad a nivel de la clase, como mencionamos previamente. Por ejemplo:
 
 ```ts
 class List<T> {
@@ -313,53 +313,53 @@ class Animal { name: string; }
 class Cat extends Animal { meow() { } }
 
 const animals = new List<Animal>();
-animals.add(new Animal()); // Okay 
-animals.add(new Cat()); // Okay 
+animals.add(new Animal()); // OK 
+animals.add(new Cat()); // OK 
 
 const cats = new List<Cat>();
 cats.add(new Animal()); // Error 
-cats.add(new Cat()); // Okay
+cats.add(new Cat()); // OK
 ```
 
-## FootNote: Invariance
+## Nota al pie: invariancia
 
-We said invariance is the only sound option. Here is an example where both `contra` and `co` variance are shown to be unsafe for arrays.
+Dijimos que la invariancia es la única opción segura. Aquí hay un ejemplo donde mostramos como tanto la varianza `co` y `contra` son inseguras para arrays:
 
 ```ts
-/** Hierarchy */
+/** Jerarquía */
 class Animal { constructor(public name: string){} }
 class Cat extends Animal { meow() { } }
 
-/** An item of each */
+/** una instancia de cada uno */
 var animal = new Animal("animal");
 var cat = new Cat("cat");
 
 /**
- * Demo : polymorphism 101
+ * Demo : polimorfismo 101
  * Animal <= Cat
  */
-animal = cat; // Okay
+animal = cat; // OK
 cat = animal; // ERROR: cat extends animal
 
-/** Array of each to demonstrate variance */
+/** Array de cada uno para demostrar varianza */
 let animalArr: Animal[] = [animal];
 let catArr: Cat[] = [cat];
 
 /**
- * Obviously Bad : Contravariance
+ * Obviamente malo : Contravarianza
  * Animal <= Cat
  * Animal[] >= Cat[]
  */
-catArr = animalArr; // Okay if contravariant
-catArr[0].meow(); // Allowed but BANG 🔫 at runtime
+catArr = animalArr; // OK si contravarianca
+catArr[0].meow(); // Permitido pero BANG 🔫 en tiempo de ejecución
 
 
 /**
- * Also Bad : covariance
+ * También malo : covarianza
  * Animal <= Cat
  * Animal[] <= Cat[]
  */
-animalArr = catArr; // Okay if covariant
-animalArr.push(new Animal('another animal')); // Just pushed an animal into catArr!
-catArr.forEach(c => c.meow()); // Allowed but BANG 🔫 at runtime
+animalArr = catArr; // OK si covarianza
+animalArr.push(new Animal('another animal')); // Pusimos un animal en catArr!
+catArr.forEach(c => c.meow()); // Permitido pero BANG 🔫 en tiempo de ejecución
 ```
