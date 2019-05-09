@@ -1,8 +1,8 @@
-# Index Signatures
+# Firmas de índices
 
-An `Object` in JavaScript (and hence TypeScript) can be accessed with a **string** to hold a reference to any other JavaScript **object**.
+Se puede acceder a un `Objecto` en JavaScript (y por lo tanto en TypeScript) con una **string** para guardar la referencia a cualquier otro **objeto** de JavaScript. 
 
-Here is a quick example:
+Aquí hay un ejemplo pequeño:
 
 ```ts
 let foo:any = {};
@@ -10,7 +10,7 @@ foo['Hello'] = 'World';
 console.log(foo['Hello']); // World
 ```
 
-We store a string `"World"` under the key `"Hello"`. Remember we said it can store any JavaScript **object**, so lets store a class instance just to show the concept:
+Guardamos una string `"World"` bajo la clave `"Hello"`. Recuerden que dijimos que puede guardar cualquier **objeto** de JavaScript, así que guardemos una instancia de una clase únicamente para demostrar este concepto:
 
 ```ts
 class Foo {
@@ -25,7 +25,7 @@ foo['Hello'] = new Foo('World');
 foo['Hello'].log(); // World
 ```
 
-Also remember that we said that it can be accessed with a **string**. If you pass any other object to the index signature the JavaScript runtime actually calls `.toString` on it before getting the result. This is demonstrated below:
+También deben recordar que dijimos que se puede acceder a un objeto con una **string**. Si le pasan cualquier otro objeto a la firma de índice, el tiempo de ejecución de JavaScript llamará `.toString` sobre él antes de obtener el resultado. Lo mostramos a continuación:
 
 ```ts
 let obj = {
@@ -36,25 +36,25 @@ let obj = {
 }
 
 let foo:any = {};
-foo[obj] = 'World'; // toString called
-console.log(foo[obj]); // toString called, World
+foo[obj] = 'World'; // toString llamado
+console.log(foo[obj]); // toString llamado, World
 console.log(foo['Hello']); // World
 ```
 
-Note that `toString` will get called whenever the `obj` is used in an index position.
+Notemos que `toString` será llamado cada vez que `obj` sea usado en posición de index.
 
-Arrays are slightly different. For `number` indexing JavaScript VMs will try to optimise (depending on things like is it actually an array and do the structures of items stored match etc.). So `number` should be considered as a valid object accessor in its own right (distinct from `string`). Here is a simple array example:
+Los arrays son ligeramente diferentes. En lo que respecta a indexación por `número`, las VMs de JavaScript tratarán de optimizar (dependiendo de cosas como si es realmente un array y si coinciden las estructuras de los ítems guardados en él, etc). Por lo tanto, los **números** pueden ser considerados como un método de acceso a un objeto válido y por derecho propio (diferente de `string`). Aquí hay un ejemplo simple de array:
 
 ```ts
 let foo = ['World'];
 console.log(foo[0]); // World
 ```
 
-So that's JavaScript. Now let's look at TypeScript's graceful handling of this concept.
+Así que eso es JavaScript. Ahora miremos como TypeScript maneja este concepto.
 
-## TypeScript Index Signature
+## Firma de índices de TypeScript
 
-First off, because JavaScript *implicitly* calls `toString` on any object index signature, TypeScript will give you an error to prevent beginners from shooting themselves in the foot (I see users shooting themselves in the foot when using JavaScript all the time on stackoverflow):
+En primer lugar, debido a que JavaScript llama `.toString` implícitamente para cualquier firma de índice de un objeto, TypeScript tirará un error para evitar que principiantes metan la pata (Vemos a usuarios meter la pata cuando usan JavaScript todo el tiempo en stackoverflow):
 
 ```ts
 let obj = {
@@ -68,11 +68,11 @@ let foo:any = {};
 // ERROR: the index signature must be string, number ...
 foo[obj] = 'World';
 
-// FIX: TypeScript forces you to be explicit
+// SOLUCION: TypeScript te obliga a ser explícito
 foo[obj.toString()] = 'World';
 ```
 
-The reason for forcing the user to be explicit is because the default `toString` implementation on an object is pretty awful, e.g. on v8 it always returns `[object Object]`:
+La razón detrás de forzar al usuario a ser explícito se encuentra en que la implementación default de `toString` en un objeto es bastante fea. Por ejemplo, en V8 siempre devuelve `[object Object]`:
 
 ```ts
 let obj = {message:'Hello'}
@@ -81,37 +81,38 @@ let foo:any = {};
 // ERROR: the index signature must be string, number ...
 foo[obj] = 'World';
 
-// Here is where you actually stored it!
+// Aquí es donde realmente lo guardaron!
 console.log(foo["[object Object]"]); // World
 ```
 
+Por supuesto que `número` es soportado, ya que:
+
+1. es necesario para tener soporte de excelente calidad para Array / Tuple
+2. aunque lo uses para un `obj` la implementación default de `toString` es buena (no `[object Object]`
 Of course `number` is supported because
 
-1. its needed for excellent Array / Tuple support.
-1. even if you use it for an `obj` its default `toString` implementation is nice (not `[object Object]`).
-
-Point 2 is shown below:
+Demostramos 2. a continuación:
 
 ```ts
 console.log((1).toString()); // 1
 console.log((2).toString()); // 2
 ```
 
-So lesson 1:
+Lección número 1:
 
-> TypeScript index signatures must be either `string` or `number`
+> Las firmas de índices de TypeScript deben ser de tipo `string` o `number`
 
-Quick note: `symbols` are also valid and supported by TypeScript. But let's not go there just yet. Baby steps.
+Una pequeña nota: los `symbols` también son válidos y soportados por TypeScript. Pero no entremos en esto aún. Paso a paso.
 
-### Declaring an index signature
+### Declarar una firma de índices
 
-So we've been using `any` to tell TypeScript to let us do whatever we want. We can actually specify an *index* signature explicitly. E.g. say you want to make sure that anything that is stored in an object using a string conforms to the structure `{message: string}`. This can be done with the declaration `{ [index:string] : {message: string} }`. This is demonstrated below:
+Hemos estado usando `any` para decirle a TypeScript que nos deje hacer lo que querramos. En realidad, podemos especificar una firma de *índice* explícitamente. Por ejemplo, digamos que quieren asegurarse que cualquier cosa que sea guardada en un objeto usando una string se ajuste a la estructura `{message: string}`. Podemos hacer esto con la declaración `{ [index:string] : {message: string} }` que mostramos a continuación:
 
 ```ts
 let foo:{ [index:string] : {message: string} } = {};
 
 /**
- * Must store stuff that conforms to the structure
+ * Debemos guardar cosas que adhieran a la estructura
  */
 /** Ok */
 foo['a'] = { message: 'some message' };
@@ -119,7 +120,7 @@ foo['a'] = { message: 'some message' };
 foo['a'] = { messages: 'some message' };
 
 /**
- * Stuff that is read is also type checked
+ * Cosas que son leidas también estan sujetas a chequeos de tipo
  */
 /** Ok */
 foo['a'].message;
@@ -127,16 +128,16 @@ foo['a'].message;
 foo['a'].messages;
 ```
 
-> TIP: the name of the index signature e.g. `index` in `{ [index:string] : {message: string} }` has no significance for TypeScript and is only for readability. e.g. if it's user names you can do `{ [username:string] : {message: string} }` to help the next dev who looks at the code (which just might happen to be you).
+> TIP: el nombre de la firma del índice (`index` en `{ [index: string]: {message: string} }` no tiene importancia para TypeScript y solamente se usa para aumentar la legibilidad. Por ejemplo, si son nombres de usuarios pueden usar `{ [username: string] : {message: string} }` para ayudar a que el próximo desarrollador que mire esta parte del código (quien bien podría ser alguno de ustedes).
 
-Of course `number` indexes are also supported e.g. `{ [count: number] : SomeOtherTypeYouWantToStoreEgRebate }`
+Por supuesto que los índices numéricos también están soportados: `{ [count: number] : SomeOtherTypeYouWantToStoreEgRebate }`
 
-### All members must conform to the `string` index signature
+### Todos los miembros deben adherir a la firma de índice `string`
 
-As soon as you have a `string` index signature, all explicit members must also conform to that index signature. This is shown below:
+A penas tengan una firma de índice `string`, todos los miembros explícitos deberán adherir a esa firma. Lo mostramos a continuación:
 
 ```ts
-/** Okay */
+/** OK */
 interface Foo {
   [key:string]: number
   x: number;
@@ -150,7 +151,7 @@ interface Bar {
 }
 ```
 
-This is to provide safety so that any string access gives the same result:
+Esto es así para proveer seguridad para que cualquier acceso mediante strings dé el mismo resultado:
 
 ```ts
 interface Foo {
@@ -167,9 +168,9 @@ let x = 'x'
 foo[x]; // number
 ```
 
-### Using a limited set of string literals
+### Usar un conjunto limitado de literales de string
 
-An index signature can require that index strings be members of a union of literal strings by using *Mapped Types* e.g.:
+Una firma de índice puede requerir que las strings de los índices sean miembros de una unión de literales de string mediante el uso de *Tipos Mapeados*. Por ejemplo:
 
 ```ts
 type Index = 'a' | 'b' | 'c'
@@ -179,40 +180,41 @@ const good: FromIndex = {b:1, c:2}
 
 // Error:
 // Type '{ b: number; c: number; d: number; }' is not assignable to type 'FromIndex'.
-// Object literal may only specify known properties, and 'd' does not exist in type 'FromIndex'.
+// Los objetos literales solo pueden especificar propiedades conocidas, y 'd' no existe en el tipo 'FromIndex'.
 const bad: FromIndex = {b:1, c:2, d:3};
 ```
 
-This is often used together with `keyof typeof` to capture vocabulary types, described on the next page.
+Generalmente, esto se usa en conjunto con `keyof typeof` para capturar tipos de vocabulario, descriptos en la siguiente página.
 
-The specification of the vocabulary can be deferred generically:
+La especificación del vocabulario se puede diferir genéricamente:
 
 ```ts
 type FromSomeIndex<K extends string> = { [key in K]: number }
 ```
 
-### Having both `string` and `number` indexers
+### Tener `string`s y `number`s como índices
 
-This is not a common use case, but TypeScript compiler supports it nonetheless.
+Este no es un caso de uso común, pero el compilador de TypeSCript lo soporta de todas maneras.
 
-However, it has the restriction that the `string` indexer is more strict than the `number` indexer. This is intentional e.g. to allow typing stuff like:
+Sin embargo, tiene la restricción de que el indexador `string` es más estricto que el indexador `number`. Esto es intencional, ya que permite tipear cosas como:
+
 
 ```ts
 interface ArrStr {
-  [key: string]: string | number; // Must accommodate all members
+  [key: string]: string | number; // Debe aceptar todos los miembros
 
-  [index: number]: string; // Can be a subset of string indexer
+  [index: number]: string; // Puede ser un subconjunto del indexador string
 
-  // Just an example member
+  // Ejemplo de un miembro
   length: number;
 }
 ```
 
-### Design Pattern: Nested index signature
+### Patrón de diseño: Firma de índices anidada
 
-> API consideration when adding index signatures
+> Consideración de API al agregar firmas de índices
 
-Quite commonly in the JS community you will see APIs that abuse string indexers. e.g. a common pattern among CSS in JS libraries:
+Comúnmente en la comunidad JS, verán APIs que abusan de los indexadores string. Por ejemplo, un patrón común en librerías de CSS en JS:
 
 ```ts
 interface NestedCSS {
@@ -228,6 +230,7 @@ const example: NestedCSS = {
 }
 ```
 
+Intenten no mezclar indexadores string con valores *válidos* como en el ejemplo anterior. Si lo hacen errores de tipeo en propiedades como `padding` no serán descurbiertos:
 Try not to mix string indexers with *valid* values this way. E.g. a typo in the padding will remain uncaught:
 
 ```ts
@@ -236,7 +239,7 @@ const failsSilently: NestedCSS = {
 }
 ```
 
-Instead separate out the nesting into its own property e.g. in a name like `nest` (or `children` or `subnodes` etc.):
+En lugar separen la anidación en su propia propiedad, usando un nombre como `nest` (o `children` o `subnodes`, etc)::
 
 ```ts
 interface NestedCSS {
@@ -260,11 +263,11 @@ const failsSilently: NestedCSS = {
 }
 ```
 
-### Excluding certain properties from the index signature
+### Excluir ciertas propiedades de la firma de índices
 
-Sometimes you need to combine properties into the index signature. This is not advised, and you *should* use the Nested index signature pattern mentioned above. 
+A veces necesitarán combinar propiedades combinar propiedades en la firma de índice. Esto no es aconsejable, y deberían usar la firma de índices anidada que mencionamos anteriormente.
 
-However, if you are modeling *existing JavaScript* you can get around it with an intersection type. The following shows an example of the error you will encounter without using an intersection:
+Sin embargo, si están modelando *JavaScript existente* pueden esquivarlo con un tipo de intersección. El siguiente ejemplo muestra un error con el que se encontrarán si no usan intersecciones:
 
 ```ts
 type FieldState = {
@@ -277,7 +280,7 @@ type FormState = {
 }
 ```
 
-Here is the workaround using an intersection type:
+Aquí está la solución con una intersección:
 
 ```ts
 type FieldState = {
@@ -289,7 +292,7 @@ type FormState =
   & { [fieldName: string]: FieldState }
 ```
 
-Note that even though you can declare it to model existing JavaScript, you cannot create such an object using TypeScript:  
+Notemos que aunque pueden declararlo para que modele JavaScript existente, no podrán crear un objeto semejante usando TypeScript:
 
 ```ts
 type FieldState = {
@@ -301,13 +304,13 @@ type FormState =
   & { [fieldName: string]: FieldState }
 
 
-// Use it for some JavaScript object you are gettting from somewhere 
+// Usenlo para un objeto JavaScript que están recibiendo de algun lado
 declare const foo:FormState; 
 
 const isValidBool = foo.isValid;
 const somethingFieldState = foo['something'];
 
-// Using it to create a TypeScript object will not work
+// Usarlo para crear un objeto en TypeScript no funcionará
 const bar: FormState = { // Error `isValid` not assignable to `FieldState
   isValid: false
 }
