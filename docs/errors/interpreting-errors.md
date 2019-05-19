@@ -1,7 +1,7 @@
-# Interpreting Errors 
-Since TypeScript is a heavily focused *Developer Help* oriented programming language, its errors messages try to be super helpful when something goes wrong. This can lead to a slight information overload for unsuspecting users of compilers that aren't so helpful. 
+# Interpretar Errores
+Dado que TypeScript es un lenguaje de programación fuertemente orientado y enfocado en *ayudar a los desarrolladores*, sus mensajes de error suelen ser súper útiles cuando algo falla. Esto puede desembocar en una ligera sobrecarga de información para los usuarios de compiladores que no suelen ser tán serviciales.
 
-Lets look at an example in an IDE to break apart the process of reading an error message. 
+Miremos un ejemplo en un IDE para desarmar el proceso de leer un mensaje de error.
 
 ```ts
 type SomethingComplex = {
@@ -15,31 +15,30 @@ function getBar(): string {
 }
 
 //////////////////////////////////
-// Example error production
+// Ejemplo de error
 //////////////////////////////////
 const fail = {
   foo: 123,
   bar: getBar
 };
 
-takeSomethingComplex(fail); // TS ERROR HAPPENS HERE 
+takeSomethingComplex(fail); // EL ERROR DE TS OCURRE AQUÍ
 ```
 
-This example demonstrates a common programmer error where they *fail* to call a function (`bar: getBar` should be `bar: getBar()`). Fortunately this mistake is caught by TypeScript as soon as it doesn't meet the type requirements. 
+Este ejemplo demuestra un error de programación común, en el que el programador *falla* al llamar una función (`bar: getBar` debería ser `bar: getBar()`). Afortunadamente, este error es atrapado por TypeScript en cuanto los requerimientos no son cumplidos.
 
-## Error Categories
-There are two categories of TypeScript Error messages (succint and detailed). 
+## Categorías de errores
+Hay dos categorías de mensajes de error en TypeScript (sucintos y detallados).
 
-### Succint
-The objective of the succint error message is to provide an example *conventional compiler* description of the error number and message. For this example the succint message looks like: 
-
+### Sucintos
+El objetivo de los mensajes de error sucintos es proveer una descripción *convencional de compilador* del número y mensaje del error. Para este ejemplo, el mensaje sucito sería el siguiente:
 ```
 TS2345: Argument of type '{ foo: number; bar: () => string; }' is not assignable to parameter of type 'SomethingComplex'.
 ```
-It is fairly self explanatory. However, it doesn't provide a deeper breakdown of *why* the error is happening. That is what the *detiled* error message is for.
+Se explica bastante a sí mismo. Sin embargo, no provee un análisis más profundo sobre *por qué* el error sucede. El mensaje de error detallado existe justamente para este propósito.
 
-### Detailed
-For this example the detailed version looks like: 
+### Detallado
+Para este ejemplo, la versión detallada del mensaje de error sería la siguiente:
 
 ```
 [ts]
@@ -47,29 +46,29 @@ Argument of type '{ foo: number; bar: () => string; }' is not assignable to para
   Types of property 'bar' are incompatible.
     Type '() => string' is not assignable to type 'string'.
 ```
-The objective of the detailed error message is to *guide* the user to the reason why some error (type incompatability in this case) is happening. The first line is same as the succint, followed by a chain. You should read this chain as a series of responses to the developer question `WHY?` between lines i.e 
+El objetivo del mensaje de error detallado es *guiar* al usuario hacia el motivo por el que algún error (en este caos, incompatibilidad de tipos) está sucediendo. La primera línea es la misma que en el error sucinto, seguida de una cadena. Deberían poder leer esta cadena como una serie de respuestas a un `POR QUÉ?` entre líneas de un desarrollador hipotético. Por ejemplo:
 
 ```
 ERROR: Argument of type '{ foo: number; bar: () => string; }' is not assignable to parameter of type 'SomethingComplex'.
 
-WHY? 
+POR QUÉ? 
 CAUSE ERROR: Types of property 'bar' are incompatible.
 
-WHY? 
+POR QUÉ? 
 CAUSE ERROR: Type '() => string' is not assignable to type 'string'.
 ```
 
-So the root cause is,
-* for property `bar`
-* there is a function `() => string` while it was expected as a `string`. 
+Por lo tanto, la causa principal es
+* para la propiedad `bar`
+* hay una función `() => string` mientras que se esperaba que fuera una `string`.
 
-This should help the developer fix the bug for the `bar` property (they forgot to invoke `()` the function).
+Esto debería ayudar a que el desarrollador arregle el problema en la propiedad `bar` (se olvidaron de invocar la función con `()`)
 
-## How it shows up in an IDE Tooltip 
+## Cómo se muestra en una información sobre herramientas IDE
 
-The IDE normally shows the `detailed` followed by the `succint` version in a tooltip as shown below: 
+el IDE suele mostrar la versión `detallada` seguida de la `sucinta` en una herramienta, como mostramos a continuación:
 
-![IDE error message example](https://raw.githubusercontent.com/basarat/typescript-book/master/images/errors/interpreting-errors/ide.png)
+![ejemplo de mensaje de error en IDE](https://raw.githubusercontent.com/basarat/typescript-book/master/images/errors/interpreting-errors/ide.png)
 
-* You normally just read the `detailed` version forming the `WHY?` chain in your head. 
-* You use the succint version if you want to search for similar errors (using the `TSXXXX` error code or portions of the error message)
+* Normalmente, lean la versión `detallada` formulando la cadena `POR QUÉ?` en sus cabezas.
+* Pueden usar la versión sucinta si quieren buscar errores similares (usando el código de error `TSXXXX` o porciones del mensaje de error)

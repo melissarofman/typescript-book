@@ -1,18 +1,18 @@
 # noImplicitAny
 
-There are some things that cannot be inferred or inferring them might result in unexpected errors. A fine example is function arguments. If you don't annotate them, its unclear what should and shouldn't be valid e.g.
+Hay algunas cosas que no pueden ser inferidas o para las que inferirlas podría resultar en errores inesperados. Un buen ejemplo son los argumentos de una función. Si no los anotan, es poco claro qué deberían hacer y qué debería ser inválido. Por ejemplo:
 
 ```ts
 function log(someArg) {
   sendDataToServer(someArg);
 }
 
-// What arg is valid and what isn't?
+// Cuál argumento es válido y cuál no?
 log(123);
 log('hello world');
 ```
 
-So if you don't annotate some function argument, TypeScript assumes `any` and moves on. This essentially turns off type checking for such cases, which is what a JavaScript dev would expect. But this can catch people that want high safety off guard. Hence there is an option, `noImplicitAny`, that when switched on will flag the cases where the type cannot be inferred e.g.
+Por este motivo, si ustedes no anotan los tipos de los argumentos de una función, TypeScript asume `any` y continúa. En la práctica, esto es lo mismo que apagar el sistema de control de tipos para estos casos, que es lo que querría un desarrollador JavaScript. Pero puede agarrar desprevenidas a las personas que quieren una alta seguridad de tipos. Por eso existe la opción `noImplicitAny`, que al ser encendida alertará sobre los casos en los que los tipos no pueden ser inferidos:
 
 ```ts
 function log(someArg) { // Error : someArg has an implicit `any` type
@@ -20,7 +20,7 @@ function log(someArg) { // Error : someArg has an implicit `any` type
 }
 ```
 
-Of course you can then go ahead and annotate:
+Claro que igual pueden proceder a anotarlo:
 
 ```ts
 function log(someArg: number) {
@@ -28,7 +28,7 @@ function log(someArg: number) {
 }
 ```
 
-And if you truly want *zero safety* you can mark it *explicitly* as `any`:
+Y si realmente quieren *cero seguridad* pueden marcarlo *explícitamente* como `any`:
 
 ```ts
 function log(someArg: any) {

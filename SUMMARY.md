@@ -65,11 +65,11 @@
 * [JSX](docs/jsx/tsx.md)
   * [React](docs/jsx/react.md)
   * [JSX sin React](docs/jsx/others.md)
-* [Options](docs/options/intro.md) --> **Traducido hasta aquí**
+* [Opciones](docs/options/intro.md) 
   * [noImplicitAny](docs/options/noImplicitAny.md)
   * [strictNullChecks](docs/options/strictNullChecks.md)
-* [Errors in TypeScript](docs/errors/main.md)
-  * [Interpreting Errors](docs/errors/interpreting-errors.md)
+* [Errores en TypeScript](docs/errors/main.md)
+  * [Interpretando Errores](docs/errors/interpreting-errors.md) --> **Traducido hasta aquí**
   * [Common Errors](docs/errors/common-errors.md)
 * [NPM](docs/npm/index.md)
 * [Testing](docs/testing/intro.md)
