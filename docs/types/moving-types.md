@@ -1,14 +1,14 @@
-# Moving Types
+# Tipos móviles
 
-TypeScript's type system is extremely powerful and allows moving and slicing types in ways not possible in any other single language out there.
+El sistema de tipos de TypeScript es extremadamente poderoso y permite mover y dividir tipos en maneras que no son posibles en ningún otro lenguaje existente.
 
-This is because TypeScript is designed to allow you to work seamlessly with a *highly dynamic* language like JavaScript. Here we cover a few tricks for moving types around in TypeScript.
+Esto se debe a que TypeScript fue diseñado para permitirles trabajar sin fricciones con un lenguaje *altamente dinámico* como JavaScript. Aquí cubriremos algunos trucos para mover tipos en TypeScript. 
 
-Key motivation for these : You change one thing and everything else just updates automatically and you get nice errors if something is going to break, like a well designed constraint system.
+La fundamentación principal es que: si cambian una sola cosa, todo lo demás se actualizará automáticamente y recibirán errors útiles si algo se rompe a partir de los cambios, como un sistema de restricciones bien diseñado.
 
-## Copying both the Type + Value
+## Copiando tanto el Tipo como el Valor
 
-If you want to move a class around, you might be tempted to do the following:
+Si quieren mover una clase, tal vez estén tentados de hacer lo siguiente:
 
 ```ts
 class Foo { }
@@ -16,7 +16,7 @@ var Bar = Foo;
 var bar: Bar; // ERROR: cannot find name 'Bar'
 ```
 
-This is an error because `var` only copied the `Foo` into the *variable* declaration space and you therefore cannot use `Bar` as a type annotation. The proper way is to use the `import` keyword. Note that you can only use the `import` keyword in such a way if you are using *namespaces* or *modules* (more on these later):
+Este es un error porque `var` únicamente copio `Foo` en el espacio de declaración de *variables* y, por lo tanto, no podrán usar `Bar` como una anotación de tipos. La estrategia correcta es usar la palabra clave `import`. Noten que solo podrán usarla de esta manera si estan usando *namespaces* o *módulos* (más detalles sobre esto luego):
 
 ```ts
 namespace importing {
@@ -27,56 +27,56 @@ import Bar = importing.Foo;
 var bar: Bar; // Okay
 ```
 
-This `import` trick only works for things that are *both type and variable*.
+Este truco de `import` solo funciona para cosas que son *tanto tipos como variables*.
 
-## Capturing the type of a variable
+## Capturar el tipo de una variable
 
-You can actually use a variable in a type annotation using the `typeof` operator. This allows you to tell the compiler that one variable is the same type as another. Here is an example to demonstrate this:
+Pueden usar una variable en una anotación de tipos usando el operador `typeof`. Esto les permitirá decirle al compilador que una variable es del mismo tipo que otra. Aquí mostramos un ejemplo:
 
 ```ts
 var foo = 123;
-var bar: typeof foo; // `bar` has the same type as `foo` (here `number`)
-bar = 456; // Okay
+var bar: typeof foo; // `bar` tiene el mismo tipo que `foo` (acá, `number`)
+bar = 456; // OK
 bar = '789'; // ERROR: Type `string` is not `assignable` to type `number`
 ```
 
-## Capturing the type of a class member
+## Capturar el tipo de un miembro de una clase
 
-Similar to capturing the type of a variable, you just declare a variable purely for type capturing purposes:
+De manera similar a como capturamos el tipo de una variable, pueden declarar una variable únicamente para capturar tipos:
 
 ```ts
 class Foo {
-  foo: number; // some member whose type we want to capture
+  foo: number; // algun miembro cuyo tipo queremos capturar
 }
 
-// Purely to capture type
+// Únicamente para capturar el tipo
 declare let _foo: Foo;
 
-// Same as before
-let bar: typeof _foo.foo; // `bar` has type `number`
+// Lo mismo que antes
+let bar: typeof _foo.foo; // `bar` tiene el tipo `number`
 ```
 
-## Capturing the type of magic strings
+## Capturando el tipo de strings mágicas
 
-Lots of JavaScript libraries and frameworks work off of raw JavaScript strings. You can use `const` variables to capture their type e.g.
+Muchas librerías de JavaScript y frameworks usan strings de JavaScript puras. Pueden usar variables `const` para capturar sus tipos:
 
 ```ts
-// Capture both the *type* _and_ *value* of magic string:
+// Captura tanto el *tipo* como el *valor* de la string mágica:
 const foo = "Hello World";
 
-// Use the captured type:
+// Usa el tipo capturado:
 let bar: typeof foo;
 
-// bar can only ever be assigned to `Hello World`
+// bar solo puede recibir `Hello World`
 bar = "Hello World"; // Okay!
 bar = "anything else "; // Error!
 ```
 
-In this example `bar` has the literal type `"Hello World"`. We cover this more in the [literal type section](https://basarat.gitbooks.io/typescript/content/docs/types/literal-types.html "Literal Types").
+En este ejemplo, `bar` tiene el tipo literal `"Hello World"`. Cubrimos esto en mayor profundidad en la [sección de tipos literales](https://basarat.gitbooks.io/typescript/content/docs/types/literal-types.html "Tipos Literales").
 
-## Capturing Key Names
+## Capturando nombres clave
 
-The `keyof` operator lets you capture the key names of a type. E.g. you can use it to capture the key names of a variable by first grabbing its type using `typeof`:
+El operador `keyof` les permitirá capturar los nombres clave de un tipo. Por ejemplo, pueden usarlo para capturar los nombres clave de una variable al agarrar primero su tipo con `typeof`:
 
 ```ts
 const colors = {
@@ -85,10 +85,10 @@ const colors = {
 }
 type Colors = keyof typeof colors;
 
-let color: Colors; // same as let color: "red" | "blue"
-color = 'red'; // okay
-color = 'blue'; // okay
+let color: Colors; // idéntico a let color: "red" | "blue"
+color = 'red'; // OK
+color = 'blue'; // OK
 color = 'anythingElse'; // Error: Type '"anythingElse"' is not assignable to type '"red" | "blue"'
 ```
 
-This allows you to have stuff like string enums + constants quite easily, as you just saw in the above example.
+Esto les permitirá tener cosas como string enums + constantes de forma sencilla, como han visto en el ejemplo anterior.

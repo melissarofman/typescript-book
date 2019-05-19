@@ -1,8 +1,8 @@
-### Discriminated Union
+### Uniones discriminadas
 
-If you have a class with a [*literal member*](./literal-types.md) then you can use that property to discriminate between union members.
+Si tuvieras una clase con un [*miembro literal*](./literal-types.md) entonces pueden usar esa propiedad para discriminar entre miembros de uniones.
 
-As an example consider the union of a `Square` and `Rectangle`, here we have a member `kind` that exists on both union members and is of a particular *literal type*:
+A modo de ejemplo, consideren la union de un `Square` y un `Rectangle`. Aquí tenemos un miembro `kind` que existe en ambos miembros de la unión y es de un *tipo literal* particular:
 
 ```ts
 interface Square {
@@ -18,25 +18,25 @@ interface Rectangle {
 type Shape = Square | Rectangle;
 ```
 
-If you use a type guard style check (`==`, `===`, `!=`, `!==`) or `switch` on the *discriminant property* (here `kind`) TypeScript will realize that the object must be of the type that has that specific literal and do a type narrowing for you :)
+Si usas un control de estilo de guardias de tipo (`==`, `===`, `!=`, `!==`) o `switch` en la *propiedad discriminante* (aquí `kind`) TypeScript se dará cuenta que el objeto debe ser del tipo que tien ese literal específico y hará una reducción de tipos por ustedes :)
 
 ```ts
 function area(s: Shape) {
     if (s.kind === "square") {
-        // Now TypeScript *knows* that `s` must be a square ;)
-        // So you can use its members safely :)
+        // Ahora TypeScript *sabe* que `s` debe ser un Square ;)
+        // Por lo que pueden usar sus miembros de manera segura :)
         return s.size * s.size;
     }
     else {
-        // Wasn't a square? So TypeScript will figure out that it must be a Rectangle ;)
-        // So you can use its members safely :)
+        // No era un Square? Entonces TypeScript se dará cuenta que debe ser un Rectanble ;)
+        // Por lo que pueden usar sus miembros de manera segura :)
         return s.width * s.height;
     }
 }
 ```
 
-### Exhaustive Checks
-Quite commonly you want to make sure that all members of a union have some code(action) against them.
+### Controles exhaustivos
+Comúnmente querrán asegurarse que todos los miembros de una unión tienen algún código (acción) en su contra.
 
 ```ts
 interface Square {
@@ -50,8 +50,8 @@ interface Rectangle {
     height: number;
 }
 
-// Someone just added this new `Circle` Type
-// We would like to let TypeScript give an error at any place that *needs* to cater for this
+// Alguien recién agregó este nuevo tipo `Circle`
+// Queremos que TypeScript de un error en cualquier lugar que *necesite* atender a esto
 interface Circle {
     kind: "circle";
     radius: number;
@@ -60,7 +60,7 @@ interface Circle {
 type Shape = Square | Rectangle | Circle;
 ```
 
-As an example of where stuff goes bad:
+A modo de ejemplo sobre dónde las cosas salen mal:
 
 ```ts
 function area(s: Shape) {
@@ -70,11 +70,11 @@ function area(s: Shape) {
     else if (s.kind === "rectangle") {
         return s.width * s.height;
     }
-    // Would it be great if you could get TypeScript to give you an error?
+    // No sería genial si pudieramos lograr que TypeScript nos de un error?
 }
 ```
 
-You can do that by simply adding a fall through and making sure that the inferred type in that block is compatible with the `never` type. For example if you add the exhaustive check you get a nice error:
+Puedes hacerlo simplemente agregando una caída y asegurándose que el tipo inferido en ese bloque sea compatible con el tipo `never`. Por ejemplo, sia gregan el chequeo exhaustivo recibirán un lindo error:
 
 ```ts
 function area(s: Shape) {
@@ -91,7 +91,7 @@ function area(s: Shape) {
 }
 ```
 
-That forces you to handle this new case : 
+Esto los obligará a cubrir el nuevo caso: 
 
 ```ts
 function area(s: Shape) {
@@ -105,7 +105,7 @@ function area(s: Shape) {
         return Math.PI * (s.radius **2);
     }
     else {
-        // Okay once more
+        // OK de nuevo
         const _exhaustiveCheck: never = s;
     }
 }
@@ -113,7 +113,7 @@ function area(s: Shape) {
 
 
 ### Switch
-TIP: of course you can also do it in a `switch` statement:
+PISTA: por supuesto, también pueden hacerlo en una declaración `switch`:
 
 ```ts
 function area(s: Shape) {
@@ -126,11 +126,9 @@ function area(s: Shape) {
 }
 ```
 
-[references-discriminated-union]:https://github.com/Microsoft/TypeScript/pull/9163
-
 ### strictNullChecks
 
-If using strictNullChecks and doing exhaustive checks, TypeScript might complain "not all code paths return a value". You can silence that by simply returning the `_exhaustiveCheck` variable (of type `never`). So:
+Si están usando strictNullChecks y haciendo controles exhaustivos, TypeScript tal vez se quejará que "no todos los caminos del código devuelven un valor". Pueden silenciar esto devolviendo la variable `_exhaustiveCheck` (de tipo `never`). Entonces:
 
 ```ts
 function area(s: Shape) {
@@ -147,9 +145,9 @@ function area(s: Shape) {
 
 ### Redux
 
-A popular library that makes use of this is redux.
+Una librería popular que hace uso de esto es redux.
 
-Here is the [*gist of redux*](https://github.com/reactjs/redux#the-gist) with TypeScript type annotations added:
+Aquí está [*la esencia de redux*(https://github.com/reactjs/redux#the-gist) con anotación de tipo de TypeScript:
 
 ```ts
 import { createStore } from 'redux'
@@ -163,16 +161,17 @@ type Action
   }
 
 /**
- * This is a reducer, a pure function with (state, action) => state signature.
- * It describes how an action transforms the state into the next state.
+ * Este es un *reducer*, una función pura con firma (state, action) => state.
+ * Describe como una acción transforma el *state* actual al siguiente *state*.
+ * 
  *
- * The shape of the state is up to you: it can be a primitive, an array, an object,
- * or even an Immutable.js data structure. The only important part is that you should
- * not mutate the state object, but return a new object if the state changes.
- *
- * In this example, we use a `switch` statement and strings, but you can use a helper that
- * follows a different convention (such as function maps) if it makes sense for your
- * project.
+ * La forma del estado depende de ustedes: puede ser un primitivo, un array, un objeto 
+ * o incluso una estructura de datos de Immutable.js. La única parte importante es que
+ * no deben mutar el objeto state, sino devolver un nuevo objeto si el state cambia.
+ * 
+ * En este ejemplo, usamos una declaración `switch` y strings, pero pueden usar un ayudante
+ * que siga una definción diferente (como funciones mapa) si tiene más sentido para sus
+ * proyectos.
  */
 function counter(state = 0, action: Action) {
   switch (action.type) {
@@ -185,20 +184,20 @@ function counter(state = 0, action: Action) {
   }
 }
 
-// Create a Redux store holding the state of your app.
-// Its API is { subscribe, dispatch, getState }.
+// Creen un *store* de Redux que guarde el estado de su aplicación.
+// La API es { subscribe, dispatch, getState }.
 let store = createStore(counter)
 
-// You can use subscribe() to update the UI in response to state changes.
-// Normally you'd use a view binding library (e.g. React Redux) rather than subscribe() directly.
-// However, it can also be handy to persist the current state in the localStorage.
+// Pueden usar subscripe() para actualizar la UI en respuesta a los cambios de estado.
+// Normalmente usarían una librería de conexión (ejemplo, React-redux) en lugar de subscribirse directamente.
+// Sin embargo, también es conveniente persistir el estado actual en el localStorage.
 
 store.subscribe(() =>
   console.log(store.getState())
 )
 
-// The only way to mutate the internal state is to dispatch an action.
-// The actions can be serialized, logged or stored and later replayed.
+// La única manera de mutar el estado interno es despachar una acción.
+// Las acciones pueden ser serializadas, registradas o guardadas y luego repetidas.
 store.dispatch({ type: 'INCREMENT' })
 // 1
 store.dispatch({ type: 'INCREMENT' })
@@ -207,4 +206,4 @@ store.dispatch({ type: 'DECREMENT' })
 // 1
 ```
 
-Using it with TypeScript gives you safety against typo errors, increased refactor-ability and self documenting code.
+Usarla con TypeScript les dará seguridad contra errores de tipeo, una mayor habilidad de refactorizar y código que auto-documentado.
