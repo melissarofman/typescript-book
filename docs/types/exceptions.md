@@ -1,32 +1,32 @@
-# Exception Handling
+# Manejo de excepciones
 
-JavaScript has an `Error` class that you can use for exceptions. You throw an error with the `throw` keyword. You can catch it with a `try` / `catch` block pair e.g.
+JavaScript tiene una clase `Error` que pueden usar para excepciones. Pueden tirar un error con la palabra clave `throw`. Pueden atraparlo con un bloque `try` / `catch`. Por ejemplo:
 
 ```js
 try {
-  throw new Error('Something bad happened');
+  throw new Error('Algo malo pasó!');
 }
 catch(e) {
   console.log(e);
 }
 ```
 
-## Error Sub Types
+## Sub tipos de Error
 
-Beyond the built in `Error` class there are a few additional built-in error classes that inherit from `Error` that the JavaScript runtime can throw:
+Más allá de la clase incluída `Error`hay algunas clases de error incluídas que heredan del `Error` que el tiempo de ejecución de JavaScript puede tirar:
 
 ### RangeError
 
-Creates an instance representing an error that occurs when a numeric variable or parameter is outside of its valid range.
+Crea una instancia representado un error que ocurre cuando una variable o parámetro numérico se encuentra fuera de su rango válido.
 
 ```js
-// Call console with too many arguments
+// Llamen a console con demasiados argumentos
 console.log.apply(console, new Array(1000000000)); // RangeError: Invalid array length
 ```
 
 ### ReferenceError
 
-Creates an instance representing an error that occurs when de-referencing an invalid reference. e.g.
+Crea una instancia representand oun error que ocurre cuando desreferimos una referencia inválida:
 
 ```js
 'use strict';
@@ -35,7 +35,7 @@ console.log(notValidVar); // ReferenceError: notValidVar is not defined
 
 ### SyntaxError
 
-Creates an instance representing a syntax error that occurs while parsing code that isn't valid JavaScript.
+Crea una instancia representando un error sintáctico que ocurre al analizar código que no es JavaScript válido.
 
 ```js
 1***3; // SyntaxError: Unexpected token *
@@ -43,7 +43,7 @@ Creates an instance representing a syntax error that occurs while parsing code t
 
 ### TypeError
 
-Creates an instance representing an error that occurs when a variable or parameter is not of a valid type.
+Crea una instancia representando un error que ocurre cuando una variable o parámetro no es de tipo válido.
 
 ```js
 ('1.2').toPrecision(1); // TypeError: '1.2'.toPrecision is not a function
@@ -51,32 +51,32 @@ Creates an instance representing an error that occurs when a variable or paramet
 
 ### URIError
 
-Creates an instance representing an error that occurs when `encodeURI()` or `decodeURI()` are passed invalid parameters.
+Crea una instancia representando un error que ocurre cuando `encodeURI()` o `decodeURI()` reciben parámetros inválidos.
 
 ```js
 decodeURI('%'); // URIError: URI malformed
 ```
 
-## Always use `Error`
+## Siempre usen `Error`
 
-Beginner JavaScript developers sometimes just throw raw strings e.g.
+Muchos desarrolladores JavaScript principantes a veces tiran strings puras:
 
 ```js
 try {
-  throw 'Something bad happened';
+  throw 'Algo malo pasó!';
 }
 catch(e) {
   console.log(e);
 }
 ```
 
-*Don't do that*. The fundamental benefit of `Error` objects is that they automatically keep track of where they were built and originated with the `stack` property.
+*No hagan eso*. El beneficio fundamental del objeto `Error` es que mantienen un registro de donde fueron construidos y originados con la propiedad `stack`.
 
-Raw strings result in a very painful debugging experience and complicate error analysis from logs.
+Las strings puras resultan en una experiencia de depuración dolorosa y complican el proceso de análisis de errores a partir de registros.
 
-## You don't have to `throw` an error
+## No es necesario que tiren un error
 
-It is okay to pass an `Error` object around. This is conventional in Node.js callback style code which takes callbacks with the first argument as an error object.
+Está bien pasar un objeto `Error`. Esto es convención en código escrito siguiente el estilo de Nodejs, de aceptar devoluciones de llamada con el primer arguemtno como un objeto error.
 
 ```js
 function myFunction (callback: (e?: Error)) {
@@ -90,13 +90,13 @@ function myFunction (callback: (e?: Error)) {
 }
 ```
 
-## Exceptional cases
+## Casos excepcionales
 
-`Exceptions should be exceptional` is a common saying in computer science. There are a few reasons why this is true for JavaScript (and TypeScript) as well.
+`Las excepciones deberían ser excepcionales` es un dicho común en ciencias de la computación. Hay algunas razones por las que esto también es verdadero para JavaScript (y TypeScript).
 
-### Unclear where it is thrown
+### Poca claridad sobre el origen del `throw`
 
-Consider the following piece of code:
+Consideren el siguiente segmento de código:
 
 ```js
 try {
@@ -107,12 +107,11 @@ catch(e) {
   console.log('Error:', e);
 }
 ```
+El próximo desarrollador que lo mire no podrá saber cuál función es la que puede tirar el error. La persona que revisa el código tampoco podrá saberlo sin leer el detalle de la implementación de task1 / task2.
 
-The next developer cannot know which function might throw the error. The person reviewing the code cannot know without reading the code for task1 / task2 and other functions they might call etc.
+### Dificulta el manejo elegante de errores
 
-### Makes graceful handling hard
-
-You can try to make it graceful with explicit catch around each thing that might throw:
+Pueden intentar mejorar la claridad escribiendo un bloque `catch` alrededor de cada cosa que pueda tirar un error:
 
 ```js
 try {
@@ -129,10 +128,10 @@ catch(e) {
 }
 ```
 
-But now if you need to pass stuff from the first task to the second one the code becomes messy: (notice `foo` mutation requiring `let` + explicit need for annotating it because it cannot be inferred from the return of `runTask1`):
+Pero si ahora necesitan pasar cosas de la primera tarea a la segunda, el código se desordena bastante (noten que la mutación de `foo` requiere una declaración `let` + la necesidad de la anotación explícita porque no puede ser inferido de la devolución de `runTask1`):
 
 ```ts
-let foo: number; // Notice use of `let` and explicit type annotation
+let foo: number; // Noten la utilización de `let` y de anotaciones de tipo explícitas
 try {
   foo = runTask1();
 }
@@ -147,9 +146,9 @@ catch(e) {
 }
 ```
 
-### Not well represented in the type system
+### No se encuentra bien representado en el sistema de tipos
 
-Consider the function:
+Consideren la función:
 
 ```ts
 function validate(value: number) {
@@ -157,7 +156,7 @@ function validate(value: number) {
 }
 ```
 
-Using `Error` for such cases is a bad idea as it is not represented in the type definition for the validate function (which is `(value:number) => void`). Instead a better way to create a validate method would be:
+Usar `Error` para casos de este tipo es una mala idea ya que no se encuentra representado en la definición de tipos de la función `validate` (que es `(value:number) => void`). En su lugar, una mejor manera de crear un método de validación sería:
 
 ```ts
 function validate(value: number): {error?: string} {
@@ -165,6 +164,6 @@ function validate(value: number): {error?: string} {
 }
 ```
 
-And now its represented in the type system.
+Y ahora se encuentra representado en el sistema de tipos:
 
-> Unless you want to handle the error in a very generic (simple / catch-all etc) way, don't *throw* an error.
+> A no ser que quieran manejar el error de manera genérica (simple / catch-all, etc), no *tiren* un error.

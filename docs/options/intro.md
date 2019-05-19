@@ -1,12 +1,12 @@
-# Convenience vs. Soundness
+# Conveniencia vs solidez
 
-There are a few things that TypeScript prevents you from doing out of the box e.g. using a variable that *isn't ever declared* (of course you can use a *declaration file* for external systems).
+Hay alguans cosas que TypeScript previene que hagan, como usar una variable que *no fue declarada nunca* (por supuesto que pueden usar un *archivo de declaraciones* para sistemas externos).
 
-That said, traditionally programming languages have a hard boundary between what is and isn't allowed by the type system. TypeScript is different in that it gives you control over where you put the slider. This is really to allow you to use the JavaScript you know and love with as much safety as **you** want. There are lots of compiler options to control exactly this slider so let's have a look.
+Habiendo dicho eso, tradicionalmente los lenguajes de programación tienen un límite duro entre lo que es y no es permitido en el sistema de tipos. TypeScript es diferente ya que les da el control de dónde dibujar esa línea. Esto ocurre para permitirles usar el JavaScript que conocen y aman con el nivel de seguridad que **ustedes** quieran. Hay muchas opciones de compilador para controlar este límite, así que miremoslo en más detalle:
 
-## Boolean Options
+## Opciones booleanas
 
-`compilerOptions` that are `boolean` can be specified as `compilerOptions` in `tsconfig.json`:
+Las `compilerOptions` que son `boolean` pueden ser especificadas como `compilerOptions` en `tsconfig.json`:
 
 ```json
 {
@@ -16,12 +16,12 @@ That said, traditionally programming languages have a hard boundary between what
 }
 ```
 
-or on the command line
+o en la línea de comandos
 
 ```sh
 tsc --someBooleanOption
 ```
 
-> All of these are `false` by default.
+> Todas estas son `false` por default.
 
-Click [here](https://www.typescriptlang.org/docs/handbook/compiler-options.html) to see all compiler options.
+Hagan click [aquí](https://www.typescriptlang.org/docs/handbook/compiler-options.html) para ver una lista de todas las opcioens del compilador.
