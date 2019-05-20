@@ -1,25 +1,25 @@
-# Common Errors
-In this section we explain a number of common error codes that users experience in the real world.
+# Errores comunes
+En esta sección explicaremos varios errores comunes que los usuarios experimentan en el mundo real.
 
 ## TS2304
-Samples:
+Muestras:
 > `Cannot find name ga`
 > `Cannot find name $`
 > `Cannot find module jquery`
 
-You are probably using a third party library (e.g. google analytics) and don't have it `declare`d. TypeScript tries to save you from *spelling mistakes* and *using variables without declaring them* so you need to be explicit on anything that is *available at runtime* because of you including some external library ([more on how to fix it][ambient]).
+Probablemente esten usando una librería hecha por terceros (por ejemplo, google analytics) y no la han `declare`ado. TypeScript intenta salvarlos de cometer *errores de tipeo* y de *usar variables sin declararlas* por lo que deben ser explícitos sobre cualquier cosa que sea *una variable en tiempo de ejecución* debido a la inclusión de una librería de terceros ([más sobre cómo solucionarlo][ambient]).
 
 ## TS2307
-Samples:
+Muestras:
 > `Cannot find module 'underscore'`
 
-You are probably using a third party library (e.g. underscore) as a *module* ([more on modules][modules]) and don't have the ambient declaration file for it ([more on ambient declarations][ambient]).
+Probablemente esten usando una librería creada por terceros (por ejemplo, underscore) como un *módulo* ([más acerca de módulos][modules]) y no tienen un archivo de declaraciones ambientes para ella ([más sobre declaraciones ambiente][ambient]).
 
 ## TS1148
-Sample:
-> Cannot compile modules unless the '--module' flag is provided
+Muestras:
+> `Cannot compile modules unless the '--module' flag is provided`
 
-Checkout the [section on modules][modules].
+Miren la [sección sobre módulos][modules].
 
 ## Catch clause variable cannot have a type annotation
 Sample:
@@ -28,7 +28,7 @@ try { something(); }
 catch (e: Error) { // Catch clause variable cannot have a type annotation
 }
 ```
-TypeScript is protecting you from JavaScript code in the wild being wrong. Use a type guard instead:
+TypeScript los está protegiendo de código JavaScript que puede ser erróneo. Usen una guardia de tipos:
 ```js
 try { something(); }
 catch (e) {
@@ -39,11 +39,11 @@ catch (e) {
 ```
 
 ## Interface `ElementClass` cannot simultaneously extend types `Component` and `Component`
-This happens when you have two `react.d.ts` (`@types/react/index.d.ts`) in the compilation context.
+Esto sucede cuando tienen dos `react.d.ts` (`@types/react/index.d.ts`) en el contexto de compilacion.
 
-**Fix**:
-* Delete `node_modules` and any `package-lock` (or yarn lock) and `npm install` again.
-* If it doesn't work, find the invalid module (all modules used by your project should have `react.d.ts` as a `peerDependency` and not a hard `dependency`) and report it on their project.
+**Solución**:
+* Eliminen `node_modules` y cualquier `package-lock` (o yarn lock) y corran `npm install` de nuevo
+* Si no funciona, encuentren el módulo inválido (todos los módulos usados por su proyecto deberían tener un archivo `react.d.ts` como `peerDependency` y no como una `dependency` dura) y reportenlo en su proyecto.
 
 
 [ambient]: ../types/ambient/d.ts.md
