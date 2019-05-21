@@ -1,2 +1,2 @@
-# Tools
-Here are some great tools that I recommend you use or at least try in your TypeScript projects. 
+# Herramientas
+Acá listamos algunas de las herramientas que les recomendamos usar (o al menos probar) en sus proyectos TypeScript.
