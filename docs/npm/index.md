@@ -1,43 +1,42 @@
 # NPM 
 
-> Fun fact `npm` is [not an acronym](https://twitter.com/npmjs/status/347057301401763840) so it doesn't expand to anything, but among friends it is commonly called `node package manager`.
+> Un dato curioso es que `npm` [no es una sigla](https://twitter.com/npmjs/status/347057301401763840), pero generalmente es llamado `node package manager`.
 
-`npm` is a binary that comes with default `node` installations used to manage community shared JavaScript / TypeScript packages.
+`npm` es un binario que viene incluido por default con la instalación de `node`, y es usado para administrar paquetes JavaScript / TypeScript compartidos en la comunidad.
 
+* Los paquetes NPM son hosted (e instalados desde) https://www.npmjs.com/ (the ☁️).
 
-* NPM packages are hosted at (and installed from) https://www.npmjs.com/ (the ☁️).
+## Preparación sencilla y rápida
 
-## Quick common setup
+* Los paquetes npm están configurados usando un archivo `package.json`. Pueden generar un archivo rápidamente usando `npm init -y`.
+* Los paquetes son instalados en una carpeta `./node_modules`. Normalmente esta carpeta se encuentra incluida en su `.gitignore`.
 
-* npm packages are configured using `package.json` file. You can generate a quick file using `npm init -y`.
-* packages get installed into a `./node_modules` folder. You normally have this folder in your `.gitignore`.
+> A pesar de que probablemente estén construyendo una aplicación, tener un `package.json` esencialmente convierte su proyecto en un paquete en sí mismo. Por lo tanto, los términos `proyecto | paquete` pueden ser usados intercambiablemente.
 
-> Even though you might be building an application, having a `package.json` essentially makes your project a package as well. So the terms your `project | package` can be used interchangably.
-
-When you checkout someone's (your team's) package, it will have a `package.json` that will list the dependencies you need to run the project. You simply run `npm install` and npm will bring them down from the cloud ☁️.
+Cuando utilicen el paquete de alguien (por ejemplo, su equipo), este tendra un `package.json` que enumerará todas las dependencias que necesitan para correr el proyecto. Simplemente deben correr `npm install` y npm las bajará de la nube ☁️.
  
-## Installing a package
-You can run `npm install <something>`. Most people will use the shorthand `npm i <something>` e.g. 
+## Instalar un paquete
+Pueden correr `npm install <algo>`. La mayoría de la gnete usará el atajo `npm i <algo>`. Por ejemplo:
 
 ```ts
-// Install react
+// Instalar React
 npm i react
 ```
 
-> This will also automatically add `react` into your `package.json`'s `dependencies`.
+> Esto agregará a `react` a las `dependencias` de su `package.json`.
 
-## Installing a devDependency
-`devDependencies` are dependencies that are only required during *development* if your project and not required after deployment. 
+## Instalar una devDependency
+Las `devDependencies` son dependencias que son necesarias únicamente durante el proceso de desarrollo de su proyecto y no luego de que éste haya sido publicado.
 
-`typescript` is common in `devDependencies` as its only required to build `.ts -> .js`. You normally deploy the built `.js` files:
+`typescript` es una `devDependencies` común, ya que únicamente se la necesita para construir `.ts -> .js`. Normalmente publicarán los archivos `.js` construidos:
 
-* into production  
-* OR for consumption by other other npm packages
+* en producción
+* para consumisión por otros paquetes npm
 
-## Security
-The public `npm` packages are scanned by security team worldwide and issues get reported to npm team. They then release security advisories detailing the issue and potential fixes. Commonly the fix is simply updating the package. 
+## Seguridad
+Los paquetes `npm` públicos son escaneados por equipos de securidad en todo el mundo, y los problemas que surgen son reportados al equipo de npm. Luego, ellos liberan recomendaciones de seguridad detallando el problema y las potenciales soluciones. Generalmente, la solución es actualizar el paquete.
 
-You can run an audit on your node project by simply running `npm audit`. This will highlight any vulnerabilities that might exist in the package / dependencies of the package. e.g. 
+Pueden correr una auditoría de su proyecto node con `npm audit`. Esto encontrará cualquier vulnerabilidad que peuda existir en el paquete o en cualquiera de sus dependencias. Por ejemplo:
 
 ```
 ┌───────────────┬──────────────────────────────────────────────────────────────┐
@@ -53,14 +52,15 @@ You can run an audit on your node project by simply running `npm audit`. This wi
 └───────────────┴──────────────────────────────────────────────────────────────┘
 ```
 
-Note that commonly the issues are found in *development* dependencies (e.g. jest in this case). Since these aren't are a part of your production deployments, most likely your production application is not vulnerable. But still good practice to keep vulnerabilities to `0`.
+Noten que, generalmente, los problemas se encuentran en dependencias de *desarrollo* (en este ejemplo `jest`). Ya que estas dependencias no son parte del código que publicarán a producción, lo más probable es que su aplicación no sea vulnerable. Más allá de esto, se considera buena práctica mantener las vulnerabilidades en `0`.
 
-Simply add `npm audit` (the command exist with error code `1` in case of error) as a part of your deployment to ensure the projects stay up to date.
+Simplemente agreguen `npm audit` (el comando tiene un un código de error `1` si hay algún error) como parte de su proceso de publicación, para asegurarse de que los proyectos estén siempre al día.
 
-## NPM Scripts 
 
-### What is with `--` in scripts 
-You can build a base script with a limited set of command line arguments e.g. here is a script target that runs `tsc` for the TypeScript compiler: 
+## Secuencias de comandos NPM
+
+### Qué es ese `--` en las secuencias de comandos
+Pueden construir una secuencia de comandos base con un conjunto limitado de argumentos de comandos de línea. Por ejemplo, a continuación mostramos un target de una secuencia de comandos que corre `tsc` por el compilador de TypeScript:
 
 ```json
 {
@@ -70,7 +70,7 @@ You can build a base script with a limited set of command line arguments e.g. he
 }
 ```
 
-You can create a `build:watch` target to run `tsc -p . -w` or alternatively asking npm to run `build` with the additional `-w` flag like so: 
+Pueden crear un target `build:watch` para correr `tsc -p . -w` o, alternativamente, pedirle a npm que corra `build` con la bandera adicional `-w`, como mostramos a continuación:
 
 ```json
 {
@@ -80,7 +80,7 @@ You can create a `build:watch` target to run `tsc -p . -w` or alternatively aski
   }
 }
 ```
-You can pass in as many flags as you want after `--` e.g. in the following example `build:more` has the same effect as `something --foo -f -d --bar`
+Pueden pasar cuantas banderas quieran luego de `--`. Por ejemplo, en el siguiente caso `build:more` tiene el mismo efecto que `something -foo -f -d --bar`
 
 ```json
 {
@@ -91,21 +91,21 @@ You can pass in as many flags as you want after `--` e.g. in the following examp
 }
 ```
 
-## Public vs. Private packages
-You don't need this when *using* any of the common public npm packages. Just know its there for enterprise / commercial customers.
+## Paquetes públicos vs privados
+No necesitan esto cuando *usen* los paquetes públicos de npm. Solo sepan que existe para los clientes empresariales / comerciales.
 
-### Public packages
-* Packages are public by default. 
-* Anyone can deploy a package to npm. 
-* You just need an account (which you can get for free).
- 
-No one needs an account to download a public package. 
+### Paquetes públicos
+* Los paquetes son públicos por default.
+* Cualquiera puede publicar un paquete en npm.
+* Solo necesitan tener una cuenta (que podrán obtener gratis).
 
-This free sharing of packages is one of the key reasons of success for npm 🌹.
+Nadie necesita una cuenta para descargar un paquete público.
 
-### Private packages 
+Esta posiblidad de compartir paquetes de manera gratis es una de las principales razones del éxito de npm 🌹.
 
-If you want a private package for your company / team / enterprise you need to sign up to a paid plan, details here : https://www.npmjs.com/pricing
+### Paquetes privados
 
-Of-course you need an account with the right permissions to download a private package.
+Si quieren un paquete privado para su empresa / equipo / etc deberán anotarse en un plan pago. Los detalles se encuentran aquí: https://www.npmjs.com/pricing
+
+Por supuesto necesitarán una cuenta con los permisos correctos para descargar un paquete privado.
  
