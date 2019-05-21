@@ -1,19 +1,19 @@
 # Husky 
 
-> Husky can prevent bad commits, pushes and more 🐶!
+> Husky puede prevenir commits malos, pushes y más 🐶!
 
-If you want to run some JavaScript / TypeScript code before a commit takes place, husky is the tool for that. 
+Si quieren correr código JavaScript / TypeSCript antes de que un commit ocurra, husky es la herramienta indicada.
 
-For example, you can use husky to make sure files are formatted by prettier automatically so you don't have to worry about manually formatting files ever again and focus on the objective of the code instead. Here is the setup: 
+Por ejemplo, pueden usar husky para asegurarse que los archivos sean formateados automáticamente por prettier para que no tengan que preocuparse de hacerlo manualmente nunca más, y así concentrarse únicamente en el código. Aquí esta la configuración:
 
 * `npm install husky -D`
-* Add `scripts` to `package.json`: 
+* Agregar las `series de comandos` a `package.json`: 
 
 ```
     "precommit": "npm run prettier:write",
 ```
 
-Now whenever you commit code and there are any formatting changes that need to be made, you'd get them as a *modified* file in your git log. You can now 
+Ahora cada vez que commitan código y hayan correcciones de formato para hacer, las recibirán como un archivo *modificado* en el registro de git. Esto les permitirá
 
-* If you have pushed your code already, simply commit them with a comment `pretty`.
-* If you haven't pushed your code, amend your last commit and look like a superhero.
+* si ya han empujado su código a remote, pueden hacer un commit nuevo con un comentario `pretty`.
+* si todavia no han empujado su código, corrijan su último commit y parezcan un superhéroe.
