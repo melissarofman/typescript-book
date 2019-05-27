@@ -1,29 +1,30 @@
-# Using Jest with TypeScript
+# Usando Jest con TypeScript
 
-> [Pro egghead lesson on Jest / TypeScript](https://egghead.io/lessons/typescript-getting-started-with-jest-using-typescript)
+> [Curso Pro de egghead sobre Jest / TypeScript](https://egghead.io/lessons/typescript-getting-started-with-jest-using-typescript)
 
-No testing solution out there is perfect. That said, jest is an excellent unit testing option which provides great TypeScript support.
+No existe una solución de testeo perfecta. Habiendo hecho esa aclaración, Jest es una opción de pruebas unitarias que provee un gran soporte para TypeScript.
 
-> Note: We assume you start off with a simple node package.json setup. Also all TypeScript files should be in a `src` folder which is always recommended (even without Jest) for a clean project setup.
+> Nota: asumimos que empiezan con una preparación simple con un package.json de node. Adicionalmente, todos los archivos de TypeScript deben estar en una carpeta `src`, ya que esto se encuentra recomendado para tener un proyecto limpio y ordenado (más allá de si usen Jest o no).
 
-## Step 1: Install
+## Paso 1: Instalar
 
-Install the following using npm:
+Corran el siguiente comando para instalar usando npm:
 
 ```shell
 npm i jest @types/jest ts-jest -D
 ```
 
-Explanation:
+Explicación:
 
-* Install `jest` framework (`jest`)
-* Install the types for `jest` (`@types/jest`)
-* Install the TypeScript preprocessor for jest (`ts-jest`) which allows jest to transpile TypeScript on the fly and have source-map support built in.
-* Save all of these to your dev dependencies (testing is almost always a npm dev-dependency)
+* Instalen el framework `jest` (`jest`)
+* Instalen los tipos para `jest` (`@types/jest`)
+* Instalen el preprocesador de TypeScript para jest (`ts-jest`) el cual les permitirá transpilar TypeScript a medida que avanzar y tener soporte para mapas de fuente incluido.
+* Guarden todos estos a sus dependencias dev (las pruebas son casi siempre una dev-dependency de npm)
 
-## Step 2: Configure Jest
 
-Add the following `jest.config.js` file to the root of your project:
+## Paso 2: Configuren Jest
+
+Agreguen el siguiente archivo `jest.config.js` a la raíz de su proyecto:
 
 ```js
 module.exports = {
@@ -45,20 +46,20 @@ module.exports = {
 }
 ```
 
-Explanation:
+Explicación:
 
-* We always recommend having *all* TypeScript files in a `src` folder in your project. We assume this is true and specify this using the `roots` option.
-* The `transform` config just tells `jest` to use `ts-jest` for ts / tsx files.
-* The `testRegex` tells Jest to look for tests in any `__tests__` folder AND also any files anywhere that use the `(.test|.spec).(ts|tsx)` extension e.g. `asdf.test.tsx` etc.
-* The `moduleFileExtensions` tells jest to recognize our file extensions. This is needed as we add `ts`/`tsx` into the defaults (`js|jsx|json|node`).
+* Siempre recomendamos tener *todos* los archivos TypeScript en una carpeta `src` en su proyecto. Asumimos que esto es así y lo especificamos usando la opción `roots`.
+* La configuración `transform` le dice a `jest` que use `ts-jest` para archivos ts / tsx.
+* La opción `testRegex` le dice a jest que busque pruebas en cualquier carpeta `__tests__` Y cualquier archivo que use la extensión `(.test|.spec).(ts|tsx)`. Por ejemplo: `asdf.test.tsx`, etc.
+* La opción `moduleFileExtension` le dice a jest que reconozca nuestras extensiones de archivos. Esto es necesario ya que agregamos `ts`/`tsx` a las opciones default (`js|jsx|json|node`).
 
-## Step 3: Run tests
+## Step 3: Correr las pruebas
 
-Run `npx jest` from your project root and jest will execute any tests you have.
+Corran `npx jest` desde la raíz de su proyecto y jest ejecutará cualquier prueba que tengan.
 
-### Optional: Add script target for npm scripts
+### Opcional: Agregar un comando target para comandos npm
 
-Add `package.json`:
+Agregar en `package.json`:
 
 ```json
 {
@@ -66,16 +67,16 @@ Add `package.json`:
 }
 ```
 
-* This allows you to run the tests with a simple `npm t`.
-* And even in watch mode with `npm t -- --watch`.
+* Esto les permitirá correr los test con un simple comando `npm t`.
+* E incluso usando el modo de observación con `npm t -- --watch`.
 
-### Optional: Run jest in watch mode
+### Opcional: Correr jest en modo observación
 
 * `npx jest --watch`
 
-### Example
+### Ejemplo
 
-* For a file `foo.ts`:
+* Para un archivo `foo.ts`:
 
 ```js
 export const sum
@@ -83,7 +84,7 @@ export const sum
     a.reduce((acc, val) => acc + val, 0);
 ```
 
-* A simple `foo.test.ts`:
+* Un simple `foo.test.ts`:
 
 ```js
 import { sum } from '../';
@@ -97,14 +98,14 @@ test('basic again', () => {
 });
 ```
 
-Notes:
+Notas:
 
-* Jest provides the global `test` function.
-* Jest comes prebuilt with assertions in the form of the global `expect`.
+* Jest provee la función global `test`.
+* Jest viene con aserciones incluidas bajo la forma del `expect` global.
 
-### Example async
+### Ejemplo async
 
-Jest has built-in async/await support. e.g.
+Jest tiene soporte para async/await incluido:
 
 ```js
 test('basic',async () => {
@@ -116,18 +117,21 @@ test('basic again', async () => {
 }, 1000 /* optional timeout */);
 ```
 
-### Example enzyme
+### Ejemplo enzyme
 
-> [Pro egghead lesson on Enzyme / Jest / TypeScript](https://egghead.io/lessons/react-test-react-components-and-dom-using-enzyme)
 
-Enzyme allows you to test react components with dom support. There are three steps to setting up enzyme:
 
-1. Install enzyme, types for enzyme, a better snapshot serializer for enzyme, enzyme-adapter-react for your react version `npm i enzyme @types/enzyme enzyme-to-json enzyme-adapter-react-16 -D`
-2. Add `"snapshotSerializers"` and `"setupTestFrameworkScriptFile"` to your `jest.config.js`:  
+> [Curso Pro de egghead sobre Enzyme / Jest / TypeScript](https://egghead.io/lessons/react-test-react-components-and-dom-using-enzyme)
+
+Enzyme les permitirá probar componentes de React con soporte de DOM. Hay tres pasos para configurar enzyme:
+
+1. Instalar enzyme, los tipos para enzyme, un serializador de snapshots mejor para enzyme, y enzyme-adapter-react para la versión de react que estén usando:
+`npm i enzyme @types/enzyme enzyme-to-json enzyme-adapter-react-16 -D`
+2. Agreguen `"snapshotSerializers"` y `"setupTestFrameworkScriptFile"` a su `jest.config.js`:  
 
 ```js
 module.exports = {
-  // OTHER PORTIONS AS MENTIONED BEFORE
+  // OTRAS SECCIONES COMO MENCIONAMOS ANTERIORMENTE
 
   // Setup Enzyme
   "snapshotSerializers": ["enzyme-to-json/serializer"],
@@ -135,7 +139,7 @@ module.exports = {
 }
 ```
 
-3. Create `src/setupEnzyme.ts` file.
+3. Creen un archivo `src/setupEnzyme.ts`.
 
 ```js
 import { configure } from 'enzyme';
@@ -143,7 +147,7 @@ import * as EnzymeAdapter from 'enzyme-adapter-react-16';
 configure({ adapter: new EnzymeAdapter() });
 ```
 
-Now here is an example react component and test:
+Ahora aquí hay un ejemplo de un componente de React y su prueba:
 
 * `checkboxWithLabel.tsx`:
 
@@ -201,13 +205,13 @@ test('CheckboxWithLabel changes the text after click', () => {
 });
 ```
 
-## Reasons why we like jest
+## Motivos por los que nos gusta jest
 
-> [For details on these features see jest website](http://facebook.github.io/jest/)
+> [Para obtener más detalles sobre estas características miren el website de jest](http://facebook.github.io/jest/)
 
-* Built-in assertion library.
-* Great TypeScript support.
-* Very reliable test watcher.
-* Snapshot testing.
-* Built-in coverage reports.
-* Built-in async/await support.
+* Una librería de aserciones incluída.
+* Gran soporte para TypeScript.
+* Un observador de pruebas muy confiable.
+* Pruebas snapshot.
+* Reportes de convertura incluídos.
+* Soporte para async/await incluído.
