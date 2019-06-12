@@ -1,18 +1,17 @@
-# Why Cypress
-Cypress is a great E2E testing tool. Here are a few great reasons to consider it:
+# Por qué Cypress
+Cypress es una herramienta de pruebas E2E muy buena. Aquí listamos algunas razones para considerarla:
 
-* Isolated installation possible.
-* Ships with TypeScript definitions out of the box.
-* Provides a nice interactive google chrome debug experience. This is very similar to how UI devs mostly work manually.
-* Has command - execution seperation which allows for more powerfull debugging and test stability (more on this below).
-* Has implicit assertions to provide more meaningful debug experience with less brittle tests (more on this in the tips below).
-* Provides the ability to mock out and observe backend XHRs easily without changing your application code (more on this in the tips below).
+* Es posible instalarla de forma aislada
+* Incluye definiciones de TypeScript por default
+* Provee una buena experiencia de depuración interactiva con Google Chrome. Esto es similar a como los desarrolladores de UI trabajan manualmente.
+* Tiene separación de comando - ejecución, lo que permite un proceso de depuración y de pruebas de estabilidad más poderoso (más detalle sobre esto a continuación)
+* Tiene aserciones implicitas para proveer una experiencia de depuración más significativa, con menos pruebas frágiles (más sobre esto en las tips que siguen).
 
-## Installation
+## Instalación
 
-> The steps provided in this installation process will give you a nice `e2e` folder that you can use as boiler plate for your organization. You can just copy paste this `e2e` folder into any existing projects that you want to test with cypress.
+> Los pasos detallados en este proceso de instalación les darán una linda carpeta `e2e` que pueden usar como plantilla para su empresa. Pueden copiar esta carpeta `e2e` en cualquier proyecto ya existente que quieran evaluar con cypress.
 
-Create an e2e directory and install cypress and its dependencies for TypeScript transpiling:
+Creen un directorio `e2e` e instalen cypress y sus dependencias para transpilación de TypeScript:
 
 ```sh
 mkdir e2e
@@ -21,11 +20,12 @@ npm init -y
 npm install cypress webpack @cypress/webpack-preprocessor typescript ts-loader
 ```
 
-> Here are a few reasons for creating a separate `e2e` folder especially for cypress: 
-* Creating a separate directory or `e2e` makes it easier to isolate its `package.json` dependencies from the rest of your project. This results in less dependency conflicts.
-* Testing frameworks have a habit of polluting the global namespace with stuff like `describe` `it` `expect`. It is best to keep the e2e `tsconfig.json` and `node_modules` in this special `e2e` folder to prevent global type definition conflicts.
+> A continuación listamos algunas razones para crear una carpeta `e2e` separada, especialmente para cypress:
+* Facilita el aislamiento de las dependencias de su `package.json` del resto de su proyecto. Esto resulta en menos conflictos de dependencias.
+* Los frameworks de evaluación tienen un mal hábito de contaminar el namespace global con variables como `describe`, `it`, `expect`. Es mejor contener los `node_modules` y el `tsconfig.json` del e2e en esta carpeta especial `e2e` para prevenir que haya conflictos de definiciones de tipo globales. 
 
-Setup TypeScript `tsconfig.json` e.g. 
+Configuren el `tsconfig.json` de TypeScript. Por ejemplo:
+
 
 ```json
 {
@@ -45,13 +45,13 @@ Setup TypeScript `tsconfig.json` e.g.
 }
 ```
 
-Do a first dry run of cypress to prime the cypress folder structure. The Cypress IDE will open. You can close it after you see the welcome message.
+Hana un simulacro de cypress para preparar la estructura de carpetas. El IDE de Cypress se abrirá. Pueden cerrarlo luego de ver el mensaje de bienvenida.
 
 ```sh
 npx cypress open
 ```
 
-Setup cypress for transpiling typescript by editing `e2e/cypress/plugins/index.js` to match the following:
+Configuren cypress para transpilar typescript editando `e2e/cypress/plugins/index.js` para que contenga lo siguiente:
 
 ```js
 const wp = require('@cypress/webpack-preprocessor')
@@ -76,8 +76,7 @@ module.exports = (on) => {
 }
 ```
 
-
-Optionally add a few scripts to the `e2e/package.json` file:
+Opcionalmente, agreguen algunos comandos al archivo `e2e/package.json`:
 
 ```json
   "scripts": {
@@ -86,21 +85,21 @@ Optionally add a few scripts to the `e2e/package.json` file:
   },
 ```
 
-## More description of key Files
-Under the `e2e` folder you now have these files: 
+## Más detalles de los archivos clave:
+En la carpeta `e2e` deberían tener estos archivos:
 
-* `/cypress.json`: Configure cypress. The default is empty and that is all you need.
-* `/cypress` Subfolders: 
-    * `/fixtures`: Test fixtures
-        * Comes with `example.json`. Feel free to delete it. 
-        * You can create simple `.json` files that can be used to provide sample data (aka fixtures) for usage across tests. 
-    * `/integration`: All your tests. 
-        * Comes with an `examples` folder. You can safely delete it.
-        * Name tests with `.spec.ts` e.g. `something.spec.ts`. 
-        * Feel free to create tests under subfolders for better organization e.g. `/someFeatureFolder/something.spec.ts`.
+* `/cypress.json`: Configura cypress. El archivo dfault está vacío y eso es todo lo que necesitan.
+* `/cypress` Subcarpetas: 
+    * `/fixtures`: Accesorios de pruebas
+        * Viene con un `example.json`. Sientanse libres de eliminarlo.
+        * Pueden crear archivos `.json` que peuden ser usados para proveer muestras de datos (es decir, accesorios) que serán utilizadas en las pruebas. 
+    * `/integration`: Todas las pruebas. 
+        * Viene con una carpeta `examples`. Sientanse libres de eliminarla.
+        * Nombren a los archivos de pruebas con `.spec.ts`. Por ejemplo `algo.spec.ts`.
+        * Sientanse libres de crear pruebas en subcarpetas para mantenrlas mejor organizadas. e.g. `/someFeatureFolder/something.spec.ts`.
 
-## First test 
-* create a file `/cypress/integration/first.spec.ts` with the following contents: 
+## Primera prueba
+* creen un archivo `/cypress/integration/first.spec.ts` con el siguiente contenido: 
 
 ```ts
 /// <reference types="cypress"/>
@@ -113,27 +112,27 @@ describe('google search', () => {
 });
 ```
 
-## Running in development
-Open the cypress IDE using the following command.
+## Correrlo en desarrollo
+Abran el IDE de Cypress usando el siguiente comando:
 
 ```sh
 npm run cypress:open
 ```
 
-And select a test to run.
+Y seleccionen una prueba para correr.
 
-## Running on a build server
+## Correrlo en un servidor build
 
-You can run cypress tests in ci mode using the following command.
+Pueden correr pruebas de cypress en modo CI usando el siguiente comando:
 
 ```sh
 npm run cypress:run
 ```
 
-## Tip: Sharing code between UI and test
-Cypress tests are compiled / packed and run in the browser. So feel free to import any project code into your test.
+## Tip: Compartan código entre UI y prueba
+Las pruebas de Cypress se compilan / empacan y corren en el navegador. Así que siéntanse libres de importar cualquier parte de código de su pryecto a la prueba. 
 
-For example you can share Id values between UI and Tests to make sure the CSS selectors don't break:
+Por ejemplo, pueden compartir valores de ID entre UI y pruebas, para asegurarse que los selectores de CSS no se vayan a romper:
 
 ```js
 import { Ids } from '../../../src/app/constants'; 
@@ -143,8 +142,8 @@ cy.get(`#${Ids.username}`)
   .type('john')
 ```
 
-## Tip: Creating Page Objects
-Creating objects that provide a convenient handle for all the interactions that various tests need to do with a page is a common testing convention. You can create page objects using TypeScript classes with getters and methods e.g. 
+## Tip: Creen objetos de página
+Crear objetos que provean una manera conveniente de usarlos para todas las interaciones que varias pruebas necesitan realizar con una página es una convención común de evaluación. Pueden crear objetos de páginas usando clases de TypeScript con getters y métodos. Por ejemplo:
 
 ```js
 import { Ids } from '../../../src/app/constants'; 
@@ -167,8 +166,8 @@ page.username.type('john');
 
 ```
 
-## Tip: Implicit assertion 
-Whenever a cypress command fails you get a nice error (instead of something like `null` with many other frameworks) so you fail quickly and know exactly when a test fails e.g. 
+## Tip: Aserciones implícitas
+Cuando un comando de cypress falla, obtendrán un lindo error (en lugar de algo como `null`, como sucede con muchos otros frameworks) por lo que podrán fallar rápido y saber exactamente por qué una prueba falla:
 
 ```
 cy.get('#foo') 
@@ -176,116 +175,116 @@ cy.get('#foo')
 // If still not found you get an error here ^ 
 
 
-// This \/ will not trigger till an element #foo is found
+// This \/ will not trigger until an element #foo is found
   .should('have.text', 'something') 
 ```
 
-## Tip: Explicit assertion 
-Cypress ships with quite a few assertion helps for the web e.g. chai-jquery https://docs.cypress.io/guides/references/assertions.html#Chai-jQuery. You use them with `.should` command passing in the chainer as a string e.g.
+## Tip: Aserciones explícitas
+Cypress incluye varias ayudas para aserciones para la web. Por ejemplo chai-jquery https://docs.cypress.io/guides/references/assertions.html#Chai-jQuery. Pueden usarlas con el comando `.should`, incluyendo el encadenador como una string. Por ejemplo:
 
 ```
 cy.get('#foo') 
   .should('have.text', 'something') 
 ```
 
-## Tip: Commands and Chaining 
-Every function call in a cypress chain is a `command`. The `should` command is an assertion. It is conventional to start distinct *category* of chains and actions seperately e.g. 
+## Tip: Comandos y encadenamiento
+Cada llamada de función en una cadena de cypress es un `comando`. El comando `should` es una aserción. Es convencional empezar por separado distintas *categorías* de cadenas y acciones. Por ejemplo:
 
 ```ts
-// Don't do this 
-cy.get(/**something*/) 
-  .should(/**something*/)
+// No hagan esto
+cy.get(/**algo*/) 
+  .should(/**algo*/)
   .click()
-  .should(/**something*/)
-  .get(/**something else*/) 
-  .should(/**something*/)
+  .should(/**algo*/)
+  .get(/**algo mas*/) 
+  .should(/**algo*/)
 
-// Prefer seperating the two gets 
-cy.get(/**something*/) 
-  .should(/**something*/)
+// Es mejor separar los dos `get` 
+cy.get(/**algo*/) 
+  .should(/**algo*/)
   .click()
-  .should(/**something*/)
+  .should(/**algo*/)
 
-cy.get(/**something else*/) 
-  .should(/**something*/)
+cy.get(/**algo mas*/) 
+  .should(/**algo*/)
 ```
 
-Some other libraries *evaluate and run* the code at the same time. Those libraries force you to have a single chain which can be nightmare to debug with selectors and assertions minggled in. 
+Otras librerías *evalúan y corren* el código al mismo tiempo. Esas librerías los fuerza a tener que elegir una única cadena, lo que puede resultar en una pesadilla de depurar, al tener aserciones y selectores entremezclados.
 
-Cypress commands are essentially *declarations* to the cypress runtime to execute the commands later. Simple words: Cypress makes it easier. 
+Los comandos de Cypress son, esencialmente, *declaraciones* que le indican al tiempo de ejecución de cypress que deberá ejecutar los comandos más adelante. En fin: Cypress es más sencillo.
 
-## Tip: Using `contains` for easier querying
+## Tip: Usen `contains` para facilitar el querying
 
-The following shows an example:
+El siguiente código muestra un ejemplo:
 
 ```
 cy.get('#foo') 
-  // Once #foo is found the following:
+  // una vez que #foo es encontrado, ocurre lo siguiente:
   .contains('Submit') 
   .click()
-  // ^ will continue to search for something that has text `Submit` and fail if it times out.
-  // ^ After it is found trigger a click on the HTML Node that contained the text `Submit`.
+  // ^ continuará buscando algo que tenga el texto `Submit` y fallará si se acaba el tiempo.
+  // ^ Luego de que es encontrado, desencadena un click en el Nodo HTML que contiene el texto `Submit`.
 ```
-## Tip: Implicit assertion
-Cypress has a concept of implicit assertion. These only kick in if a future command is erroring because of a previous command. E.g. The following will not error if there is no text with `Submit`: 
+## Tip: Aserciones implícitas
+Cypress tiene un concepto de aserciones implícitas. Estas solo corren si un comando futuro tiene errores debido a un comando previo. Por ejemplo, el siguiente código no tendrá errores si no hay texto con `Submit`:
 
 ```ts
 cy.get('#foo') 
-  // Once #foo is found the following:
+// una vez que #foo es encontrado, ocurre lo siguiente:
   .contains('Submit') 
 ```
-However the following will error at `contains` (after automatic retries of course) as nothing found can get `click`ed: 
+Sin embargo, el siguiente ejemplo tendrá un error en `contains` (luego de reintentar automáticamente, por supuesto) ya que no se puede encontarr nada que pueda ser `click`eado:
 
 ```ts
 cy.get('#foo') 
-  // Once #foo is found the following:
+// una vez que #foo es encontrado, ocurre lo siguiente:
   .contains('Submit') 
   .click()
   // ^ Error: #foo does not have anything that `contains` `'Submit'`
 ```
 
-If you want to assert *use an explicit assertion* and don't rely on implicit assertions. e.g. instead of `contains` you would `cy.should('contain','Submit')` e.g. 
+Si quieren pueden usar una *aserción explícita* y no dependen de aserciones implícitas. Por ejemplo, en lugar de `contain` deberían usar `cy.should('contain','Submit')`: 
 
 ```ts
-// Bad. No error.
+// Mal. No hay error.
 cy.get('#foo') 
   .contains('Submit') 
 
-// Good. Error: `#foo` does not contain `Submit`
+// Bien. Error: `#foo` does not contain `Submit`
 cy.get('#foo') 
   .should('contain', 'Submit')
 ```
 
-## Tip: Waiting for an HTTP request
-A lot of tests have been traditionally brittle due to all the arbitrary timeouts needed for XHRs that an application makes. `cy.server` makes it easy to 
-* create an alias for backend calls
-* wait for them to occur
+## Tip: Esperar un pedido HTTP
+Muchas de las pruebas han sido tradicionalmente frágiles debido a todos los timeouts que son necesarios para los XHRs que hace una aplicación. `cy.server` facilita
+* crear un alias para llamadas al backend
+* esperar a que ocurran
 
-e.g. 
+Por ejemplo:
 
 ```ts
 cy.server()
   .route('POST', 'https://example.com/api/application/load')
-  .as('load') // create an alias
+  .as('load') // creen un alias
 
-// Start test
+// Empiecen la prueba
 cy.visit('/')
 
-// wait for the call
+// esperen la llamada
 cy.wait('@load') 
 
-// Now the data is loaded
+// Ahora la data ha sido cargada
 ```
 
-## Tip: Mocking an HTTP request response
-You can also easily mock out a request response using `route`: 
+## Tip: Imitar una respuesta de un pedido HTTP
+También pueden imitar la respuesta del pedido fácilmente usando `route`:
 ```ts
 cy.server()
   .route('POST', 'https://example.com/api/application/load', /* Example payload response */{success:true})
 ```
 
-## Tip: Mocking time 
-You can use `wait` to pause a test for some time e.g. to test an automatic "you are about to be logged out" notification screen:
+## Tip: Tiempo de imitación
+Pueden usar `wait` para pausar una prueba por un determinado período de tiempo, por ejemplo, para evaluar una pantalla automática de notificación de "están a punto de ser cerrada su sesión":
 
 ```ts
 cy.visit('/');
@@ -293,7 +292,7 @@ cy.wait(waitMilliseconds);
 cy.get('#logoutNotification').should('be.visible');
 ```
 
-However, it is recommended to mock time using `cy.clock` and forwarding time using `cy.tick` e.g. 
+Sin embargo, se recomenda imitar tiempo usando `cy.clock` y reenviar tiempo usando `cy.tick`. Por ejemplo:
 
 ```ts
 cy.clock();
@@ -303,19 +302,19 @@ cy.tick(waitMilliseconds);
 cy.get('#logoutNotification').should('be.visible');
 ```
 
-## Tip: Smart delays and retries
-Cypress will automatically wait (and retry) for many async things e.g. 
+## Tip: Retrasos inteligentes y reintentos
+Cypress esperará (y reintentará) automáticamente muchas cosas asincrónicas:
 ```
-// If there is no request against the `foo` alias cypress will wait for 4 seconds automatically 
+// Si no hay un pedido hacia el alias `foo`, cypress esperará 4 segundos automáticamente
 cy.wait('@foo') 
-// If there is no element with id #foo cypress will wait for 4 seconds automatically and keep retrying
+// Si no hay un elemento con id #foo, cypress esperará 4 segundos automáticamente y continuará reintentando
 cy.get('#foo')
 ```
-This keeps you from having to constantly add arbitrary timeout (and retry) logic in your test code flow. 
+Esto previene que tengan que agregar lógica arbitraria de timeout (y reintentar) constantemente en su código de pruebas.
 
 
-## Tip: Unit testing application code
-You can also use cypress to unit test your application code in isolation e.g.
+## Tip: Realizar pruebas unitarias para el código de la aplicación
+También pueden usar Cypress para pruebas unitarias. Por ejemplo:
 
 ```js
 import { once } from '../../../src/app/utils'; 
@@ -330,8 +329,8 @@ it('should only call function once', () => {
 });
 ```
 
-## Tip: Mocking in unit testing
-If you are unit testing modules in your application you can provide mocks using `cy.stub` e.g. if you want to ensure that `navigate` is called in a function `foo`: 
+## Tip: Imitación en pruebas unitarias
+Si estan realizando pruebas unitarias en su aplicación, pueden proveer imitaciones usando `cy.stub`. Por ejemplo, si quieren asegurarse que `navigate` es llamada en una función `foo`:
 
 * `foo.ts`
 ```ts
@@ -342,7 +341,7 @@ export function foo() {
 }
 ```
 
-* You can do this as in `some.spec.ts`: 
+* Pueden hacerlo como en `some.spec.ts`: 
 ```ts
 /// <reference types="cypress"/>
 
@@ -358,21 +357,21 @@ describe('should work', () => {
 });
 ```
 
-## Tip: Breakpoint
-The automatic snapshots + command log generated by the cypress test are great for debugging. That said you can pause test execution if you want. 
+## Tip: Puntos de quiebre
+El registro automático de instantáneas y comandos que las pruebas de Cypress generan es buenísimo para depurar. Habiendo dicho esto, también es posible pausar la ejecución de las pruebas si así lo desean.
 
-First make sure you have chrome developer tools (lovingly called dev tools) open in the test runner (`CMD + ALT + i` on mac / `F12` on windows). Once the dev tools are open you can re-run the test and the dev tools will stay open. If you have the dev tools open, you can pause test execution in two ways:
+Primero deben asegurarse que tienen las herramienta de desarrolladores de chrome ("dev tools") abiertas en el "corredor" de las pruebas (`CMD + ALT + i` en mac / `F12` en windows). Una vez que las dev tools estan abiertas, pueden reiniciar las pruebas y las dev tools permanecerán abiertas. Si están abiertas, podrán pausar las pruebas de dos maneras:
 
-* Application code breakpoints: Use a `debugger` statement in your application code and the test runner will stop on that just like standard web developement. 
-* Test code breakpoints: You can use the `.debug()` command and cypress test execution will stop at it. Alternatively you can use a `debugger` statement in a `.then` command callback to cause a pause. e.g `.then(() => { debugger })`. You can even use it to grab some element `cy.get('#foo').then(($ /* a reference to the dom element */) => { debugger; })` or a network call e.g. `cy.request('https://someurl').then((res /* network response */) => { debugger });`. However idiomatic way is `cy.get('#foo').debug()` and then when the test runner is paused on `debug` you can click on the `get` in the command log to automatically `console.log` any information you might need about the `.get('#foo')` command (and similarly for any other commands you want to debug).
+* Puntos de quiebre en el código de la aplicación: usen una declaración `debugger` en el código y el "corredor" parará en él, de la misma forma que en desarrollo web estándar.
+* Puntos de quiebre de código de pruebas: Pueden usar el comando `.debug()` y la ejecución de pruebas de Cypress parará en él. Alternativamente, pueden usar una declaración `debugger` en una devolución de llamada `.then` de un comando para provocar una pausa. Por ejemplo, `.then(() => {debugger})`.  También lo pueden usar para agarrar un elemento `cy.get('#foo').then(($ /* referencia al elemento dom */) => { debugger; })` o una llamada de red como `cy.request('https://someurl').then((res /* respuesta */) => { debugger });`. Sin embargo, la forma idiomática es `cy.get('#foo').debug()` y una vez que el "corredor" de pruebas ha pausado en `debug` pueden hacer click en `get` en el registro de comandos para `console.log` cualquier información que necesiten sobre el comando `.get('#foo')` automáticamente (al igual que para cualquier otro comando que quieran depurar).
 
-## Tip: Start server and test 
-If you need to start a local server before your tests can run you can add `start-server-and-test` https://github.com/bahmutov/start-server-and-test as a dependency. It takes the following arguments
-* an npm script to *run* the server (aka server) 
-* an endpoint to check if the server has booted up (aka start)
-* an npm script to initiate the testing (aka test)
+## Tip: Empezar el servidor y el test
+Si necesitan empezar el servidor local antes que sus pruebas puedan correr, pueden agregar `start-server-and-test` https://github.com/bahmutov/start-server-and-test como una dependencia. Acepta los siguientes argumentos:
+* un script npm que *corre* el servidor (server)
+* un endpoint para controlar si el servidor ha empezador (start)
+* un script npm para iniciar las pruebas (test)
 
-Example package.json: 
+Ejemplo package.json: 
 ```json
 {
     "scripts": {
@@ -383,8 +382,8 @@ Example package.json:
 }
 ```
 
-## Resources 
+## Recursos 
 * Website: https://www.cypress.io/
-* Write your first cypress test (gives a nice tour of the cypress IDE) : https://docs.cypress.io/guides/getting-started/writing-your-first-test.html
-* Setting up a CI environment (e.g. the provided docker image that works out of the box with `cypress run`): https://docs.cypress.io/guides/guides/continuous-integration.html
-* Recipes (Lists recipes with descriptions. Click on headings to navigate to the source code for the recipe): https://docs.cypress.io/examples/examples/recipes.html
+* Escriban su primera prueba cypress (da un buen tour de la IDE de cypress) : https://docs.cypress.io/guides/getting-started/writing-your-first-test.html
+* Configuren un ambiente CI (por jeemplo, la imagen docker que funciona por default con `cypress run`): https://docs.cypress.io/guides/guides/continuous-integration.html
+* Recetas (Listas de recetas con descripciones. Hagan click en los títulos para navegar al código fuente de cada receta): https://docs.cypress.io/examples/examples/recipes.html
