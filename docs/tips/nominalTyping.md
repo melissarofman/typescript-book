@@ -1,11 +1,11 @@
-## Nominal Typing
-The TypeScript type system is structural [and this is one of the main motivating benefits](../why-typescript.md). However, there are real-world use cases for a system where you want two variables to be differentiated because they have a different *type name* even if they have the same structure. A very common use case is *identity* structures (which are generally just strings with semantics associated with their *name* in languages like C#/Java).
+## Tipado nominal
+El sistema de tipos de TypeScript es estructural [y este es uno de los principales beneficios de usarlo](../why-typescript.md). Sin embargo, hay casos de uso reales para un sistema en el que es deseable que dos variables sean diferenciadas porque tienen un *nombre de tipo* distinto, aunque sea la misma estructura. Un caso común son las estructuras de *identidad* (las cuales suelen ser strings con semánticas asociadas a sus *nombres* en lenguages como C#/Java).
 
-There are a few patterns that have emerged in the community. I cover them in decreasing order of personal preference:
+Existen algunos patrones que han emergido de la comunidad. Los cubriremos en orden de preferencia personal descendiente:
 
-## Using literal types
+## Usar tipos literales
 
-This pattern uses generics and literal types: 
+Este patrón usa genéricos y tipos literales:
 
 ```ts
 /** Generic Id type */
@@ -14,11 +14,11 @@ type Id<T extends string> = {
   value: string,
 }
 
-/** Specific Id types */
+/** Tipos de Id específicos */
 type FooId = Id<'foo'>;
 type BarId = Id<'bar'>;
 
-/** Optional: contructors functions */
+/** Opcional: funciones contructoras */
 const createFoo = (value: string): FooId => ({ type: 'foo', value });
 const createBar = (value: string): BarId => ({ type: 'bar', value });
 
@@ -26,22 +26,22 @@ let foo = createFoo('sample')
 let bar = createBar('sample');
 
 foo = bar; // Error
-foo = foo; // Okay
+foo = foo; // OK
 ```
 
-* Advantages
-  - No need for any type assertions 
-* Disadvantage
-  - The structure `{type,value}` might not be desireable and need server serialization support
+* Ventajas
+  - No se necesitan aserciones de tipo
+* Desventajas
+  - La estructura `{type,value}` puede no ser deseable y necesita soporte de serialización en el servidor
 
-## Using Enums
-[Enums in TypeScript](../enums.md) offer a certain level of nominal typing. Two enum types aren't equal if they differ by name. We can use this fact to provide nominal typing for types that are otherwise structurally compatible.
+## Usar Enums
+[Los enums en TypeScript](../enums.md) ofrecen un cierto nivel de tipado nominal. Dos tipos enum no son iguales si difieren en el nombre. Podemos usar esta característica para proveer tipado nominal para tipos que de otra manera son estructuralmente compatibles.
 
-The workaround involves:
-* Creating a *brand* enum.
-* Creating the type as an *intersection* (`&`) of the brand enum + the actual structure.
+Esta solución implica:
+* crear un enum *marca*
+* crear el tipo como la *intersección* (`&`) del enum marca + la estructura real.
 
-This is demonstrated below where the structure of the types is just a string:
+Lo mostramos a continuación con un ejemplo en el que la estructura de los tipos es una string:
 
 ```ts
 // FOO
@@ -53,63 +53,63 @@ enum BarIdBrand {}
 type BarId = BarIdBrand & string;
 
 /**
- * Usage Demo
+ * Demo de uso
  */
 var fooId: FooId;
 var barId: BarId;
 
-// Safety!
+// Seguridad!
 fooId = barId; // error
 barId = fooId; // error
 
-// Newing up
+// Renovando
 fooId = 'foo' as FooId;
 barId = 'bar' as BarId;
 
-// Both types are compatible with the base
+// Ambos tipos son compatibles con la base
 var str: string;
 str = fooId;
 str = barId;
 ```
 
-## Using Interfaces
+## Usar Interfaces
 
-Because `numbers` are type compatible with `enum`s the previous technique cannot be used for them. Instead we can use interfaces to break the structural compatibility. This method is still used by the TypeScript compiler team, so worth mentioning. Using `_` prefix and a `Brand` suffix is a convention I strongly recommend (and [the one followed by the TypeScript team](https://github.com/Microsoft/TypeScript/blob/7b48a182c05ea4dea81bab73ecbbe9e013a79e99/src/compiler/types.ts#L693-L698)).
+Debido a que los `números` son compatibles con los `enum`s, la técnica anterior no puede ser usada para ellos. En su lugar, podemos usar interfaces para romper la compatibilidad estructural. Este método es usado por el equipo que trabaja sobre el compilador de TypeScript, por lo que vale la pena mencionarlo. Usar el prefijo `_` y un sufijo `Brand` es una convención que recomendamos seguir (y [la que sigue el equipo de TypeScript](https://github.com/Microsoft/TypeScript/blob/7b48a182c05ea4dea81bab73ecbbe9e013a79e99/src/compiler/types.ts#L693-L698)).
 
-The workaround involves the following:
-* adding an unused property on a type to break structural compatibility.
-* using a type assertion when needing to new up or cast down.
+La solución implica:
+* agregar una propiedad no utilizada en un tipo para romper la compatibilidad estructural
+* usar una aserción de tipo cuando se necesita renovar o abatir
 
-This is demonstrated below:
+Lo mostramos a continuaci'on:
 
 ```ts
 // FOO
 interface FooId extends String {
-    _fooIdBrand: string; // To prevent type errors
+    _fooIdBrand: string; // Para prevenir errores de tipo
 }
 
 // BAR
 interface BarId extends String {
-    _barIdBrand: string; // To prevent type errors
+    _barIdBrand: string; // Para prevenir errores de tipo
 }
 
 /**
- * Usage Demo
+ * Demo de uso
  */
 var fooId: FooId;
 var barId: BarId;
 
-// Safety!
+// Seguridad!
 fooId = barId; // error
 barId = fooId; // error
 fooId = <FooId>barId; // error
 barId = <BarId>fooId; // error
 
-// Newing up
+// Renovar
 fooId = 'foo' as any;
 barId = 'bar' as any;
 
-// If you need the base string
+// Si necesitan la string base
 var str: string;
 str = fooId as any;
 str = barId as any;
