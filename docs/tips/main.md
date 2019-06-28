@@ -1,2 +1,2 @@
-# TIPs
-In this section we present a number of tips that we have collected over the course of using TypeScript in the real world.
+# Consejos
+En esta sección presentaremos una serie de consejos que hemos juntado a través de usar TypeScript en el mundo real.
