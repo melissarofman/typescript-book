@@ -1,17 +1,17 @@
-## Currying
+## Currificiar
 
-Just use a chain of fat arrow functions:
+Usen una cadena de funciones de flecha gorda:
 
 ```ts
-// A curried function
+// Una función currificada
 let add = (x: number) => (y: number) => x + y;
 
-// Simple usage
+// Caso de uso simple
 add(123)(456);
 
-// partially applied
+// Aplicado parcialmente
 let add123 = add(123);
 
-// fully apply the function
+// Aplicar la función en su totalidad
 add123(456);
 ```
