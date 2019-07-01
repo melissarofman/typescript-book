@@ -1,5 +1,5 @@
-## Stateful Functions
-A common feature in other programming languages is usage of the `static` keyword to increase the *lifetime* (not *scope*) of a function variable to live beyond function invocations. Here is a `C` sample that achieves this:
+## Funciones con estado
+Una característica común de otros lenguajes de programación es el uso de la palabra clave `static` para incrementar el *tiempo de vida* (no el *ámbito*) de una variable de función para que viva por fuera de invocaciones de la función. Aquí mostramos un ejemplo `C` que hace uso de esta característica:
 
 ```c
 void called() {
@@ -15,7 +15,7 @@ int main () {
 }
 ```
 
-Since JavaScript (or TypeScript) doesn't have function statics you can achieve the same thing using various abstractions that wrap over a local variable e.g. using a `class` :
+Debido a que JavaScript (o TypeScript) no tienen funciones estáticas, esto puede ser logrado usando varias abstracciones que envuelven una variable local. Por ejemplo, usando una `clase`:
 
 ```ts
 const {called} = new class {
@@ -30,4 +30,4 @@ called(); // Called : 1
 called(); // Called : 2
 ```
 
-> C++ developers also try and achieve this using a pattern they call `functor` (a class that overrides the operator `()`).
+> Los desarrolladores C++ también intentan lograr esto usando un patrón llamado `functor` (una clase que anula el operador `()`).
