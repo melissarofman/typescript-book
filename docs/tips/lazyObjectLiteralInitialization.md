@@ -1,6 +1,6 @@
-## Lazy Object Literal Initialization
+## Inicialización perezosa de objetos literales
 
-Quite commonly in JavaScript code bases you would initialize object literals in the following manner:
+En bases de código JavaScript comúnmente se inicializan los objetos literales de la siguiente manera: 
 
 ```ts
 let foo = {};
@@ -8,7 +8,7 @@ foo.bar = 123;
 foo.bas = "Hello World";
 ```
 
-As soon as you move the code to TypeScript you will start to get Errors like the following:
+A penas muevan su códito a TypeScript empezarán a tener errores como los siguientes:
 
 ```ts
 let foo = {};
@@ -16,11 +16,11 @@ foo.bar = 123; // Error: Property 'bar' does not exist on type '{}'
 foo.bas = "Hello World"; // Error: Property 'bas' does not exist on type '{}'
 ```
 
-This is because from the state `let foo = {}`, TypeScript *infers* the type of `foo` (left hand side of initializing assignment) to be the type of the right hand side `{}` (i.e. an object with no properties). So, it error if you try to assign to a property it doesn't know about.
+Esto se debe a que a partir del estado `let foo = {}`, TypeScript *infiere* que el tipo de `foo` (lado izquierdo de la asignación inicializante) es el tipo del lado derecho `{}` (es decir, un objeto sin propiedades). Por lo tanto, tira un error si intentan asignarle a una propiedad que TypeScript no reconoce.
 
-### Ideal Fix
+### Solución ideal
 
-The *proper* way to initialize an object in TypeScript is to do it in the assignment:
+La manera *apropiada* de inicializar un objeto en TypeScript es hacerlo en el momento de la asignación:
 
 ```ts
 let foo = {
@@ -29,13 +29,13 @@ let foo = {
 };
 ```
 
-This is also great for code review and code maintainability purposes.
+Esto también es bueno para la revisión de código y para la mantenibilidad de la base.
 
-> The quick fix and middle ground *lazy* initialization patterns described below suffer from *mistakenly forgetting to initialize a property*. 
+> Las soluciones rápida y a medio camino mostradas en los patrones de inicialización *perezosos* que describimos a continuación sufren de *un olvido al inicializar una propiedad*.
 
-### Quick Fix
+### Solución rápida
 
-If you have a large JavaScript code base that you are migrating to TypeScript the ideal fix might not be a viable solution for you. In that case you can carefully use a *type assertion* to silence the compiler:
+Si tienen una base de código JavaScript grande y estan migrando a TypeScript, la solución ideal puede que no sea viable para su caso. En su lugar, pueden usar (con cuidado) una *aserción de tipo* que haga callar al compilador:
 
 ```ts
 let foo = {} as any;
@@ -43,14 +43,14 @@ foo.bar = 123;
 foo.bas = "Hello World";
 ```
 
-### Middle Ground
+### Punto medio
 
-Of course using the `any` assertion can be very bad as it sort of defeats the safety of TypeScript. The middle ground fix is to create an `interface` to ensure
+Claro que usar la aserción `any` puede ser una muy mala decisión ya que elimina el beneficio de la seguridad de tipos que obtienen con TypeScript. La solución de medio camino es crear una interface para asegurar:
 
-* Good Docs
-* Safe assignment
+* Buena documentación
+* Asignaciones seguras
 
-This is shown below:
+Lo mostramos a continuación:
 
 ```ts
 interface Foo {
@@ -63,7 +63,7 @@ foo.bar = 123;
 foo.bas = "Hello World";
 ```
 
-Here is a quick example that shows the fact that using the interface can save you:
+Aquí hay un ejemplo corto que muestra como el hecho de usar esa interface puede llegar a salvarlos:
 
 ```ts
 interface Foo {
@@ -75,6 +75,6 @@ let foo = {} as Foo;
 foo.bar = 123;
 foo.bas = "Hello World";
 
-// later in the codebase:
+// más adelante en el código:
 foo.bar = 'Hello Stranger'; // Error: You probably misspelled `bas` as `bar`, cannot assign string to number
 ```
