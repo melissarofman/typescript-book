@@ -1,70 +1,69 @@
-## Classes Are Useful
+## Las clases son útiles
 
-It is very common to have the following structure:
+Es muy común tener la siguiente estructura:
 
 ```ts
 function foo() {
     let someProperty;
 
-    // Some other initialization code
+    // Más código de inicialización
 
     function someMethod() {
-        // Do some stuff with `someProperty`
-        // And potentially other things
+        // hace algo con `someProperty`
+        // Y potencialmente otras cosas
     }
-    // Maybe some other methods
+    // Tal vez otros métodos
 
     return {
         someMethod,
-        // Maybe some other methods
+        // Tal vez otros métodos
     };
 }
 ```
+Este patrón se llama *patrón de revelación de módulos* y es bastante común en JavaScript (aprovecha los cierres de JavaScript).
 
-This is known as the *revealing module pattern* and quite common in JavaScript (taking advantage of JavaScript closure).
-
-If you use [*file modules* (which you really should as global scope is bad)](../project/modules.md) then *your file is effectively the same*. However, there are too many cases where people will write code like the following:
+Si usan [*módulos en archivos* (lo que deberían hacer ya que el ámbito global es malo)](../project/modules.md) entonces *su archivo es el mismo*. Sin embargo, hay muchos casos en los que programadores escribirán código de la siguiente manera:
 
 ```ts
 let someProperty;
 
 function foo() {
-   // Some initialization code
+   // Código de inicialización
 }
-foo(); // some initialization code
+foo(); // Código de inicialización
 
-someProperty = 123; // some more initialization
+someProperty = 123; // Algo más de inicialización
 
-// Some utility function not exported
+// Una función de utilidad no exportada
 
-// later
+// luego
 export function someMethod() {
 
 }
 ```
 
-Even though I am not a big fan of inheritance *I do find that letting people use classes helps them organize their code better*. The same developer would intuitively write the following:
+A pesar de que no somos grandes fans de la herencia *encuentramos que dejar que la gente use clases los ayuda a organizar su código mejor*. El mismo desarrollador hubiese escrito lo siguiente intuitivamente:
 
 ```ts
 class Foo {
     public someProperty;
 
     constructor() {
-        // some initialization
+        // Código de inicialización
     }
 
     public someMethod() {
-        // some code
+        // algo de código
     }
 
     private someUtility() {
-        // some code
+                // algo de código
     }
 }
 
 export = new Foo();
 ```
 
-And its not just developers, creating dev tools that provide great visualizations over classes are much more common, and there is one less pattern your team needs to understand and maintain.
+Y no son solo desarrolladores, las herramientas de desarrollo que proveen buenas visualizaciones de clases son mucho mas comunes, y hay un patrón menos que su equipo deberá entender y mantener.
 
-> PS: There is nothing wrong in my opinion with *shallow* class hierarchies if they provide significant reuse and reduction in boiler plate.
+> P.D.: No hay anda de malo, en nuestra opinión, con jerarquías *superficiales* de clases si posibilitan su reutilización y reducen la repetición.
