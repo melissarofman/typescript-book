@@ -1,10 +1,10 @@
-## JQuery Tips
+## Pistas JQuery
 
-Note: you need to install the `jquery.d.ts` file for these tips
+Nota: necesitarán instalar el archivo `jquery.d.ts` para estas pistas
 
-### Quickly define a new plugin 
+### definan un plugin de forma rápida
 
-Just create `jquery-foo.d.ts` with: 
+Creen un archivo `jquery-foo.d.ts` con:
 
 ```ts
 interface JQuery {
@@ -12,4 +12,4 @@ interface JQuery {
 }
 ```
 
-And now you can use `$('something').foo({whateverYouWant:'hello jquery plugin'})`
+Y podrán usar `$('something').foo({whateverYouWant:'hello jquery plugin'})`

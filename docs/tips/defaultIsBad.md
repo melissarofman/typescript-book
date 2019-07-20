@@ -1,6 +1,6 @@
-## `export default` considered harmful
+## `export default` es considerado dañino
 
-Consider you have a file `foo.ts` with the following contents:
+Imaginen que tienen un archivo `foo.ts` con el siguiente contenido:
 
 ```ts
 class Foo {
@@ -8,77 +8,77 @@ class Foo {
 export default Foo;
 ```
 
-You would import it (in `bar.ts`) using ES6 syntax as follows:
+Lo importarían (en `bar.ts`) usando la sintaxis de ES6 de la siguiente manera:
 
 ```ts
 import Foo from "./foo";
 ```
 
-There are a few maintainability concerns here:
-* If you refactor `Foo` in `foo.ts` it will not rename it in `bar.ts`.
-* If you end up needing to export more stuff from `foo.ts` (which is what many of your files will have) then you have to juggle the import syntax.
+Hay algunas consideraciones sobre la mantenibilidad en este caso:
+* Si fueran a refactorizar `Foo` en `foo.ts`, este cambio no cambiaría el nombre en `bar.ts`
+* Si terminas necesitando exportar más cosas desde `foo.ts` (algo que sucederá en muchos de sus archivos), enconces tendran que combinar múltiples sintáxis.
 
-For this reason I recommend simple exports + destructured import. E.g. `foo.ts`:
+Por esta razón, recomendamos usar exports simples + impors desestructurados. Por ejemplo, en `foo.ts`:
 
 ```ts
 export class Foo {
 }
 ```
-And then:
+Seguido por:
 
 ```ts
 import { Foo } from "./foo";
 ```
 
-Below I also present a few more reasons.
+A continuación detallamos algunas más razones:
 
-### Poor Discoverability
-Discoverability is very poor for default exports. You cannot explore a module with intellisense to see if it has a default export or not.
+### Mala capacidad de descubrimiento
+La capacidad de descubrir default exports es muy mala. No pueden explorar un módulo con intellisense para ver si tiene un default export o no.
 
-With export default you get nothing here (maybe it does export default / maybe it doesn't `¯\_(ツ)_/¯`):
+Con export default no obtendrán nada (tal vez hace un export default / tal vez no `¯\_(ツ)_/¯`):
 ```
-import /* here */ from 'something';
-```
-
-Without export default you get a nice intellisense here: 
-
-```
-import { /* here */ } from 'something';
+import /* acá */ from 'something';
 ```
 
-### Autocomplete 
-Irrespective of if you know about the exports, you evenautocomplete at this `import {/*here*/} from "./foo";` cursor location. Gives your developers a bit of wrist relief.
+Sin export default, obtendrán todo el poder de intellisense:
 
-### CommonJS interop
-With `default` there is horrible experience for commonJS users who have to `const {default} = require('module/foo');` instead of `const {Foo} = require('module/foo')`. You will most likely want to rename the `default` export to something else when you import it.
+```
+import { /* acá */ } from 'something';
+```
 
-### Typo Protection
-You don't get typos like one dev doing `import Foo from "./foo";` and another doing `import foo from "./foo";`
+### Autocompletar
+Más alla de si saben que han exportado, el autocompletador les ofrecerá las opciones disponibles en `import {/*here*/} from "./foo";`
 
-### TypeScript auto-import
-Auto import quickfix works better. You use `Foo` and auto import will write down `import { Foo } from "./foo";` cause its a well defined name exported from a module. Some tools out there will try to magic read and *infer* a name for a default export but magic is flaky.
+### CommonJS ineroperabilidad
+Exportando con `default` la experiencia para usuarios de commonJS quienes tendrán que escribir `const {default} = require('module/foo');` en lugar de `const {Foo} = require('module/foo')`. Probablemente querrán cambiar el nombre del export `default` a otra cosa cuando lo importen.
 
-### Re-exporting
-Re-exporting is common for the root `index` file in npm packages, and forces you to name the default export manually e.g. `export { default as Foo } from "./foo";` (with default) vs. `export * from "./foo"` (with named exports).
+### Protección contra errores de tipeo
+No tendrán errores de tipeo como un desarrollador escribiendo `import Foo from "./foo"` y otro escribiendo `import foo from "./foo"`
 
-### Dynamic Imports
-Default exports expose themselves badly named as `default` in dynamic `import`s e.g. 
+### Auto-importación de TypeScript
+Las soluciones rápidas de auto-importación funcionan mejor. Cuando escriban `Foo`, el auto importador escribirá `import { Foo } from "./foo"` ya que sabe que es un nombre definido y exportado de un módulo. Algunas herramientas intentarán de usar magia para *inferir* un nombre para un default export, pero su funcionamiento no es muy estable.
+
+### Re-exportar
+Re-exportar es una práctica común para el archivo raíz `index` en paquetes npm y los obliga a nombrar el default export manualmente. Por ejemplo, `export { default as Foo } from "./foo";` (con default) vs. `export * from "./foo"` (con exports con nombre).
+
+### Importaciones dinámicas
+Las exportaciones `default` se exponen a ser nombradas incorrectamente en `import`s dinámicos:
 
 ```
 const HighChart = await import('https://code.highcharts.com/js/es-modules/masters/highcharts.src.js');
 Highcharts.default.chart('container', { ... }); // Notice `.default`
 ```
 
-### Needs two lines for non-class / non-function
+### Necesita dos líneas para una exportacion no-clase / no-función
 
-Can be one statement for function / class e.g. 
+Puede ser una línea para funciones y clases:
 
 ```ts
 export default function foo() {
 }
 ```
 
-Can be one statement for *non named / type annotated* objects e.g.: 
+Puede ser una línea para objetos *sin nombre / sin anotaciones de tipo*:
 
 ```ts
 export default {
@@ -87,9 +87,9 @@ export default {
 };
 ```
 
-But needs two statements otherwise:
+Pero necesitará dos líneas en cualquier otro caso:
 ```ts
-// If you need to name it (here `foo`) for local use OR need to annotate type (here `Foo`)
+// Si tienes que darle un nombre (en este caso `foo`) para uso local O necesitan anotar el tipo (en este caso `Foo`)
 const foo: Foo = {
   notAFunction: 'Yeah, I am not a function or a class',
   soWhat: 'The export is now *removed* from the declaration'

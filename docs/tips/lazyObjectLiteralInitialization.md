@@ -1,6 +1,6 @@
 ## Inicialización perezosa de objetos literales
 
-En bases de código JavaScript comúnmente se inicializan los objetos literales de la siguiente manera: 
+En bases de código JavaScript comúnmente se inicializan los objetos literales de la siguiente manera:
 
 ```ts
 let foo = {};
@@ -8,7 +8,7 @@ foo.bar = 123;
 foo.bas = "Hello World";
 ```
 
-A penas muevan su códito a TypeScript empezarán a tener errores como los siguientes:
+Apenas muevan su códito a TypeScript empezarán a tener errores como los siguientes:
 
 ```ts
 let foo = {};
