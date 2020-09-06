@@ -20,10 +20,7 @@ interface IteratorResult<T> {
 }
 ```
 
-Imagina que hay un objeto que pertenece a algun encuadre (`Frame`), el cual incluye la lista de componentes que componen (valga la redundancia) a este encuadre. Con la interface del Iterador es posible recuperar los componentes de este encuadre, como a continuación: 
-Imagine that there's an object of some frame, which includes the list of
-components of which this frame consists. With Iterator interface it is possible
-to retrieve components from this frame object like below:
+Imagina que hay un objeto que pertenece a algun encuadre (`Frame`), el cual incluye la lista de componentes que componen (valga la redundancia) a este encuadre. Con la interface del Iterador es posible recuperar los componentes de este encuadre, como a continuación:
 
 ```ts
 class Component {
