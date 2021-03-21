@@ -112,7 +112,7 @@ function toInt(str: string): { valid: boolean, int?: number } {
 
 ### JSON y serialización
 
-El estándar JSON soporta la codificación de `null` pero no de `undefined`. Al codificar a JSON un objecto que contiene un atributo `null`, el atributo será incluido con su valor `null`, mientras que un atributo con valor `undefined` será excluido en su totalidad.
+El estándar JSON soporta la codificación de `null` pero no de `undefined`. Al codificar a JSON un objeto que contiene un atributo `null`, el atributo será incluido con su valor `null`, mientras que un atributo con valor `undefined` será excluido en su totalidad.
 
 ```ts
 JSON.stringify({quedara: null, seIra: undefined}); // {"willStay":null}
