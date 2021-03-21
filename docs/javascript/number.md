@@ -48,7 +48,7 @@ console.log(Number.isSafeInteger(Number.MAX_SAFE_INTEGER + 1)); // falso
 // Dado que puede haber sido redondeado debido a exceso
 console.log(Number.isSafeInteger(Number.MAX_SAFE_INTEGER + 10)); // falso
 ```
-> Eventualmente, JavaScript recibirá soporte para [BigIng](https://developers.google.com/web/updates/2018/05/bigint). Por ahora, si quieres matemática integral con precisión arbitraria, utilizá `big.js`.
+> Eventualmente, JavaScript recibirá soporte para [BigInt](https://developers.google.com/web/updates/2018/05/bigint). Por ahora, si quieres matemática integral con precisión arbitraria, utilizá `big.js`.
 
 ### big.js
 Cada vez que utilices la matemática para cálculos financieros (por ejemplo, cálculos GST, dinero con centavos, sumas, etc) utilizá una libreria como [big.js](https://github.com/MikeMcl/big.js/) la cual está diseñada para realizar
