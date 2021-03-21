@@ -125,4 +125,4 @@ Setear los valores de un atributo a `undefined` puede conservar espacio de almac
 ### Conclusiones
 El equipo de TypeScript no utiliza `null`: [Guía de programación TypeScript](https://github.com/Microsoft/TypeScript/wiki/Coding-guidelines#null-and-undefined) y eso no a causado ningún problema. Douglas Crockford piensa que [`null` es una mala idea](https://www.youtube.com/watch?v=PSGEjv3Tqo0&feature=youtu.be&t=9m21s) y que todos deberíamos utilizar `undefined`.
 
-Sin embargo, codigos de base con estilo NodeJS utilizan `null` como estándar de argumentos para Errores ya que denoa que `algo esta actualmente no disponible`. Personalmente, no me importa distinguir entre ambos ya que la mayoría de los proyectos utilizan librerias con diferentes opiniones y ambos pueden ser descartados con `== null`.
+Sin embargo, códigos de base con estilo NodeJS utilizan `null` como estándar de argumentos para Errores ya que denoa que `algo esta actualmente no disponible`. Personalmente, no me importa distinguir entre ambos ya que la mayoría de los proyectos utilizan librerias con diferentes opiniones y ambos pueden ser descartados con `== null`.
