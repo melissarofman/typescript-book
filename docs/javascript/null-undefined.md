@@ -40,7 +40,7 @@ Hay una excepción: valores `undefined` a nivel raíz (root level). Discutiremos
 
 ### Chequeando undefined a nivel raíz
 
-Recuerden que dije que deberían utilizar `== null`. Claramente sí (ya que acabo de decirlo ^). No lo utilicen para cosas a nivel raíz (o root level). En modo estricto, si usas `foo` y `foo` es undefined, recives una **excepción**  `ReferenceError` (o error de referencia) y todo el stack de llamadas se desarma.
+Recuerden que dije que deberían utilizar `== null`. Claramente sí (ya que acabo de decirlo ^). No lo utilicen para cosas a nivel raíz (o root level). En modo estricto, si usas `foo` y `foo` es undefined, recibes una **excepción**  `ReferenceError` (o error de referencia) y todo el stack de llamadas se desarma.
 
 > Deberías usar modo estricto... incluso, el compilador de TS lo insertará por tí si utilizas módulos... Más sobre esto más adelante en el libro, así que no de necesitas ser explícito al respecto.
 
