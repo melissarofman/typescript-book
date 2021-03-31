@@ -40,7 +40,7 @@ Hay una excepción: valores `undefined` a nivel raíz (root level). Discutiremos
 
 ### Chequeando undefined a nivel raíz
 
-Recuerden que dije que deberían utilizar `== null`. Claramente sí (ya que acabo de decirlo ^). No lo utilicen para cosas a nivel raíz (o root level). En modo estricto, si usas `foo` y `foo` es undefined, recives una **excepción**  `ReferenceError` (o error de referencia) y todo el stack de llamadas se desarma.
+Recuerden que dije que deberían utilizar `== null`. Claramente sí (ya que acabo de decirlo ^). No lo utilicen para cosas a nivel raíz (o root level). En modo estricto, si usas `foo` y `foo` es undefined, recibes una **excepción**  `ReferenceError` (o error de referencia) y todo el stack de llamadas se desarma.
 
 > Deberías usar modo estricto... incluso, el compilador de TS lo insertará por tí si utilizas módulos... Más sobre esto más adelante en el libro, así que no de necesitas ser explícito al respecto.
 
@@ -112,7 +112,7 @@ function toInt(str: string): { valid: boolean, int?: number } {
 
 ### JSON y serialización
 
-El estándar JSON soporta la codificación de `null` pero no de `undefined`. Al codificar a JSON un objecto que contiene un atributo `null`, el atributo será incluido con su valor `null`, mientras que un atributo con valor `undefined` será excluido en su totalidad.
+El estándar JSON soporta la codificación de `null` pero no de `undefined`. Al codificar a JSON un objeto que contiene un atributo `null`, el atributo será incluido con su valor `null`, mientras que un atributo con valor `undefined` será excluido en su totalidad.
 
 ```ts
 JSON.stringify({quedara: null, seIra: undefined}); // {"willStay":null}
@@ -125,4 +125,4 @@ Setear los valores de un atributo a `undefined` puede conservar espacio de almac
 ### Conclusiones
 El equipo de TypeScript no utiliza `null`: [Guía de programación TypeScript](https://github.com/Microsoft/TypeScript/wiki/Coding-guidelines#null-and-undefined) y eso no a causado ningún problema. Douglas Crockford piensa que [`null` es una mala idea](https://www.youtube.com/watch?v=PSGEjv3Tqo0&feature=youtu.be&t=9m21s) y que todos deberíamos utilizar `undefined`.
 
-Sin embargo, codigos de base con estilo NodeJS utilizan `null` como estándar de argumentos para Errores ya que denoa que `algo esta actualmente no disponible`. Personalmente, no me importa distinguir entre ambos ya que la mayoría de los proyectos utilizan librerias con diferentes opiniones y ambos pueden ser descartados con `== null`.
+Sin embargo, códigos de base con estilo NodeJS utilizan `null` como estándar de argumentos para Errores ya que denoa que `algo esta actualmente no disponible`. Personalmente, no me importa distinguir entre ambos ya que la mayoría de los proyectos utilizan librerias con diferentes opiniones y ambos pueden ser descartados con `== null`.
