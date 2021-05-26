@@ -1,6 +1,6 @@
 # Por qué TypeScript
 Hay dos objetivos principales de TypeScript: 
-* Proveer un *systema tipado opcional* para Javascript
+* Proveer un *sistema tipado opcional* para Javascript
 * Proveer características de futuras ediciones de Javascript a motores actuales de Javascript
 
 
@@ -10,7 +10,7 @@ El por qué de estos objetivos se explica a continuación
 
 Puedes estar preguntandote "**Por qué agregar tipos a Javascript?**"
 
-Los tipos han provado su habilidad para mejorar la calidad y comprensibilidad del código. Equipos grandes (Google, Microsoft, Facebook) han alcanzado esta conclusion multiples veces. Específicamente:
+Los tipos han probado su habilidad para mejorar la calidad y comprensibilidad del código. Equipos grandes (Google, Microsoft, Facebook) han alcanzado esta conclusión multiples veces. Específicamente:
 
 * Los tipos mejoran la velocidad cuando hay que refactorizar. *Es mejor que el compilador atrape los errores a que fallen cosas en tiempo de ejecución*
 * Los tipos son una de las mejores formas de documentación que se puede tener. *La firma de una función es un teorema y el cuerpo de la función es la prueba*
@@ -18,7 +18,7 @@ Los tipos han provado su habilidad para mejorar la calidad y comprensibilidad de
 Sin embargo, los tipos tienen una característica de ser innecesariamente ceremoniales. TypeScript es muy particular en cuanto a mantener la barrera de entrada lo más baja posible. Así es como lo hace:
 
 ### Javascript es Typescript
-TypeScript provee seguridad al momento de compilar para tu codigo JavaScript. Esto no es gran sorpresa dado su nombre. La ventaja es que los tipos son completamente opcionales. Tu código JavaScript en archivos `.js` pueden ser renombrados a `.ts` y Typescript igual devolverá un archivo `.js` válido e equivalente al archivo `.js` original. Typescript es *intencionalmente* y estrictamente un superconjunto de Javascript con chequeo de tipado opcional. 
+TypeScript provee seguridad al momento de compilar para tu codigo JavaScript. Esto no es gran sorpresa dado su nombre. La ventaja es que los tipos son completamente opcionales. Tu código JavaScript en archivos `.js` pueden ser renombrados a `.ts` y Typescript igual devolverá un archivo `.js` válido y equivalente al archivo `.js` original. Typescript es *intencionalmente* y estrictamente un superconjunto de Javascript con chequeo de tipado opcional. 
 
 ### Los tipos pueden ser implicitos
 TypeScript intentará inferir la máxima información posible sobre el tipo, para brindar seguirdad de tipo con un costo mínimo de productividad durante el desarrollo de código. Por ejemplo, en el siguiente ejemplo TypeScript sabrá que `foo` es de tipo `numero` y devolverá un error en la segunda línea (error en inglés: traducido al español): 
@@ -30,7 +30,7 @@ foo = '456'; // Error: cannot assign `string` to `number` (Error: no es posible 
 // Is foo a number or a string? (Es foo un número o una string?)
 ```
 
-Esta inferencia del tipo esta bien motivada. Si haces cosas como las que se ven en este ejemplo, en tonces en el resto de tu código es imposible estar seguro sobre que `foo` es un `numero` o una `string`. Problemas de este tipo ocurren habitualmente en bases de código grandes y con múltiples archivos. Ahondaremos en las reglas sobre la inferencia de tipos más adelante.
+Esta inferencia del tipo está bien motivada. Si haces cosas como las que se ven en este ejemplo, entonces en el resto de tu código es imposible estar seguro sobre que `foo` es un `numero` o una `string`. Problemas de este tipo ocurren habitualmente en bases de código grandes y con múltiples archivos. Ahondaremos en las reglas sobre la inferencia de tipos más adelante.
 
 ### Los tipos pueden ser explícitos
 Como hemos mencionado previamente, TypeScript inferirá lo máximo que pueda en forma segura. Sin embargo, puedes usar anotaciones para: 
@@ -72,7 +72,7 @@ yoAceptoPuntos2D(punto3D); // información extra okay
 yoAceptoPuntos2D({ x: 0 }); // Error: falta la información `y`
 ```
 
-### Errores de typo no previenen que JavaScript emita
+### Errores de tipo no previenen que JavaScript emita
 Para facilitar la migración de Javascript a Typescript, aunque hayan errores de compilación, por default Typescript emitirá *Javascript válido* de la mejor manera posible. Por ejemplo: 
 
 ```ts
@@ -100,7 +100,7 @@ A modo de ejemplo sobre como podrías escribir tu propio archivo de declaracione
 ```ts
 $('.genial').show(); // Error: cannot find name `$` (Error: no es posible encontrar el nombre `$`)
 ```
-A modod de solución, *le puedes indicar a TypeScript* que existe algo llamado `$`: 
+A modo de solución, *le puedes indicar a TypeScript* que existe algo llamado `$`: 
 ```ts
 declare var $: any;
 $('.genial').show(); // Ok!
